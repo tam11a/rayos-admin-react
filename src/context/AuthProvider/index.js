@@ -1,6 +1,6 @@
 import React from "react";
 import { validate } from "../../query/sign";
-import { updateAuthInstance, updateInstance } from "../../service/instance";
+import { updateInstance } from "../../service/instance";
 import { responseHandler } from "../../utilities/response-handler";
 
 export const authContext = React.createContext();
@@ -17,7 +17,6 @@ const Index = ({ children }) => {
 
   React.useEffect(() => {
     updateInstance();
-    updateAuthInstance();
     if (token) {
       validateUser();
     }

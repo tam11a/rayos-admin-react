@@ -32,7 +32,8 @@ const Index = () => {
   const onValid = async (data) => {
     const res = await responseHandler(() => signIn(data));
     if (res.status) {
-      auth.setToken(res.data.value.access_token);
+      // console.log(res);
+      auth.setToken(res.data.token);
       snack.createSnack("Login Successfull!");
       reset();
     } else {
@@ -58,14 +59,26 @@ const Index = () => {
           }}
           elevation={10}
         >
-          <Typography variant={"button"}>email</Typography>
+          <Typography variant={"button"}>phone</Typography>
           <CInput
             fullWidth
-            placeholder="example@email.com"
-            {...register("email")}
+            placeholder="01****"
+            startAdornment={
+              <Typography
+                sx={{
+                  mr: 1,
+                }}
+              >
+                +88
+              </Typography>
+            }
+            inputProps={{
+              type: "tel",
+            }}
+            {...register("phone")}
           />
-          {errors.email && (
-            <Alert severity="error">{errors.email.message}</Alert>
+          {errors.phone && (
+            <Alert severity="error">{errors.phone.message}</Alert>
           )}
           <Typography variant={"button"}>password</Typography>
           <CPassword
@@ -106,13 +119,13 @@ const Index = () => {
 };
 
 const schema = Joi.object({
-  email: Joi.string()
-    .label("Email")
-    // .regex(/01\d{9}$/)
+  phone: Joi.string()
+    .label("Phone")
+    .regex(/01\d{9}$/)
     .required()
     .messages({
-      "string.pattern.base": "Invalid Email",
-      "string.empty": "Email Required",
+      "string.pattern.base": "Invalid Phone Number",
+      "string.empty": "Phone Number Required",
     }),
   password: Joi.string().label("Password").required().messages({
     "string.empty": "Password Required",

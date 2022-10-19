@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import React from "react";
 import { FiEdit2 } from "react-icons/fi";
-import { authRootURL } from "../../service/instance";
 import { authContext } from "../../context/AuthProvider";
 import { objToFormData } from "../../utilities/json-form";
 import {
@@ -147,7 +146,7 @@ const Profile = ({ uid }) => {
                   width: "150px",
                   height: "150px",
                 }}
-                src={authRootURL + userData?.data?.value?.image}
+                // src={authRootURL + userData?.data?.value?.image}
                 alt={userData?.data?.value?.full_name}
               />
               <Tooltip title={"Upload Photo"}>

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import instance, { authInstance } from "../service/instance";
+import instance from "../service/instance";
 
 const getAllCustomer = (params) => {
   let queryString = `admin/get-all-user?${
@@ -8,7 +8,7 @@ const getAllCustomer = (params) => {
   params.filters?.map((filter) => {
     queryString += `&filters[]=${filter}`;
   });
-  return authInstance.get(queryString);
+  return instance.get(queryString);
 };
 
 export const useGetAllCustomer = (params) => {
@@ -20,7 +20,7 @@ export const useGetAllCustomer = (params) => {
 
 // confirm user
 const confirmUser = (id) => {
-  return authInstance.put(`admin/user-register/confirm/${id}`);
+  return instance.put(`admin/user-register/confirm/${id}`);
 };
 
 export const useConfirmUser = () => {
@@ -32,7 +32,7 @@ export const useConfirmUser = () => {
 
 // block user
 const blockUser = (id) => {
-  return authInstance.put(`admin/user-register/block/${id}`);
+  return instance.put(`admin/user-register/block/${id}`);
 };
 
 export const useBlockUser = () => {
@@ -44,7 +44,7 @@ export const useBlockUser = () => {
 
 // cancel user
 const cancelUser = (id) => {
-  return authInstance.put(`admin/user-register/cancel/${id}`);
+  return instance.put(`admin/user-register/cancel/${id}`);
 };
 
 export const useCancelUser = () => {
@@ -55,7 +55,7 @@ export const useCancelUser = () => {
 };
 
 const getUserProfile = (id) => {
-  return authInstance.get("admin/user-profile/" + id);
+  return instance.get("admin/user-profile/" + id);
 };
 
 export const useGetCustomerProfile = (id) => {
@@ -65,7 +65,7 @@ export const useGetCustomerProfile = (id) => {
 };
 
 const updateUserProfile = (data) => {
-  return authInstance.postForm("admin/update/user-profile", data);
+  return instance.postForm("admin/update/user-profile", data);
 };
 
 export const useUpdateUserProfile = () => {
