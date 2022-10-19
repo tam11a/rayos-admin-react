@@ -25,4 +25,8 @@ export const updateInstance = () => {
   );
 };
 
+export const getAttachment = (attachmentId) => {
+  return baseURL + "/attachments/" + attachmentId;
+};
+
 export default instance;

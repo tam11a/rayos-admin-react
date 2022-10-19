@@ -1,13 +1,24 @@
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import instance from "../service/instance";
 
 const getAllCategory = () => {
-  return instance.get(`category/get-all-category-info`);
+  return instance.get(`category`);
 };
 
 export const useGetAllCategory = () => {
   return useQuery(["get-all-category"], () => getAllCategory(), {
     // refetchInterval: 20000,
+  });
+};
+
+const createCategory = (data) => {
+  return instance.post("category", data);
+};
+
+export const useCreateCategory = () => {
+  const queryClient = useQueryClient();
+  return useMutation(createCategory, {
+    onSuccess: () => queryClient.invalidateQueries("get-all-category"),
   });
 };
 

@@ -25,10 +25,10 @@ const Index = ({ children }) => {
   const validateUser = async () => {
     const res = await responseHandler(() => validate());
     if (res.status) {
-      setUserId(res.data.value.user_details.id);
+      // setUserId(res.data.value.user_details?.id);
       setUser({
         ...user,
-        ...res.data.value.user_details,
+        // ...res.data.value.user_details,
       });
       // console.log(res.data.value.user_details);
       // queryClient.invalidateQueries("user-info");

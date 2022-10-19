@@ -3,7 +3,7 @@ import React from "react";
 
 const ShowError = ({ err }) => {
   const [open, setOpen] = React.useState(false);
-  React.useEffect(() => setOpen(err), [err]);
+  React.useEffect(() => setOpen(!!err), [err]);
   return (
     <Collapse
       in={open}

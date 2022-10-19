@@ -84,7 +84,7 @@ const LeftDrawer = ({ open, setOpen }) => {
       sx={{
         color: "primary.main",
       }}
-      onclick={() => setOpen(false)}
+      onClick={() => setOpen(false)}
     >
       {drawerData.map((item, index) => (
         <ListItemButton
@@ -181,9 +181,10 @@ const LeftDrawer = ({ open, setOpen }) => {
           variant={"caption"}
           sx={{
             textAlign: "center",
+            mb: 1,
           }}
         >
-          Powered by <b>PND Service</b>
+          Powered by <b>Team Deviate</b>
         </Typography>
       </Drawer>
     </>
