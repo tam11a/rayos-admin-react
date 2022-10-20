@@ -1,57 +1,45 @@
 import React from "react";
-import { validate } from "../../query/sign";
-import { updateInstance } from "../../service/instance";
-import { responseHandler } from "../../utilities/response-handler";
+import { useValidate } from "../../query/sign";
+import { updateInstanceAuthorization } from "../../service/instance";
 
 export const authContext = React.createContext();
 
 const Index = ({ children }) => {
-  const [token, handleToken] = React.useState(localStorage.getItem("tkn"));
-  const setToken = (tkn) => {
-    handleToken(tkn);
-    localStorage.setItem("tkn", tkn);
-  };
-
+  const [token, setToken] = React.useState(localStorage.getItem("token"));
   const [user, setUser] = React.useState({});
-  const [userId, setUserId] = React.useState();
 
-  React.useEffect(() => {
-    updateInstance();
-    if (token) {
-      validateUser();
-    }
-  }, [token]);
+  const { data: validateData, isError: validationError } = useValidate(!!token);
 
-  const validateUser = async () => {
-    const res = await responseHandler(() => validate());
-    if (res.status) {
-      // setUserId(res.data.value.user_details?.id);
-      setUser({
-        ...user,
-        // ...res.data.value.user_details,
-      });
-      // console.log(res.data.value.user_details);
-      // queryClient.invalidateQueries("user-info");
-    } else {
-      logout();
-    }
+  const setLoginToken = (tkn) => {
+    localStorage.setItem("token", tkn);
+    updateInstanceAuthorization();
+    setToken(tkn);
   };
 
   const logout = () => {
-    localStorage.removeItem("tkn");
-    handleToken();
-    setUser({});
-    setUserId();
+    localStorage.removeItem("token");
+    updateInstanceAuthorization();
+    setToken();
   };
+
+  React.useEffect(() => {
+    if (!validationError) return;
+    logout();
+  }, [validationError]);
+
+  React.useEffect(() => {
+    if (!validateData) return;
+    setUser(validateData);
+  }, [validateData]);
 
   return (
     <authContext.Provider
       value={{
-        token,
-        setToken,
-        logout,
+        isLoggedIn: !!token,
+        token: token,
+        setToken: setLoginToken,
         userInfo: user,
-        userId,
+        logout: logout,
       }}
     >
       {children}

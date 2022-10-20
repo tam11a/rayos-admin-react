@@ -42,21 +42,25 @@ const LeftDrawer = ({ open, setOpen }) => {
       name: "Order",
       icon: <CgBox />,
       to: "/order-list",
+      disabled: true,
     },
     {
       name: "Customer",
       icon: <IoIosPeople />,
       to: "/customer-list",
+      disabled: true,
     },
     {
       name: "Product",
       icon: <MdOutlineDashboardCustomize />,
       to: "/product-list",
+      disabled: true,
     },
     {
       name: "Images",
       icon: <RiImageLine />,
       to: "/images",
+      disabled: true,
     },
     {
       name: "Category",
@@ -95,6 +99,7 @@ const LeftDrawer = ({ open, setOpen }) => {
             if (item.onClick) item.onClick();
             setOpen(false);
           }}
+          disabled={!!item.disabled}
         >
           <ListItemIcon sx={{ color: "primary.main", fontSize: "24px" }}>
             {" "}

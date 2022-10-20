@@ -13,18 +13,14 @@ const instance = axios.create({
   },
 });
 
-export const updateInstance = () => {
-  instance.interceptors.request.use(
-    (req) => {
-      req.headers["Authorization"] = `Bearer ${localStorage.getItem("tkn")}`;
-      return req;
-    },
-    (err) => {
-      return Promise.reject(err);
-    }
-  );
+export const updateInstanceAuthorization = () => {
+  instance.interceptors.request.use((req) => {
+    req.headers["Authorization"] = localStorage.getItem("token")
+      ? `Bearer ${localStorage.getItem("token")}`
+      : "";
+    return req;
+  });
 };
-
 export const getAttachment = (attachmentId) => {
   return baseURL + "/attachments/" + attachmentId;
 };

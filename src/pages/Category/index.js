@@ -30,7 +30,7 @@ const Index = () => {
 
   const cols = [
     {
-      headerName: "#",
+      headerName: "",
       headerAlign: "center",
       field: "actions",
       align: "center",
@@ -159,9 +159,6 @@ const Index = () => {
           columns={cols}
           rows={data?.data?.data || []}
           isLoading={isLoading}
-          onRowClick={() => {
-            console.log("hello");
-          }}
           width={"auto"}
         />
         <CreateDrawer

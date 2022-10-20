@@ -18,9 +18,10 @@ import Wallet from "../pages/User/Wallet";
 const AppRoute = () => {
   const authCntxt = React.useContext(authContext);
 
+
   return (
     <>
-      {authCntxt.token ? (
+      {authCntxt.isLoggedIn ? (
         <>
           <Header />
           <Container>
