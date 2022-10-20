@@ -4,9 +4,9 @@
   "display": "standalone",
   "scope": "/",
   "start_url": "/",
-  "name": "Admin | PND Service",
-  "short_name": "PND Admin",
-  "description": "Administration Website for PND Service Admin & Moderators",
+  "name": "Rayos",
+  "short_name": "Rayos",
+  "description": "Rayos is one of the largest e-commerce stores in Bangladesh. its design is to make it easy for customers to navigate to what they want.",
   "icons": [
     {
       "src": "/maskable_icon_x48.png",

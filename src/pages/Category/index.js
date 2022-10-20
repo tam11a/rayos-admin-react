@@ -15,93 +15,93 @@ import {
 
 import DataTable from "../../components/DataTable";
 import { useGetAllCategory } from "../../query/category";
-import { rootURL } from "../../service/instance";
+import { getAttachment, rootURL } from "../../service/instance";
 import ButtonSwitch from "../../components/ButtonSwitch";
 import tableOptionsStyle from "../../style/tableOptions";
 
-import { IoMdEye } from "react-icons/io";
-import { FiEdit2 } from "react-icons/fi";
 import { MdAdd } from "react-icons/md";
+import CreateDrawer from "./CreateDrawer";
+import { FaSlackHash } from "react-icons/fa";
 
 const Index = () => {
   const { data, isLoading } = useGetAllCategory();
-  console.log(data);
+
+  const [openCreate, setOpenCreate] = React.useState(false);
 
   const cols = [
     {
-      headerName: "#",
+      headerName: "",
       headerAlign: "center",
-      field: "show_info",
-      width: 60,
+      field: "actions",
       align: "center",
+      width: 50,
+      sortable: false,
       renderCell: () => (
         <>
-          <IconButton>
-            <IoMdEye />
+          <IconButton size={"small"} color={"primary"}>
+            <FaSlackHash />
           </IconButton>
         </>
       ),
     },
     {
-      headerName: "Image",
+      headerName: "Icon",
       headerAlign: "center",
       field: "receiver_number",
       align: "center",
       width: 80,
       renderCell: (params) => (
-        <Avatar src={rootURL + params.row.photo} variant="square" />
+        <Avatar src={getAttachment(params.row.icon)} variant="square" />
       ),
     },
 
     {
       headerName: "Category Name",
       //   headerAlign: "center",
-      field: "title_en",
+      field: "titleEn",
       minWidth: 120,
       flex: 1,
     },
     {
       headerName: "Subcategory",
       headerAlign: "center",
-      field: "sub-category",
+      field: "totalSubcategories",
       Width: 120,
       // flex: 1,
       align: "center",
-      renderCell: () => (
-        <>
-          <IconButton>
-            <IoMdEye />
-          </IconButton>
-        </>
-      ),
+      // renderCell: () => (
+      //   <>
+      //     <IconButton>
+      //       <IoMdEye />
+      //     </IconButton>
+      //   </>
+      // ),
     },
 
     {
       headerName: "Status",
       headerAlign: "center",
-      field: "status",
+      field: "isActive",
       align: "center",
+      sortable: false,
       renderCell: (params) => (
-        <ButtonSwitch
-          checked={params.row.status === "active"}
-          color={"success"}
-        />
+        <ButtonSwitch checked={params.row.isActive} color={"success"} />
       ),
     },
-    {
-      headerName: "Action",
-      headerAlign: "center",
-      field: "actions",
-      align: "center",
-      width: 120,
-      renderCell: () => (
-        <>
-          <IconButton size={"small"}>
-            <FiEdit2 />
-          </IconButton>
-        </>
-      ),
-    },
+    // {
+    //   headerName: "Action",
+    //   headerAlign: "center",
+    //   field: "actions",
+    //   align: "center",
+    //   width: 120,
+    //   renderCell: () => (
+    //     <>
+    //       <IconButton size={"small"}>
+    //         <FiEdit2 />
+    //       </IconButton>
+    //     </>
+    //   ),
+    // },
   ];
   return (
     <>
@@ -147,6 +147,7 @@ const Index = () => {
                   height: "52px",
                 }}
                 startIcon={<MdAdd />}
+                onClick={() => setOpenCreate(!openCreate)}
                 fullWidth
               >
                 Add Category
@@ -156,9 +157,13 @@ const Index = () => {
         </Paper>{" "}
         <DataTable
           columns={cols}
-          rows={data?.data?.value || []}
+          rows={data?.data?.data || []}
           isLoading={isLoading}
           width={"auto"}
+        />
+        <CreateDrawer
+          open={openCreate}
+          onClose={() => setOpenCreate(!openCreate)}
         />
       </Container>
     </>

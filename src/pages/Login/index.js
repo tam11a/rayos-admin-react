@@ -14,13 +14,14 @@ import snackContext from "../../context/snackProvider";
 import CInput from "./CInput";
 import CPassword from "./CPassword";
 import { joiResolver } from "@hookform/resolvers/joi";
-import { signIn } from "../../query/sign";
+import { useLogin } from "../../query/sign";
 import { responseHandler } from "../../utilities/response-handler";
 
 const Index = () => {
   // contexts
   const auth = React.useContext(authContext);
   const snack = React.useContext(snackContext);
+  const { mutateAsync: postLogin } = useLogin();
 
   const {
     reset,
@@ -30,10 +31,10 @@ const Index = () => {
   } = useForm({ resolver: joiResolver(schema) });
 
   const onValid = async (data) => {
-    const res = await responseHandler(() => signIn(data));
+    const res = await responseHandler(() => postLogin(data));
     if (res.status) {
-      // console.log(res);
-      auth.setToken(res.data.token);
+      console.log(res);
+      auth.setToken(res.object?.token);
       snack.createSnack("Login Successfull!");
       reset();
     } else {

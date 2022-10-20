@@ -1,11 +1,9 @@
-// 314C3D -> Dark Green
-// D5E4DB -> Light Green
-
 import { createTheme } from "@mui/material/styles";
 
 // colors
-const primary = "#314C3D";
-const primaryLight = "#D5E4DB";
+const primary = "#272643";
+const primaryLight = "#F6EAE3";
+const primaryBright = "#F6EAE3";
 const black = "#252E42";
 const blackDark = "#1F283B";
 const blackLight = "#2F3B52";
@@ -27,6 +25,7 @@ const theme = createTheme({
   palette: {
     primary: {
       main: primary,
+      bright: primaryBright,
       contrastText: primaryLight,
     },
     secondary: {
@@ -40,17 +39,20 @@ const theme = createTheme({
       search: "#2C3448",
       contrastText: "#fff",
     },
-    error: {
-      main: "#e86161",
-      contrastText: "#fff",
-    },
     white: {
       main: "#fff",
       contrastText: "#2C3448",
     },
+    error: {
+      main: "#e86161",
+    },
+    warning: {
+      main: "#F49320",
+      contrastText: "#272725",
+    },
   },
   typography: {
-    fontFamily: "Lato, sans-serif",
+    fontFamily: "Rajdhani, Noto Sans Bengali, sans-serif",
   },
   components: {
     MuiButton: {
@@ -58,6 +60,17 @@ const theme = createTheme({
         contained: {
           borderRadius: "2px",
           fontWeight: "500",
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        outlined: {
+          "& .MuiInputBase-input": {
+            backgroundColor: "rgba(0, 0, 0, 0.05)",
+            border: "none",
+            outline: "none",
+          },
         },
       },
     },

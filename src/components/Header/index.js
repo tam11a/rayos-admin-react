@@ -87,7 +87,7 @@ const Index = () => {
                 </Typography>
               </span>
               <span>
-                <Hidden smDown>
+                {/* <Hidden smDown>
                   <IconButton size={"small"}>
                     <Avatar
                       src={BIicon}
@@ -111,7 +111,7 @@ const Index = () => {
                   >
                     Create Order
                   </Button>
-                </Hidden>
+                </Hidden> */}
                 <IconButton color={"black"} size={"small"}>
                   <MdNotificationsNone />
                 </IconButton>
@@ -191,7 +191,7 @@ const RightDrawer = ({ open, setOpen }) => {
             {/* </ListItemAvatar> */}
           </ListItem>
           <Divider />
-          <ListItemButton>
+          {/* <ListItemButton>
             <ListItemAvatar>
               <Avatar
                 src={BIicon}
@@ -220,7 +220,7 @@ const RightDrawer = ({ open, setOpen }) => {
               primary={"Create PND Order"}
               // secondary={"Brothers Importing Order"}
             />
-          </ListItemButton>
+          </ListItemButton> */}
           <ListItemButton>
             <ListItemAvatar>
               <Avatar />

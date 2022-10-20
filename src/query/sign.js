@@ -1,18 +1,22 @@
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import instance from "../service/instance";
 
-export const signIn = (data) => {
+const login = (data) => {
   return instance.post("auth/admin/login", data);
 };
 
-// export const requestOTP = (phoneNumber) => {
-//   return instance.get("forget-password/by-phone/" + phoneNumber);
-// };
+export const useLogin = () => {
+  return useMutation(login);
+};
 
-// export const resetPassword = (data) => {
-//   return instance.post("change-password/by-phone", data);
-// };
-
-export const validate = () => {
+const validate = () => {
   return instance.get("auth/admin/validate");
+};
+
+export const useValidate = (enabled) => {
+  return useQuery(["do-validate"], validate, {
+    enabled: enabled,
+    retry: 0,
+    select: (data) => data?.data?.data || undefined,
+  });
 };
