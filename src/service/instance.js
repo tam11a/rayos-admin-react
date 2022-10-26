@@ -7,7 +7,7 @@ const instance = axios.create({
   // unauthorized instance
   baseURL: baseURL,
   headers: {
-    Authorization: `Bearer ${localStorage.getItem("tkn")}`,
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
     "Content-Type": "application/json",
     accept: "*/*",
   },

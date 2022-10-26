@@ -24,7 +24,11 @@ import CreateDrawer from "./CreateDrawer";
 import { FaSlackHash } from "react-icons/fa";
 
 const Index = () => {
-  const { data, isLoading } = useGetAllCategory();
+  const [params, setParams] = React.useState({
+    limit: 5,
+    page: 1,
+  });
+  const { data, isLoading } = useGetAllCategory(params);
 
   const [openCreate, setOpenCreate] = React.useState(false);
 
@@ -160,6 +164,22 @@ const Index = () => {
           rows={data?.data?.data || []}
           isLoading={isLoading}
           width={"auto"}
+          paginationMode={"server"}
+          rowCount={data?.data?.total || 0}
+          page={(params?.page || 1) - 1}
+          onPageChange={(newPage) =>
+            setParams({
+              ...params,
+              page: newPage + 1,
+            })
+          }
+          pageSize={params?.limit}
+          onPageSizeChange={(pageSize) =>
+            setParams({
+              ...params,
+              limit: pageSize,
+            })
+          }
         />
         <CreateDrawer
           open={openCreate}

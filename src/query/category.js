@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import instance from "../service/instance";
 
-const getAllCategory = () => {
-  return instance.get(`category`);
+const getAllCategory = (params) => {
+  return instance.get(`category?limit=${params.limit}&page=${params.page}`);
 };
 
-export const useGetAllCategory = () => {
-  return useQuery(["get-all-category"], () => getAllCategory(), {
+export const useGetAllCategory = (params) => {
+  return useQuery(["get-all-category", params], () => getAllCategory(params), {
     // refetchInterval: 20000,
   });
 };
