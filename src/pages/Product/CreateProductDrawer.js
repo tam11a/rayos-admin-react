@@ -90,7 +90,7 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
 
   const { mutateAsync: mutateCreateProduct, isLoading } = useCreateProduct();
 
-  console.log(multiimgs);
+  // console.log(multiimgs);
 
   const handleUpdate = async (data) => {
     let colorList = {};

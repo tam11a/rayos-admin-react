@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import instance from "../service/instance";
 
 const getAllProduct = (params) => {
-  let queryString = `product/get-all-product-info?orders=created_at-DESC&limit=${params.limit}&page=${params.page}`; // /${params.limit}?page=${params.page}
+  let queryString = `product?limit=${params.limit}&page=${params.page}`; // /${params.limit}?page=${params.page}
   params.filters?.map((filter) => {
     queryString += `&filters[]=${filter}`;
   });
@@ -36,8 +36,6 @@ export const useDelProduct = () => {
     onSuccess: () => queryClient.invalidateQueries("get-all-product"),
   });
 };
-
-
 
 const updateProduct = (data) => {
   return instance.postForm(`product/update`, data);

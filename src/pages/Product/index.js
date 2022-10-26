@@ -23,11 +23,12 @@ import tableOptionsStyle from "../../style/tableOptions";
 import { MdAdd } from "react-icons/md";
 import { IoMdEye } from "react-icons/io";
 import { FiEdit2 } from "react-icons/fi";
-import { rootURL } from "../../service/instance";
+import { getAttachment, rootURL } from "../../service/instance";
 
 import StateViewer from "../../components/StateViewer";
 import UpdateProductDrawer from "./UpdateProductDrawer";
 import CreateProductDrawer from "./CreateProductDrawer";
+import { FaSlackHash } from "react-icons/fa";
 
 const Index = () => {
   const [open, setOpen] = React.useState(false);
@@ -40,24 +41,31 @@ const Index = () => {
     filters: [],
   });
 
-  const { data: catData, isLoading: isCatLoading } = useGetAllCategory();
+  const { data: catData, isLoading: isCatLoading } = useGetAllCategory(params);
   const { data, isLoading } = useGetAllProduct(params);
-
-  // console.log(data);
+  console.log(data);
 
   const cols = [
     {
       headerName: "#",
-      field: "show_info",
+      field: "id",
       width: 60,
       headerAlign: "center",
       align: "center",
-      renderCell: (params) => (
+      renderCell: () => (
         <>
-          <UpdateProductDrawer info={params.row} drawerIcon={<IoMdEye />} />
+          <IconButton size={"small"} color={"primary"}>
+            <FaSlackHash />
+          </IconButton>
         </>
       ),
+      // renderCell: (params) => (
+      //   <>
+      //     <UpdateProductDrawer info={params.row} drawerIcon={<IoMdEye />} />
+      //   </>
+      // ),
     },
+
     {
       headerName: "Image",
       headerAlign: "center",
@@ -65,56 +73,56 @@ const Index = () => {
       align: "center",
       width: 80,
       renderCell: (params) => (
-        <Avatar src={rootURL + params.row.photo} variant="square" />
+        <Avatar src={getAttachment(params.row.image)} variant="square" />
       ),
     },
     {
       headerName: "Product Name",
       headerAlign: "center",
-      field: "title_en",
+      field: "titleEn",
       align: "center",
       width: 200,
     },
 
-    // {
-    //   headerName: "Color",
-    //   headerAlign: "center",
-    //   field: "colors",
-    //   width: 80,
-    //   align: "center",
-    //   renderCell: () => (
-    //     <>
-    //       <IconButton size={"small"}>
-    //         <IoMdEye />
-    //       </IconButton>
-    //     </>
-    //   ),
-    // },
-    // {
-    //   headerName: "Category",
-    //   headerAlign: "center",
-    //   field: "category_id",
-    //   width: 200,
-    //   align: "center",
-    //   renderCell: (params) => (
-    //     <>
-    //       {catData?.data?.value?.map((cat) => {
-    //         return cat.id === params.row.category_id ? cat.title_en : "-";
-    //       })[0] || "-"}
-    //     </>
-    //   ),
-    // },
+    {
+      headerName: "Variants",
+      headerAlign: "center",
+      field: "colors",
+      width: 80,
+      align: "center",
+      renderCell: () => (
+        <>
+          <IconButton size={"small"}>
+            <IoMdEye />
+          </IconButton>
+        </>
+      ),
+    },
+    {
+      headerName: "Category",
+      headerAlign: "center",
+      field: "category_id",
+      width: 200,
+      align: "center",
+      renderCell: (params) => (
+        <>
+          {catData?.data?.data?.map((cat) => {
+            return cat.titleEn;
+          })[0] || "-"}
+        </>
+      ),
+    },
     {
       headerName: "Buy Price",
       headerAlign: "center",
-      field: "buy_price",
+      field: "buyPrice",
       align: "center",
       width: 100,
     },
     {
       headerName: "Sell Price",
       headerAlign: "center",
-      field: "sell_price",
+      field: "sellPrice",
       width: 100,
       align: "center",
     },
@@ -124,54 +132,54 @@ const Index = () => {
       field: "quantity",
       align: "center",
     },
-    {
-      headerName: "Status",
-      headerAlign: "center",
-      field: "status_stock",
-      align: "center",
-      width: 180,
-      renderCell: (d) => (
-        <Chip
-          label={d.row.quantity > 0 ? "In Sell" : "Stock Out"}
-          color={d.row.quantity > 0 ? "success" : "error"}
-          size={"small"}
-          sx={{
-            textTransform: "uppercase",
-          }}
-        />
-      ),
-    },
-    {
-      headerName: "Discount",
-      headerAlign: "center",
-      field: "discount",
-      align: "center",
-    },
-    {
-      headerName: "Published",
-      headerAlign: "center",
-      field: "status",
-      align: "center",
-      width: 120,
-      renderCell: (params) => (
-        <ButtonSwitch
-          checked={params.row.status === "active"}
-          color={"success"}
-        />
-      ),
-    },
-    {
-      headerName: "Action",
-      headerAlign: "center",
-      field: "actions",
-      align: "center",
-      width: 120,
-      renderCell: (params) => (
-        <>
-          <UpdateProductDrawer info={params.row} />
-        </>
-      ),
-    },
+    // {
+    //   headerName: "Status",
+    //   headerAlign: "center",
+    //   field: "status_stock",
+    //   align: "center",
+    //   width: 180,
+    //   renderCell: (d) => (
+    //     <Chip
+    //       label={d.row.quantity > 0 ? "In Sell" : "Stock Out"}
+    //       color={d.row.quantity > 0 ? "success" : "error"}
+    //       size={"small"}
+    //       sx={{
+    //         textTransform: "uppercase",
+    //       }}
+    //     />
+    //   ),
+    // },
+    // {
+    //   headerName: "Discount",
+    //   headerAlign: "center",
+    //   field: "discount",
+    //   align: "center",
+    // },
+    // {
+    //   headerName: "Published",
+    //   headerAlign: "center",
+    //   field: "status",
+    //   align: "center",
+    //   width: 120,
+    //   renderCell: (params) => (
+    //     <ButtonSwitch
+    //       checked={params.row.status === "active"}
+    //       color={"success"}
+    //     />
+    //   ),
+    // },
+    // {
+    //   headerName: "Action",
+    //   headerAlign: "center",
+    //   field: "actions",
+    //   align: "center",
+    //   width: 120,
+    //   renderCell: (params) => (
+    //     <>
+    //       <UpdateProductDrawer info={params.row} />
+    //     </>
+    //   ),
+    // },
   ];
 
   return (
@@ -275,10 +283,10 @@ const Index = () => {
 
         <DataTable
           columns={cols}
-          rows={data?.data?.value?.data?.data || []}
+          rows={data?.data?.data || []}
           isLoading={isLoading}
           paginationMode={"server"}
-          rowCount={data?.data?.value?.data?.total || 0}
+          rowCount={data?.data?.total || 0}
           page={(params?.page || 1) - 1}
           onPageChange={(newPage) =>
             setParams({
