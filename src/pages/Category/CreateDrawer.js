@@ -4,6 +4,7 @@ import {
   Drawer,
   IconButton,
   InputBase,
+  LinearProgress,
   List,
   ListItem,
   ListItemText,
@@ -69,15 +70,19 @@ const CreateDrawer = ({ open, onClose }) => {
                 <BiReset />
               </IconButton>
             )}
-            <IconButton size={"small"}>
+            <IconButton size={"small"} onClick={onClose}>
               <MdClose />
             </IconButton>
           </ListItem>
-          <Divider
-            sx={{
-              mb: 1,
-            }}
-          />
+          {isLoading ? (
+            <LinearProgress />
+          ) : (
+            <Divider
+              sx={{
+                mb: 1,
+              }}
+            />
+          )}
           <ListItem
             sx={{
               display: "flex",
