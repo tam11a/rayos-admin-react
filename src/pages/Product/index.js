@@ -43,7 +43,7 @@ const Index = () => {
 
   const { data: catData, isLoading: isCatLoading } = useGetAllCategory(params);
   const { data, isLoading } = useGetAllProduct(params);
-  console.log(data);
+  // console.log(data);
 
   const cols = [
     {
@@ -132,42 +132,39 @@ const Index = () => {
       field: "quantity",
       align: "center",
     },
-    // {
-    //   headerName: "Status",
-    //   headerAlign: "center",
-    //   field: "status_stock",
-    //   align: "center",
-    //   width: 180,
-    //   renderCell: (d) => (
-    //     <Chip
-    //       label={d.row.quantity > 0 ? "In Sell" : "Stock Out"}
-    //       color={d.row.quantity > 0 ? "success" : "error"}
-    //       size={"small"}
-    //       sx={{
-    //         textTransform: "uppercase",
-    //       }}
-    //     />
-    //   ),
-    // },
+    {
+      headerName: "Status",
+      headerAlign: "center",
+      field: "status_stock",
+      align: "center",
+      width: 120,
+      renderCell: (d) => (
+        <Chip
+          label={d.row.quantity > 0 ? "In Sell" : "Stock Out"}
+          color={d.row.quantity > 0 ? "success" : "error"}
+          size={"small"}
+          sx={{
+            textTransform: "uppercase",
+          }}
+        />
+      ),
+    },
     // {
     //   headerName: "Discount",
     //   headerAlign: "center",
     //   field: "discount",
     //   align: "center",
     // },
-    // {
-    //   headerName: "Published",
-    //   headerAlign: "center",
-    //   field: "status",
-    //   align: "center",
-    //   width: 120,
-    //   renderCell: (params) => (
-    //     <ButtonSwitch
-    //       checked={params.row.status === "active"}
-    //       color={"success"}
-    //     />
-    //   ),
-    // },
+    {
+      headerName: "Published",
+      headerAlign: "center",
+      field: "status",
+      align: "center",
+      width: 120,
+      renderCell: (params) => (
+        <ButtonSwitch checked={params.row.isActive} color={"success"} />
+      ),
+    },
     // {
     //   headerName: "Action",
     //   headerAlign: "center",
