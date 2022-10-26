@@ -29,6 +29,7 @@ const Index = () => {
     page: 1,
   });
   const { data, isLoading } = useGetAllCategory(params);
+  // console.log(data);
 
   const [openCreate, setOpenCreate] = React.useState(false);
 

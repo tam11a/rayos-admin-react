@@ -48,102 +48,35 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
     formState: { errors },
   } = useForm();
 
-  const [image, setImage] = React.useState();
   const [categoryId, setCategoryId] = React.useState();
   const [subcategoryId, setSubcategoryId] = React.useState();
-  const [colorDetails, setColorDetails] = React.useState({});
-  const [multiimgs, setMultiimgs] = React.useState([]);
-  const [colors, setColors] = React.useState({});
-  const [tempColor, setTempColor] = React.useState({
-    name: "",
-    value: 0,
-  });
-
-  //   React.useEffect(() => {
-  //     let temp = {};
-  //     Object.keys(JSON.parse(info.color_product_details)?.color || {}).map(
-  //       (color, index) => {
-  //         temp[index] = {
-  //           name: color,
-  //           value: colorDetails[color],
-  //           remove: false,
-  //         };
-  //       }
-  //     );
-  //     setColors(temp);
-  //   }, [colorDetails]);
 
   React.useEffect(() => {
     setValue("category_id", categoryId);
   }, [categoryId]);
 
+  const [params] = React.useState({
+    limit: 1000,
+    page: 1,
+    filters: [],
+  });
+
   const {
     data: catData,
     // isLoading: isCatLoading
-  } = useGetAllCategory();
+  } = useGetAllCategory(params);
 
   const {
     data: subCatData,
     // isLoading: isSubCatLoading,
     isError: isSubCatError,
-  } = useGetSubCategoryFromCatID(categoryId);
+  } = useGetSubCategoryFromCatID(categoryId, params);
 
   const { mutateAsync: mutateCreateProduct, isLoading } = useCreateProduct();
 
-  console.log(multiimgs);
-
   const handleUpdate = async (data) => {
-    let colorList = {};
-    let totalProduct = 0;
-    if (Object.keys(colors).length)
-      Object.keys(colors).map((color) => {
-        if (colors[color].name) {
-          colorList[colors[color].name] = colors[color].value;
-          totalProduct += parseInt(colors[color].value);
-        }
-      });
-    let formData = {
-      title_en: data.title_en,
-      description_en: data.description_en,
-      category_id: data.category_id,
-      subcategory_id: data.subcategory_id,
-      buy_price: data.buy_price,
-      sell_price: data.sell_price,
-      is_featured: data.is_featured ? 1 : 0,
-      color_product_details: JSON.stringify({
-        color: colorList,
-      }),
-      quantity: totalProduct,
-      keyword: data.keyword,
-    };
-    if (image?.previous !== true) {
-      formData = {
-        ...formData,
-        photo: image,
-      };
-    }
-    if (data.title_ba) {
-      formData = {
-        ...formData,
-        title_ba: data.title_ba,
-      };
-    }
-    if (data.description_ba) {
-      formData = {
-        ...formData,
-        description_ba: data.description_ba,
-      };
-    }
-
-    multiimgs?.map((multiimg, index) => {
-      formData = {
-        ...formData,
-        [`multi_img[${index}]`]: multiimg,
-      };
-    });
-
-    const res = await responseHandler(() => mutateCreateProduct(formData));
-    // console.log(res);
+    const res = await responseHandler(() => mutateCreateProduct(data), [201]);
+    console.log(res);
     if (res.status) {
       snack.createSnack(res.msg);
       onClose();
@@ -153,16 +86,8 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
   };
 
   React.useEffect(() => {
-    setImage();
     setCategoryId();
     setSubcategoryId();
-    setColorDetails({});
-    setColors({});
-    setMultiimgs([]);
-    setTempColor({
-      name: "",
-      value: 0,
-    });
     reset();
   }, [open]);
 
@@ -201,7 +126,7 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
               </IconButton>
             </ListItem>
             <Divider />
-            <ListItem>
+            {/* <ListItem>
               <Box
                 sx={
                   {
@@ -222,7 +147,7 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
                   }}
                 />
               </Box>
-            </ListItem>
+            </ListItem> */}
             <ListItem
               sx={{
                 display: "flex",
@@ -235,12 +160,12 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
               <InputBase
                 sx={tableOptionsStyle}
                 placeholder={"Enter Product Name"}
-                {...register("title_en", {
+                {...register("titleEn", {
                   required: true,
                 })}
                 fullWidth
               />
-              <ShowError err={errors.title_en} />
+              <ShowError err={errors.titleEn} />
             </ListItem>
             <ListItem
               sx={{
@@ -254,10 +179,10 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
               <InputBase
                 sx={tableOptionsStyle}
                 placeholder={"Enter Product Name"}
-                {...register("title_ba")}
+                {...register("titleBn")}
                 fullWidth
               />
-              <ShowError err={errors.title_ba} />
+              <ShowError err={errors.titleBn} />
             </ListItem>
             <ListItem
               sx={{
@@ -271,12 +196,12 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
               <InputBase
                 sx={tableOptionsStyle}
                 placeholder={"Enter Buy Price"}
-                {...register("buy_price", {
+                {...register("buyPrice", {
                   required: true,
                 })}
                 fullWidth
               />
-              <ShowError err={errors.buy_price} />
+              <ShowError err={errors.buyPrice} />
             </ListItem>
             <ListItem
               sx={{
@@ -290,12 +215,12 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
               <InputBase
                 sx={tableOptionsStyle}
                 placeholder={"Enter Sell Price"}
-                {...register("sell_price", {
+                {...register("sellPrice", {
                   required: true,
                 })}
                 fullWidth
               />
-              <ShowError err={errors.sell_price} />
+              <ShowError err={errors.sellPrice} />
             </ListItem>
             <ListItem
               sx={{
@@ -311,7 +236,7 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
                 value={categoryId || "null"}
                 onChange={(e) => {
                   setCategoryId(e.target.value);
-                  setValue("category_id", e.target.value);
+                  setValue("category", e.target.value);
                 }}
                 placeholder={"Select Category"}
                 fullWidth
@@ -319,17 +244,17 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
                 <MenuItem value={"null"} disabled>
                   Select Category
                 </MenuItem>
-                {catData?.data?.value?.map((cat) => (
+                {catData?.data?.data?.map((cat) => (
                   <MenuItem
-                    key={cat.id}
-                    value={cat.id}
+                    key={cat._id}
+                    value={cat._id}
                     // disabled={cat.id === selectedCategory}
                   >
-                    {cat.title_en}
+                    {cat.titleEn}
                   </MenuItem>
                 ))}
               </Select>
-              <ShowError err={errors.category_id} />
+              <ShowError err={errors.category} />
             </ListItem>
             <ListItem
               sx={{
@@ -347,27 +272,57 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
                 onChange={(e) => {
                   setSubcategoryId(e.target.value);
                   setValue(
-                    "subcategory_id",
+                    "subcategory",
                     e.target.value !== "null" ? e.target.value : null
                   );
                 }}
-                disabled={isSubCatError}
+                disabled={!subCatData?.data?.total}
                 fullWidth
               >
                 <MenuItem value={"null"} disabled>
                   Select Sub Category
                 </MenuItem>
-                {subCatData?.data?.value?.map((cat) => (
+                {subCatData?.data?.data?.map((cat) => (
                   <MenuItem
-                    key={cat.id}
-                    value={cat.id}
+                    key={cat._id}
+                    value={cat._id}
                     // disabled={cat.id === selectedCategory}
                   >
-                    {cat.title_en}
+                    {cat.titleEn}
                   </MenuItem>
                 ))}
               </Select>
-              <ShowError err={errors.subcategory_id} />
+              <ShowError err={errors.subcategory} />
+            </ListItem>
+            <ListItem
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                rowGap: 1,
+              }}
+            >
+              Variant Type
+              <Select
+                sx={tableOptionsStyle}
+                placeholder={"Select Sub Category"}
+                value={getValues("variantType") || "null"}
+                onChange={(e) => {
+                  setValue(
+                    "variantType",
+                    e.target.value !== "null" ? e.target.value : null
+                  );
+                }}
+                fullWidth
+              >
+                <MenuItem value={"null"} disabled>
+                  Select a Variant Type
+                </MenuItem>
+                <MenuItem value={"Size"}>Size</MenuItem>
+                <MenuItem value={"Color"}>Color</MenuItem>
+                <MenuItem value={"Variant"}>Variant</MenuItem>
+              </Select>
+              <ShowError err={errors.variantType} />
             </ListItem>
             <ListItem
               sx={{
@@ -381,7 +336,7 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
               <InputBase
                 sx={{ ...tableOptionsStyle, height: "unset", py: 1 }}
                 placeholder={"Enter Description"}
-                {...register("description_en", {
+                {...register("descriptionEn", {
                   required: true,
                 })}
                 multiline
@@ -389,7 +344,7 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
                 maxRows={6}
                 fullWidth
               />
-              <ShowError err={errors.description_en} />
+              <ShowError err={errors.descriptionEn} />
             </ListItem>
             <ListItem
               sx={{
@@ -403,143 +358,15 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
               <InputBase
                 sx={{ ...tableOptionsStyle, height: "unset", py: 1 }}
                 placeholder={"Enter Description"}
-                {...register("description_ba")}
+                {...register("descriptionBn")}
                 multiline
                 minRows={5}
                 maxRows={6}
                 fullWidth
               />
-              <ShowError err={errors.description_ba} />
+              <ShowError err={errors.descriptionBn} />
             </ListItem>
-            <ListItem
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                rowGap: 1,
-              }}
-            >
-              Colors
-              {colors ? (
-                Object.keys(colors).map(
-                  (color) =>
-                    colors[color] && (
-                      <Stack
-                        key={color}
-                        direction={"row"}
-                        columnGap={1}
-                        sx={{
-                          width: "100%",
-                        }}
-                      >
-                        <InputBase
-                          sx={tableOptionsStyle}
-                          endAdornment={
-                            <IconButton
-                              size={"small"}
-                              color={"error"}
-                              onClick={() => {
-                                let temp = colors;
-                                delete temp[color];
-                                setColors(temp);
-                              }}
-                            >
-                              <MdDeleteForever />
-                            </IconButton>
-                          }
-                          defaultValue={colors[color].name}
-                          onChange={(e) => {
-                            setColors({
-                              ...colors,
-                              [color]: {
-                                name: e.target.value,
-                                value: colors[color].value,
-                              },
-                            });
-                          }}
-                          fullWidth
-                        />
-                        <InputBase
-                          sx={tableOptionsStyle}
-                          defaultValue={colors[color].value}
-                          onChange={(e) =>
-                            setColors({
-                              ...colors,
-                              [color]: {
-                                name: colors[color].name,
-                                value: parseInt(e.target.value),
-                              },
-                            })
-                          }
-                        />
-                      </Stack>
-                    )
-                )
-              ) : (
-                <ShowError
-                  err={{
-                    message: "No Color Added!",
-                  }}
-                />
-              )}
-              <Stack
-                direction={"row"}
-                columnGap={1}
-                sx={{
-                  width: "100%",
-                }}
-              >
-                <InputBase
-                  sx={tableOptionsStyle}
-                  placeholder={"Color Name"}
-                  value={tempColor.name}
-                  onChange={(e) => {
-                    setTempColor({
-                      name: e.target.value,
-                      value: tempColor.value,
-                    });
-                  }}
-                  endAdornment={
-                    tempColor.name ? (
-                      <IconButton
-                        size={"small"}
-                        color={"success"}
-                        onClick={() => {
-                          setColors({
-                            ...colors,
-                            [Date.now()]: {
-                              name: tempColor.name,
-                              value: tempColor.value,
-                            },
-                          });
-                          setTempColor({
-                            name: "",
-                            value: 0,
-                          });
-                        }}
-                      >
-                        <MdOutlineCheck />
-                      </IconButton>
-                    ) : (
-                      <></>
-                    )
-                  }
-                  fullWidth
-                />
-                <InputBase
-                  sx={tableOptionsStyle}
-                  placeholder={"Quantity"}
-                  value={tempColor.value}
-                  onChange={(e) =>
-                    setTempColor({
-                      name: tempColor.name,
-                      value: e.target.value,
-                    })
-                  }
-                />
-              </Stack>
-            </ListItem>
-            <ListItem
+            {/* <ListItem
               sx={{
                 display: "flex",
                 flexDirection: "row",
@@ -551,8 +378,8 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
                 defaultChecked={!!getValues("is_featured")}
               />{" "}
               Product is Featured
-            </ListItem>
-            <ListItem
+            </ListItem> */}
+            {/* <ListItem
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -575,40 +402,7 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
                 fullWidth
               />
               <ShowError err={errors.keyword} />
-            </ListItem>
-            <ListItem
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                rowGap: 1,
-              }}
-            >
-              Product Gallery
-              <Stack
-                direction={"row"}
-                rowGap={1}
-                columnGap={1}
-                flexWrap={"wrap"}
-              >
-                <DropZone
-                  maxSize={10242880}
-                  onChange={async (data) => {
-                    setMultiimgs([...multiimgs, data]);
-                  }}
-                />
-                {multiimgs?.map((imgs, index) => (
-                  <React.Fragment key={index}>
-                    <DropZone
-                      defaultValue={imgs}
-                      onDelete={async (data) => {
-                        setMultiimgs(multiimgs.filter((item) => item !== data));
-                      }}
-                    />
-                  </React.Fragment>
-                ))}
-              </Stack>
-            </ListItem>
+            </ListItem> */}
             <ListItem
               sx={{
                 display: "flex",

@@ -54,7 +54,6 @@ const LeftDrawer = ({ open, setOpen }) => {
       name: "Product",
       icon: <MdOutlineDashboardCustomize />,
       to: "/product-list",
-      disabled: true,
     },
     {
       name: "Images",

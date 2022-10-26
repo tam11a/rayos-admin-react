@@ -22,16 +22,16 @@ export const useCreateCategory = () => {
   });
 };
 
-const getSubCategoryFromCatID = (category_id) => {
+const getSubCategoryFromCatID = (category_id, params) => {
   return instance.get(
-    `subcategory/get-subcategory-info-by-category/${category_id}`
+    `category/${category_id}/subcategories?limit=${params.limit}&page=${params.page}`
   );
 };
 
-export const useGetSubCategoryFromCatID = (category_id) => {
+export const useGetSubCategoryFromCatID = (category_id, params) => {
   return useQuery(
-    ["get-sub-category-cat", category_id],
-    () => getSubCategoryFromCatID(category_id),
+    ["get-sub-category-cat", category_id, params],
+    () => getSubCategoryFromCatID(category_id, params),
     {
       // refetchInterval: 20000,
       enabled: !!category_id,
