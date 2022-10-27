@@ -11,13 +11,13 @@ import Order from "../pages/Order";
 import Customer from "../pages/Customer";
 import Product from "../pages/Product";
 import Category from "../pages/Category";
+import CategoryUpdate from "../pages/CategoryUpdate";
 import User from "../pages/User";
 import UserOrder from "../pages/User/UserOrder";
 import Wallet from "../pages/User/Wallet";
 
 const AppRoute = () => {
   const authCntxt = React.useContext(authContext);
-
 
   return (
     <>
@@ -38,6 +38,7 @@ const AppRoute = () => {
               <Route path="create-order" element={<>Create Order</>} />
               <Route path="create-bim-order" element={<>Create BIM Order</>} />
               <Route path="category" element={<Category />} />
+              <Route path="cat/:cid" element={<CategoryUpdate />} />
             </Routes>
           </Container>
         </>
