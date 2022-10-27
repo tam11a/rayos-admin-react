@@ -16,11 +16,12 @@ const DropZone = ({
   const snack = React.useContext(snackContext);
   const [files, setFiles] = useState([]);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: extension || "image/*",
-    maxFiles: 1,
+    accept: extension || [],
+    // maxFiles: 1,
     minSize: 0,
     maxSize: maxSize || 5242880,
-    multiple: false,
+    multiple: true,
+    // onError:
     onDropAccepted: (acceptedFiles) => {
       setFiles(
         acceptedFiles.map((file) =>
@@ -31,9 +32,7 @@ const DropZone = ({
       );
     },
     onDropRejected: (rejectedFiles) => {
-      snack.setSaverity("error");
-      snack.setMessage(rejectedFiles[0].errors[0].message);
-      snack.handleClick();
+      snack.createSnack(rejectedFiles[0].errors[0].message, "error");
     },
   });
 
@@ -50,7 +49,7 @@ const DropZone = ({
       !(defaultValue && files[0].preview === defaultValue.preview)
     ) {
       if (typeof onChange === "function") {
-        resOnChange(files[0]);
+        resOnChange(files);
       }
     }
   }, [files]);
@@ -70,7 +69,7 @@ const DropZone = ({
         height: "125px",
         width: "125px",
         border: "2px dashed",
-        borderColor: "#bbb",
+        borderColor: "#00000022",
         rowGap: 0.5,
         ...others.sx,
       }}

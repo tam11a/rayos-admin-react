@@ -56,15 +56,15 @@ const LeftDrawer = ({ open, setOpen }) => {
       to: "/product-list",
     },
     {
-      name: "Images",
-      icon: <RiImageLine />,
-      to: "/images",
-      disabled: true,
-    },
-    {
       name: "Category",
       icon: <FaRegListAlt />,
       to: "/category",
+    },
+    {
+      name: "Images",
+      icon: <RiImageLine />,
+      to: "/images",
+      // disabled: true,
     },
   ];
 

@@ -12,6 +12,7 @@ import Customer from "../pages/Customer";
 import Product from "../pages/Product";
 import Category from "../pages/Category";
 import User from "../pages/User";
+import Images from "../pages/Images";
 import UserOrder from "../pages/User/UserOrder";
 import Wallet from "../pages/User/Wallet";
 
@@ -33,7 +34,7 @@ const AppRoute = () => {
               <Route path="product-list" element={<Product />} />
               <Route path="user/:uid" element={<Navigate to={"profile"} />} />
               <Route path="user/:uid/:path_url" element={<User />} />
-              <Route path="images" element={<>Images</>} />
+              <Route path="images" element={<Images />} />
               <Route path="settings" element={<>Settings</>} />
               <Route path="create-order" element={<>Create Order</>} />
               <Route path="create-bim-order" element={<>Create BIM Order</>} />
