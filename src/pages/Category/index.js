@@ -22,6 +22,7 @@ import tableOptionsStyle from "../../style/tableOptions";
 import { MdAdd } from "react-icons/md";
 import CreateDrawer from "./CreateDrawer";
 import { FaSlackHash } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   const [params, setParams] = React.useState({
@@ -41,9 +42,14 @@ const Index = () => {
       align: "center",
       width: 50,
       sortable: false,
-      renderCell: () => (
+      renderCell: (params) => (
         <>
-          <IconButton size={"small"} color={"primary"}>
+          <IconButton
+            component={Link}
+            size={"small"}
+            color={"primary"}
+            to={`/cat/${params.row?._id}`}
+          >
             <FaSlackHash />
           </IconButton>
         </>
