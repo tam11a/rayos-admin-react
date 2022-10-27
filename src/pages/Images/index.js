@@ -1,6 +1,6 @@
 import { Container, Typography } from "@mui/material";
 import React from "react";
-import CPaper from "../../components/CPaper";
+import Cpaper from "../../components/Cpaper";
 import DropZone from "../../components/DropZone";
 import snackContext from "../../context/snackProvider";
 import {
@@ -57,7 +57,7 @@ const Index = () => {
         <Typography variant={"h5"} fontWeight={"600"}>
           News Feed
         </Typography>
-        <CPaper
+        <Cpaper
           sx={{
             my: 1,
             display: "flex",
@@ -81,7 +81,7 @@ const Index = () => {
             </React.Fragment>
           ))}
           <DropZone onChange={(data) => postImage(data)} />
-        </CPaper>
+        </Cpaper>
       </Container>
     </>
   );
