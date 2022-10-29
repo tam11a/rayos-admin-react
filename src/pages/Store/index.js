@@ -1,11 +1,13 @@
 import {
   Avatar,
   Button,
+  Chip,
   Container,
   Grid,
   IconButton,
   InputBase,
   Paper,
+  Typography,
 } from "@mui/material";
 import DataTable from "../../components/DataTable";
 import React from "react";
@@ -16,6 +18,7 @@ import { FaSlackHash } from "react-icons/fa";
 import { getAttachment } from "../../service/instance";
 import ButtonSwitch from "../../components/ButtonSwitch";
 import CreateStoreDrawer from "./CreateStoreDrawer";
+import moment from "moment/moment";
 
 const Index = () => {
   const [open, setOpen] = React.useState(false);
@@ -50,17 +53,17 @@ const Index = () => {
         </>
       ),
     },
-    {
-      headerName: "Image",
-      headerAlign: "center",
-      field: "receiver_number",
-      align: "center",
-      width: 80,
-      sortable: false,
-      renderCell: (params) => (
-        <Avatar src={getAttachment(params.row.image)} variant="square" />
-      ),
-    },
+    // {
+    //   headerName: "Image",
+    //   headerAlign: "center",
+    //   field: "receiver_number",
+    //   align: "center",
+    //   width: 80,
+    //   sortable: false,
+    //   renderCell: (params) => (
+    //     <Avatar src={getAttachment(params.row.image)} variant="square" />
+    //   ),
+    // },
     {
       headerName: "Store Name",
       headerAlign: "center",
@@ -72,11 +75,24 @@ const Index = () => {
     {
       headerName: "Owner",
       headerAlign: "center",
-      field: "ownerModel",
+      field: "owner",
       type: "date",
       align: "center",
       width: 120,
+      renderCell: (params) => (
+        <Chip
+          avatar={
+            <Avatar
+              alt={params.row.owner.userName}
+              src={getAttachment(params.row.owner.image)}
+            />
+          }
+          label={params.row.owner.userName}
+          variant="outlined"
+        />
+      ),
     },
+
     {
       headerName: "Total Products",
       headerAlign: "center",
@@ -92,6 +108,11 @@ const Index = () => {
       type: "date",
       align: "center",
       width: 250,
+      renderCell: (params) => (
+        <Typography>
+          {moment(params.row.createdAt).format("MMMM Do YYYY, h:mm")}
+        </Typography>
+      ),
     },
     {
       headerName: "Status",

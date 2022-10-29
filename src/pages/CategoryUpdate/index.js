@@ -126,7 +126,7 @@ const Index = () => {
           }}
         >
           <Grid item xs={12} sm={5.9} md={7.9}>
-            <Typography variant={"body1"} sx={{ fontWeight: "500" }}>
+            <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
               Information
             </Typography>
             <CPaper>
@@ -184,7 +184,7 @@ const Index = () => {
             </CPaper>
           </Grid>
           <Grid item xs={12} sm={5.9} md={3.9}>
-            <Typography variant={"body1"} sx={{ fontWeight: "500" }}>
+            <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
               Image
             </Typography>
             <CPaper>
@@ -192,7 +192,7 @@ const Index = () => {
             </CPaper>
           </Grid>
         </Grid>
-        <Typography variant={"h5"} sx={{ fontWeight: "500", mt: 2 }}>
+        <Typography variant={"h6"} sx={{ fontWeight: "500", mt: 2 }}>
           Subcategory
         </Typography>
         <Typography sx={{ fontWeight: "500" }} variant={"subtitle2"}>

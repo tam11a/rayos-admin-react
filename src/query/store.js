@@ -10,3 +10,14 @@ export const useGetAllStore = (params) => {
     // refetchInterval: 20000,
   });
 };
+
+const createStore = (data) => {
+  return instance.post("store", data);
+};
+
+export const useCreateStore = () => {
+  const queryClient = useQueryClient();
+  return useMutation(createStore, {
+    onSuccess: () => queryClient.invalidateQueries("get-all-store"),
+  });
+};

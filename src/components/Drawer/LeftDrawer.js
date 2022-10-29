@@ -165,15 +165,19 @@ const LeftDrawer = ({ open, setOpen }) => {
             >
               <Avatar
                 src={PIlogo}
-                alt={"PND"}
+                alt={"Rayos"}
                 sx={{
                   borderRadius: 0,
-                  width: "50px",
-                  height: "50px",
+                  width: "30px",
+                  height: "30px",
                 }}
               />
             </ListItemIcon>
-            <IconButton color={"primary"} onClick={() => setOpen(false)}>
+            <IconButton
+              size={"small"}
+              color={"primary"}
+              onClick={() => setOpen(false)}
+            >
               <BiMenuAltRight />
             </IconButton>
           </ListItem>
