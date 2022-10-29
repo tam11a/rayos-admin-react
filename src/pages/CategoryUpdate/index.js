@@ -17,7 +17,7 @@ import { BiArrowBack } from "react-icons/bi";
 import CFab from "../../components/CFab";
 import { fontWeight } from "@mui/system";
 import BackButton from "../../components/BackButton";
-import CPaper from "../../components/Cpaper";
+import CPaper from "../../components/CPaper";
 import CatInput from "./CatInput";
 import DropZone from "../../components/DropZone";
 import DataTable from "../../components/DataTable";
