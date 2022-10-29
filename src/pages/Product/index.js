@@ -29,6 +29,7 @@ import StateViewer from "../../components/StateViewer";
 import UpdateProductDrawer from "./UpdateProductDrawer";
 import CreateProductDrawer from "./CreateProductDrawer";
 import { FaSlackHash } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   const [open, setOpen] = React.useState(false);
@@ -47,14 +48,19 @@ const Index = () => {
 
   const cols = [
     {
-      headerName: "#",
+      headerName: "",
       field: "id",
       width: 60,
       headerAlign: "center",
       align: "center",
-      renderCell: () => (
+      renderCell: (params) => (
         <>
-          <IconButton size={"small"} color={"primary"}>
+          <IconButton
+            component={Link}
+            size={"small"}
+            color={"primary"}
+            to={`/prod/${params.row?._id}`}
+          >
             <FaSlackHash />
           </IconButton>
         </>

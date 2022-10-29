@@ -29,6 +29,7 @@ import { getAttachment } from "../../service/instance";
 import ButtonSwitch from "../../components/ButtonSwitch";
 import tableOptionsStyle from "../../style/tableOptions";
 import { MdAdd } from "react-icons/md";
+import InputBox from "../../components/InputBox";
 
 const Index = () => {
   const snack = React.useContext(snackContext);
@@ -130,7 +131,7 @@ const Index = () => {
             </Typography>
             <CPaper>
               <Typography>Name (English)</Typography>
-              <CatInput
+              <InputBox
                 fullWidth
                 placeholder="Enter Category Name (English)"
                 {...register("titleEn", {
@@ -138,7 +139,7 @@ const Index = () => {
                 })}
               />
               <Typography>Name (Bengali)</Typography>
-              <CatInput
+              <InputBox
                 fullWidth
                 placeholder="Enter Category Name (Bengali)"
                 {...register("titleBn", {
@@ -146,7 +147,7 @@ const Index = () => {
                 })}
               />
               <Typography>Description (English)</Typography>
-              <CatInput
+              <InputBox
                 fullWidth
                 placeholder="Enter Description (English)"
                 {...register("descriptionEn", {
@@ -157,7 +158,7 @@ const Index = () => {
                 maxRows={6}
               />
               <Typography>Description (Bengali)</Typography>
-              <CatInput
+              <InputBox
                 fullWidth
                 placeholder="Enter Description (Bengali)"
                 {...register("descriptionBn", {
