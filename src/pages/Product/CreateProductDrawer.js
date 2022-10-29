@@ -41,10 +41,10 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
 
   const {
     register,
-    getValues,
     setValue,
     reset,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm();
 
@@ -306,7 +306,7 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
               <Select
                 sx={tableOptionsStyle}
                 placeholder={"Select Sub Category"}
-                value={getValues("variantType") || "null"}
+                value={watch("variantType") || "null"}
                 onChange={(e) => {
                   setValue(
                     "variantType",

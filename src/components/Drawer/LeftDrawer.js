@@ -20,7 +20,7 @@ import { RiImageLine } from "react-icons/ri";
 import { GiCog } from "react-icons/gi";
 import { CgBox } from "react-icons/cg";
 import { HiOutlineLogout } from "react-icons/hi";
-import { BiMenuAltRight } from "react-icons/bi";
+import { BiMenuAltRight, BiStore } from "react-icons/bi";
 import { IoIosPeople } from "react-icons/io";
 import { FaRegListAlt } from "react-icons/fa";
 
@@ -43,6 +43,12 @@ const LeftDrawer = ({ open, setOpen }) => {
       icon: <CgBox />,
       to: "/order-list",
       disabled: true,
+    },
+    {
+      name: "Store",
+      icon: <BiStore />,
+      to: "/store",
+      disabled: false,
     },
     {
       name: "Customer",
@@ -159,15 +165,19 @@ const LeftDrawer = ({ open, setOpen }) => {
             >
               <Avatar
                 src={PIlogo}
-                alt={"PND"}
+                alt={"Rayos"}
                 sx={{
                   borderRadius: 0,
-                  width: "50px",
-                  height: "50px",
+                  width: "30px",
+                  height: "30px",
                 }}
               />
             </ListItemIcon>
-            <IconButton color={"primary"} onClick={() => setOpen(false)}>
+            <IconButton
+              size={"small"}
+              color={"primary"}
+              onClick={() => setOpen(false)}
+            >
               <BiMenuAltRight />
             </IconButton>
           </ListItem>

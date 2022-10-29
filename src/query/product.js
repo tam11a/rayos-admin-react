@@ -18,7 +18,7 @@ export const useGetAllProduct = (params) => {
 const createProduct = (data) => {
   return instance.post(`product`, {
     ...data,
-    store: "634dec83a563b7ff4b848711",
+    // store: "634dec83a563b7ff4b848711",
   });
 };
 

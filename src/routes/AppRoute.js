@@ -8,8 +8,10 @@ import { authContext } from "../context/AuthProvider";
 
 // pages
 import Order from "../pages/Order";
+import Store from "../pages/Store";
 import Customer from "../pages/Customer";
 import Product from "../pages/Product";
+import ProductUpdate from "../pages/ProductUpdate";
 import Category from "../pages/Category";
 import CategoryUpdate from "../pages/CategoryUpdate";
 import User from "../pages/User";
@@ -30,8 +32,12 @@ const AppRoute = () => {
               <Route index element={<Dashboard />} />
               {/* <Route path="/login" element={<>Order Lists</>} /> */}
               <Route path="order-list" element={<Order />} />
+              <Route path="store" element={<Store />} />
+
               <Route path="customer-list" element={<Customer />} />
               <Route path="product-list" element={<Product />} />
+              <Route path="prod/:pid" element={<ProductUpdate />} />
+
               <Route path="user/:uid" element={<Navigate to={"profile"} />} />
               <Route path="user/:uid/:path_url" element={<User />} />
               <Route path="images" element={<Images />} />

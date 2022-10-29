@@ -29,6 +29,7 @@ import { getAttachment } from "../../service/instance";
 import ButtonSwitch from "../../components/ButtonSwitch";
 import tableOptionsStyle from "../../style/tableOptions";
 import { MdAdd } from "react-icons/md";
+import InputBox from "../../components/InputBox";
 
 const Index = () => {
   const snack = React.useContext(snackContext);
@@ -125,12 +126,12 @@ const Index = () => {
           }}
         >
           <Grid item xs={12} sm={5.9} md={7.9}>
-            <Typography variant={"body1"} sx={{ fontWeight: "500" }}>
+            <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
               Information
             </Typography>
             <CPaper>
               <Typography>Name (English)</Typography>
-              <CatInput
+              <InputBox
                 fullWidth
                 placeholder="Enter Category Name (English)"
                 {...register("titleEn", {
@@ -138,7 +139,7 @@ const Index = () => {
                 })}
               />
               <Typography>Name (Bengali)</Typography>
-              <CatInput
+              <InputBox
                 fullWidth
                 placeholder="Enter Category Name (Bengali)"
                 {...register("titleBn", {
@@ -146,7 +147,7 @@ const Index = () => {
                 })}
               />
               <Typography>Description (English)</Typography>
-              <CatInput
+              <InputBox
                 fullWidth
                 placeholder="Enter Description (English)"
                 {...register("descriptionEn", {
@@ -157,7 +158,7 @@ const Index = () => {
                 maxRows={6}
               />
               <Typography>Description (Bengali)</Typography>
-              <CatInput
+              <InputBox
                 fullWidth
                 placeholder="Enter Description (Bengali)"
                 {...register("descriptionBn", {
@@ -183,7 +184,7 @@ const Index = () => {
             </CPaper>
           </Grid>
           <Grid item xs={12} sm={5.9} md={3.9}>
-            <Typography variant={"body1"} sx={{ fontWeight: "500" }}>
+            <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
               Image
             </Typography>
             <CPaper>
@@ -191,7 +192,7 @@ const Index = () => {
             </CPaper>
           </Grid>
         </Grid>
-        <Typography variant={"h5"} sx={{ fontWeight: "500", mt: 2 }}>
+        <Typography variant={"h6"} sx={{ fontWeight: "500", mt: 2 }}>
           Subcategory
         </Typography>
         <Typography sx={{ fontWeight: "500" }} variant={"subtitle2"}>

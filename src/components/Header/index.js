@@ -13,23 +13,15 @@ import {
   ListItemAvatar,
   ListItemButton,
   ListItemText,
-  ListSubheader,
   Stack,
   Toolbar,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
 
-import BIicon from "../../assets/bim-order.svg";
-import PNDicon from "../../assets/pnd-logo.svg";
-
 import { BiMenuAltLeft, BiMenuAltRight } from "react-icons/bi";
 import { FiUser } from "react-icons/fi";
-import {
-  MdClose,
-  MdNotificationsNone,
-  MdOutlineAddShoppingCart,
-} from "react-icons/md";
+import { MdClose, MdNotificationsNone } from "react-icons/md";
 import LeftDrawer from "../Drawer/LeftDrawer";
 import { authContext } from "../../context/AuthProvider";
 import { Route, Routes } from "react-router-dom";
@@ -70,11 +62,14 @@ const Index = () => {
                   <Routes path={"/"}>
                     <Route index element={"Dashboard"} />
                     <Route path={"order-list"} element={"Order List"} />
+                    <Route path={"store"} element={"Store List"} />
                     <Route path={"customer-list"} element={"Customer List"} />
                     <Route path={"product-list"} element={"Product List"} />
+                    <Route path={"prod/:pid"} element={"Product"} />
                     <Route path={"images"} element={"Images"} />
                     <Route path={"settings"} element={"Settings"} />
-                    <Route path={"category"} element={"Category"} />
+                    <Route path={"category"} element={"Category List"} />
+                    <Route path={"cat/:cid"} element={"Category"} />
                     <Route
                       path={"user/:uid/profile"}
                       element={"User Profile"}
