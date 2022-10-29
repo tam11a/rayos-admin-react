@@ -2,13 +2,17 @@ import {
   Button,
   Container,
   Grid,
+  IconButton,
+  InputBase,
   ListItem,
   MenuItem,
   Select,
   Typography,
 } from "@mui/material";
+import { Stack } from "@mui/system";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { MdDeleteForever } from "react-icons/md";
 import { useParams } from "react-router-dom";
 import BackButton from "../../components/BackButton";
 import CPaper from "../../components/CPaper";
@@ -21,6 +25,7 @@ import {
   useGetSubCategoryFromCatID,
 } from "../../query/category";
 import tableOptionsStyle from "../../style/tableOptions";
+import VariantInput from "./VariantInput";
 
 const Index = () => {
   const snack = React.useContext(snackContext);
@@ -78,7 +83,7 @@ const Index = () => {
             mt: 2,
           }}
         >
-          <Grid item xs={12} sm={5.9} md={7.9}>
+          <Grid item xs={12} sm={5.9} md={6.9}>
             <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
               Information
             </Typography>
@@ -123,29 +128,21 @@ const Index = () => {
               />
             </CPaper>
 
-            <Typography variant={"h6"} sx={{ fontWeight: "500", mt: 1 }}>
-              Pricing
-            </Typography>
-            <CPaper>
-              <Typography>BuyPrice</Typography>
-              <InputBox
-                fullWidth
-                placeholder="Enter Buy Price"
-                {...register("titleEn", {
-                  required: true,
-                })}
-              />
-              <Typography>Sell Price</Typography>
-              <InputBox
-                fullWidth
-                placeholder="Enter Sell Price"
-                {...register("titleEn", {
-                  required: true,
-                })}
-              />
-            </CPaper>
+            <Button
+              variant={"contained"}
+              color={"primary"}
+              size={"large"}
+              sx={{
+                height: "52px",
+                mt: 1,
+              }}
+              // onClick={() => setOpenCreate(!openCreate)}
+              fullWidth
+            >
+              Update Product
+            </Button>
           </Grid>
-          <Grid item xs={12} sm={5.9} md={3.9}>
+          <Grid item xs={12} sm={5.9} md={4.9}>
             <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
               Image
             </Typography>
@@ -231,6 +228,29 @@ const Index = () => {
                 </Select>
                 <ShowError err={errors.subcategory} />
               </ListItem>
+
+              <Typography>BuyPrice</Typography>
+              <InputBox
+                fullWidth
+                placeholder="Enter Buy Price"
+                {...register("titleEn", {
+                  required: true,
+                })}
+              />
+              <Typography>Sell Price</Typography>
+              <InputBox
+                fullWidth
+                placeholder="Enter Sell Price"
+                {...register("titleEn", {
+                  required: true,
+                })}
+              />
+            </CPaper>
+
+            <Typography variant={"h6"} sx={{ fontWeight: "500", mt: 1 }}>
+              Variants
+            </Typography>
+            <CPaper>
               <ListItem
                 sx={{
                   display: "flex",
@@ -262,20 +282,8 @@ const Index = () => {
                 </Select>
                 <ShowError err={errors.variantType} />
               </ListItem>
+              <VariantInput />
             </CPaper>
-            <Button
-              variant={"contained"}
-              color={"primary"}
-              size={"large"}
-              sx={{
-                height: "52px",
-                mt: 1,
-              }}
-              // onClick={() => setOpenCreate(!openCreate)}
-              fullWidth
-            >
-              Update Product
-            </Button>
           </Grid>
         </Grid>
       </Container>
