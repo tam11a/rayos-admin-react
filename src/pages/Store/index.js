@@ -19,6 +19,7 @@ import { getAttachment } from "../../service/instance";
 import ButtonSwitch from "../../components/ButtonSwitch";
 import CreateStoreDrawer from "./CreateStoreDrawer";
 import moment from "moment/moment";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   const [open, setOpen] = React.useState(false);
@@ -43,10 +44,10 @@ const Index = () => {
       renderCell: (params) => (
         <>
           <IconButton
-            // component={Link}
+            component={Link}
             size={"small"}
             color={"primary"}
-            // to={`/prod/${params.row?._id}`}
+            to={`/store/${params.row?._id}`}
           >
             <FaSlackHash />
           </IconButton>
@@ -91,6 +92,13 @@ const Index = () => {
           variant="outlined"
         />
       ),
+    },
+    {
+      headerName: "Store Address",
+      headerAlign: "center",
+      field: "address",
+      align: "center",
+      width: 200,
     },
 
     {

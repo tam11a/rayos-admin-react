@@ -4,6 +4,7 @@ import { MdDeleteForever } from "react-icons/md";
 import tableOptionsStyle from "../../style/tableOptions";
 
 const VariantInput = () => {
+  const [tempVariant, setTempVariant] = React.useState();
   return (
     <div>
       {/* <ListItem
