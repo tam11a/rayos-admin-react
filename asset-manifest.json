@@ -1,16 +1,15 @@
 {
   "files": {
-    "main.js": "/static/js/main.63c26165.js",
+    "main.js": "/static/js/main.64e87122.js",
     "static/js/787.5b12448e.chunk.js": "/static/js/787.5b12448e.chunk.js",
     "static/media/pnd-logo.png": "/static/media/pnd-logo.636dadf529e28f8594ef.png",
-    "static/media/bim-order.svg": "/static/media/bim-order.ff5e02ee5c58d2bac6e240c030cdb783.svg",
     "static/media/pnd-logo.svg": "/static/media/pnd-logo.e114b70d9fe8be56a7e5cadd2a26e979.svg",
     "index.html": "/index.html",
     "static/media/ImageUploadIconPreview.svg": "/static/media/ImageUploadIconPreview.ef03b177a4b3ff4e67d793aff4f62a46.svg",
-    "main.63c26165.js.map": "/static/js/main.63c26165.js.map",
+    "main.64e87122.js.map": "/static/js/main.64e87122.js.map",
     "787.5b12448e.chunk.js.map": "/static/js/787.5b12448e.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/main.63c26165.js"
+    "static/js/main.64e87122.js"
   ]
 }
