@@ -9,7 +9,7 @@ import { authContext } from "../context/AuthProvider";
 // pages
 import Order from "../pages/Order";
 import Store from "../pages/Store";
-import StoreUpdate from "../pages/StoreUpdates";
+import StoreUpdate from "../pages/StoreUpdate";
 import Customer from "../pages/Customer";
 import Product from "../pages/Product";
 import ProductUpdate from "../pages/ProductUpdate";
