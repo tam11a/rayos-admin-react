@@ -9,6 +9,7 @@ import { authContext } from "../context/AuthProvider";
 // pages
 import Order from "../pages/Order";
 import Store from "../pages/Store";
+import StoreUpdate from "../pages/StoreUpdate";
 import Customer from "../pages/Customer";
 import Product from "../pages/Product";
 import ProductUpdate from "../pages/ProductUpdate";
@@ -33,6 +34,7 @@ const AppRoute = () => {
               {/* <Route path="/login" element={<>Order Lists</>} /> */}
               <Route path="order-list" element={<Order />} />
               <Route path="store" element={<Store />} />
+              <Route path="store/:sid" element={<StoreUpdate />} />
 
               <Route path="customer-list" element={<Customer />} />
               <Route path="product-list" element={<Product />} />

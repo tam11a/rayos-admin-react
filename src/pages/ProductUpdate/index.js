@@ -127,29 +127,14 @@ const Index = () => {
                 maxRows={6}
               />
             </CPaper>
-
-            <Button
-              variant={"contained"}
-              color={"primary"}
-              size={"large"}
-              sx={{
-                height: "52px",
-                mt: 1,
-              }}
-              // onClick={() => setOpenCreate(!openCreate)}
-              fullWidth
-            >
-              Update Product
-            </Button>
-          </Grid>
-          <Grid item xs={12} sm={5.9} md={4.9}>
             <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
               Image
             </Typography>
             <CPaper>
               <DropZone />
             </CPaper>
-
+          </Grid>
+          <Grid item xs={12} sm={5.9} md={4.9}>
             <Typography variant={"h6"} sx={{ fontWeight: "500", mt: 1 }}>
               Additional Information
             </Typography>
@@ -246,7 +231,6 @@ const Index = () => {
                 })}
               />
             </CPaper>
-
             <Typography variant={"h6"} sx={{ fontWeight: "500", mt: 1 }}>
               Variants
             </Typography>
@@ -284,6 +268,19 @@ const Index = () => {
               </ListItem>
               <VariantInput />
             </CPaper>
+            <Button
+              variant={"contained"}
+              color={"primary"}
+              size={"large"}
+              sx={{
+                height: "52px",
+                mt: 1,
+              }}
+              // onClick={() => setOpenCreate(!openCreate)}
+              fullWidth
+            >
+              Update Product
+            </Button>
           </Grid>
         </Grid>
       </Container>

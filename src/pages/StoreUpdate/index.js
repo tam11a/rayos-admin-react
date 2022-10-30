@@ -1,5 +1,6 @@
-import React from "react";
 import {
+  Avatar,
+  Button,
   Chip,
   Container,
   Grid,
@@ -8,43 +9,58 @@ import {
   MenuItem,
   Paper,
   Select,
-  Button,
-  Avatar,
-  Stack,
   Typography,
 } from "@mui/material";
-import DataTable from "../../components/DataTable";
-import { useGetAllProduct } from "../../query/product";
-import { useGetAllCategory } from "../../query/category";
-import ButtonSwitch from "../../components/ButtonSwitch";
-import moment from "moment";
-import tableOptionsStyle from "../../style/tableOptions";
-
-import { MdAdd } from "react-icons/md";
-import { IoMdEye } from "react-icons/io";
-import { FiEdit2 } from "react-icons/fi";
-import { getAttachment, rootURL } from "../../service/instance";
-
-import StateViewer from "../../components/StateViewer";
-import UpdateProductDrawer from "./UpdateProductDrawer";
-import CreateProductDrawer from "./CreateProductDrawer";
+import React from "react";
+import { useForm } from "react-hook-form";
 import { FaSlackHash } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { useGetStoreByID } from "../../query/store";
+import { Link, useParams } from "react-router-dom";
+import BackButton from "../../components/BackButton";
+import ButtonSwitch from "../../components/ButtonSwitch";
+import CPaper from "../../components/CPaper";
+import InputBox from "../../components/InputBox";
+import snackContext from "../../context/snackProvider";
+import { useGetProductsByStoreID } from "../../query/store";
+import DataTable from "../../components/DataTable";
+import { getAttachment } from "../../service/instance";
+import { IoMdEye } from "react-icons/io";
+import { useGetAllCategory } from "../../query/category";
+import DropZone from "../../components/DropZone";
+import tableOptionsStyle from "../../style/tableOptions";
+import { MdAdd } from "react-icons/md";
+import CreateProductDrawer from "../Product/CreateProductDrawer";
+import { useGetAllProduct } from "../../query/product";
 
 const Index = () => {
-  const [open, setOpen] = React.useState(false);
-  const onClose = () => setOpen(!open);
+  const snack = React.useContext(snackContext);
+  const { sid } = useParams();
+
+  const {
+    register,
+    getValues,
+    setValue,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
   const [selectedCategory, setSelectedCategory] = React.useState("null");
-  const [storeId, setStoreId] = React.useState();
+  const [open, setOpen] = React.useState(false);
   const [params, setParams] = React.useState({
-    limit: 10,
+    limit: 100,
     page: 1,
     filters: [],
   });
 
+  const {
+    data: prodData,
+    isLoading: isProdDataLoading,
+    // isError: isSubCatError,
+  } = useGetProductsByStoreID(sid, params);
   const { data: catData, isLoading: isCatLoading } = useGetAllCategory(params);
   const { data, isLoading } = useGetAllProduct(params);
+
+  const onClose = () => setOpen(!open);
 
   const cols = [
     {
@@ -65,13 +81,7 @@ const Index = () => {
           </IconButton>
         </>
       ),
-      // renderCell: (params) => (
-      //   <>
-      //     <UpdateProductDrawer info={params.row} drawerIcon={<IoMdEye />} />
-      //   </>
-      // ),
     },
-
     {
       headerName: "Image",
       headerAlign: "center",
@@ -89,7 +99,6 @@ const Index = () => {
       align: "center",
       width: 200,
     },
-
     {
       headerName: "Variants",
       headerAlign: "center",
@@ -155,12 +164,6 @@ const Index = () => {
         />
       ),
     },
-    // {
-    //   headerName: "Discount",
-    //   headerAlign: "center",
-    //   field: "discount",
-    //   align: "center",
-    // },
     {
       headerName: "Published",
       headerAlign: "center",
@@ -171,18 +174,6 @@ const Index = () => {
         <ButtonSwitch checked={params.row.isActive} color={"success"} />
       ),
     },
-    // {
-    //   headerName: "Action",
-    //   headerAlign: "center",
-    //   field: "actions",
-    //   align: "center",
-    //   width: 120,
-    //   renderCell: (params) => (
-    //     <>
-    //       <UpdateProductDrawer info={params.row} />
-    //     </>
-    //   ),
-    // },
   ];
 
   return (
@@ -192,22 +183,101 @@ const Index = () => {
           py: 2,
         }}
       >
-        <StateViewer
-          stateList={[
-            {
-              num: data?.data?.value?.total_product,
-              title: "Total",
-            },
-            {
-              num: data?.data?.value?.total_publish_product,
-              title: "Published",
-            },
-            {
-              num: data?.data?.value?.total_unpublish_product,
-              title: "Unpublished",
-            },
-          ]}
+        <BackButton
+          to={"/store"}
+          primary={"Back to Store List"}
+          secondary={"Update Store"}
         />
+        <Grid
+          container
+          rowGap={1}
+          columnGap={1}
+          sx={{
+            mt: 2,
+          }}
+        >
+          <Grid item xs={12} sm={5.9} md={7.9}>
+            <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
+              Information
+            </Typography>
+            <CPaper>
+              <Typography>Name (English)</Typography>
+              <InputBox
+                fullWidth
+                placeholder="Enter Store Name (English)"
+                {...register("titleEn", {
+                  required: true,
+                })}
+              />
+              <Typography>Name (Bengali)</Typography>
+              <InputBox
+                fullWidth
+                placeholder="Enter Store Name (Bengali)"
+                {...register("titleBn", {
+                  required: false,
+                })}
+              />
+              <Typography>Description (English)</Typography>
+              <InputBox
+                fullWidth
+                placeholder="Enter Description (English)"
+                {...register("descriptionEn", {
+                  required: true,
+                })}
+                multiline={true}
+                minRows={5}
+                maxRows={6}
+              />
+              <Typography>Description (Bengali)</Typography>
+              <InputBox
+                fullWidth
+                placeholder="Enter Description (Bengali)"
+                {...register("descriptionBn", {
+                  required: false,
+                })}
+                multiline={true}
+                minRows={5}
+                maxRows={6}
+              />
+              <Typography>Address </Typography>
+              <InputBox
+                fullWidth
+                placeholder="Enter Store Address"
+                {...register("titleBn", {
+                  required: false,
+                })}
+              />
+              <Button
+                variant={"contained"}
+                color={"primary"}
+                size={"large"}
+                sx={{
+                  height: "52px",
+                  mt: 1,
+                }}
+                // onClick={() => setOpenCreate(!openCreate)}
+                fullWidth
+              >
+                Update Store Info
+              </Button>
+            </CPaper>
+          </Grid>
+          <Grid item xs={12} sm={5.9} md={3.9}>
+            <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
+              Image
+            </Typography>
+            <CPaper>
+              <DropZone />
+            </CPaper>
+          </Grid>
+        </Grid>
+        <Typography variant={"h6"} sx={{ fontWeight: "500", mt: 2 }}>
+          Products Of The Store
+        </Typography>
+        <Typography sx={{ fontWeight: "500", mb: 2 }} variant={"subtitle2"}>
+          {prodData?.data?.total || 0} Products Found
+        </Typography>
+
         <Paper
           elevation={0}
           sx={{
@@ -286,10 +356,10 @@ const Index = () => {
 
         <DataTable
           columns={cols}
-          rows={data?.data?.data || []}
-          isLoading={isLoading}
+          rows={prodData?.data?.data || []}
+          //   isLoading={isLoading}
           paginationMode={"server"}
-          rowCount={data?.data?.total || 0}
+          rowCount={prodData?.data?.total || 0}
           page={(params?.page || 1) - 1}
           onPageChange={(newPage) =>
             setParams({
