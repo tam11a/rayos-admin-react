@@ -19,6 +19,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { FiEdit2 } from "react-icons/fi";
 import { MdClose, MdDeleteForever, MdOutlineCheck } from "react-icons/md";
+import { useParams } from "react-router-dom";
 import DropZone from "../../components/DropZone";
 import ShowError from "../../components/ShowError";
 import snackContext from "../../context/snackProvider";
@@ -38,7 +39,7 @@ import { responseHandler } from "../../utilities/response-handler";
 
 const CreateProductDrawer = ({ open, onClose, ...others }) => {
   const snack = React.useContext(snackContext);
-
+  const { sid } = useParams();
   const {
     register,
     setValue,
@@ -75,7 +76,10 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
   const { mutateAsync: mutateCreateProduct, isLoading } = useCreateProduct();
 
   const handleUpdate = async (data) => {
-    const res = await responseHandler(() => mutateCreateProduct(data), [201]);
+    const res = await responseHandler(
+      () => mutateCreateProduct({ ...data, store: sid }),
+      [201]
+    );
     console.log(res);
     if (res.status) {
       snack.createSnack(res.msg);

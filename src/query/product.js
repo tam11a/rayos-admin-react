@@ -18,14 +18,16 @@ export const useGetAllProduct = (params) => {
 const createProduct = (data) => {
   return instance.post(`product`, {
     ...data,
-    // store: "634dec83a563b7ff4b848711",
   });
 };
 
 export const useCreateProduct = () => {
   const queryClient = useQueryClient();
   return useMutation(createProduct, {
-    onSuccess: () => queryClient.invalidateQueries("get-all-product"),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["get-all-product"]);
+      queryClient.invalidateQueries(["get-products-by-store"]);
+    },
   });
 };
 

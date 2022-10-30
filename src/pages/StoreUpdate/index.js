@@ -5,6 +5,10 @@ import {
   Container,
   Grid,
   IconButton,
+  InputBase,
+  MenuItem,
+  Paper,
+  Select,
   Typography,
 } from "@mui/material";
 import React from "react";
@@ -22,6 +26,10 @@ import { getAttachment } from "../../service/instance";
 import { IoMdEye } from "react-icons/io";
 import { useGetAllCategory } from "../../query/category";
 import DropZone from "../../components/DropZone";
+import tableOptionsStyle from "../../style/tableOptions";
+import { MdAdd } from "react-icons/md";
+import CreateProductDrawer from "../Product/CreateProductDrawer";
+import { useGetAllProduct } from "../../query/product";
 
 const Index = () => {
   const snack = React.useContext(snackContext);
@@ -36,6 +44,8 @@ const Index = () => {
     formState: { errors },
   } = useForm();
 
+  const [selectedCategory, setSelectedCategory] = React.useState("null");
+  const [open, setOpen] = React.useState(false);
   const [params, setParams] = React.useState({
     limit: 100,
     page: 1,
@@ -47,9 +57,10 @@ const Index = () => {
     isLoading: isProdDataLoading,
     // isError: isSubCatError,
   } = useGetProductsByStoreID(sid, params);
-
   const { data: catData, isLoading: isCatLoading } = useGetAllCategory(params);
-  console.log(prodData);
+  const { data, isLoading } = useGetAllProduct(params);
+
+  const onClose = () => setOpen(!open);
 
   const cols = [
     {
@@ -70,13 +81,7 @@ const Index = () => {
           </IconButton>
         </>
       ),
-      // renderCell: (params) => (
-      //   <>
-      //     <UpdateProductDrawer info={params.row} drawerIcon={<IoMdEye />} />
-      //   </>
-      // ),
     },
-
     {
       headerName: "Image",
       headerAlign: "center",
@@ -94,7 +99,6 @@ const Index = () => {
       align: "center",
       width: 200,
     },
-
     {
       headerName: "Variants",
       headerAlign: "center",
@@ -160,12 +164,6 @@ const Index = () => {
         />
       ),
     },
-    // {
-    //   headerName: "Discount",
-    //   headerAlign: "center",
-    //   field: "discount",
-    //   align: "center",
-    // },
     {
       headerName: "Published",
       headerAlign: "center",
@@ -176,18 +174,6 @@ const Index = () => {
         <ButtonSwitch checked={params.row.isActive} color={"success"} />
       ),
     },
-    // {
-    //   headerName: "Action",
-    //   headerAlign: "center",
-    //   field: "actions",
-    //   align: "center",
-    //   width: 120,
-    //   renderCell: (params) => (
-    //     <>
-    //       <UpdateProductDrawer info={params.row} />
-    //     </>
-    //   ),
-    // },
   ];
 
   return (
@@ -256,13 +242,10 @@ const Index = () => {
               <Typography>Address </Typography>
               <InputBox
                 fullWidth
-                placeholder="Enter Address "
-                {...register("address", {
-                  required: true,
+                placeholder="Enter Store Address"
+                {...register("titleBn", {
+                  required: false,
                 })}
-                multiline={true}
-                minRows={5}
-                maxRows={6}
               />
               <Button
                 variant={"contained"}
@@ -294,6 +277,83 @@ const Index = () => {
         <Typography sx={{ fontWeight: "500", mb: 2 }} variant={"subtitle2"}>
           {prodData?.data?.total || 0} Products Found
         </Typography>
+
+        <Paper
+          elevation={0}
+          sx={{
+            p: 2,
+            border: "1px solid #ccc",
+            my: 2,
+          }}
+        >
+          <Grid
+            container
+            rowGap={1}
+            columnGap={1}
+            alignItems={"center"}
+            justifyContent={"space-between"}
+          >
+            <Grid item xs={12} md={5.7}>
+              <InputBase
+                placeholder="Search Product"
+                sx={tableOptionsStyle}
+                onChange={(e) => {
+                  setParams({
+                    ...params,
+                    filters: [`title_en~${e.target.value}`],
+                  });
+                }}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={5.9} md={3}>
+              <Select
+                sx={{
+                  ...tableOptionsStyle,
+                }}
+                value={selectedCategory}
+                onChange={(e) => {
+                  setSelectedCategory(e.target.value);
+                  setParams({
+                    ...params,
+                    filters: [`category_id=${e.target.value}`],
+                  });
+                }}
+                fullWidth
+              >
+                <MenuItem value={"null"} disabled>
+                  Select Category
+                </MenuItem>
+                {catData?.data?.value?.map((cat) => (
+                  <MenuItem
+                    key={cat.id}
+                    value={cat.id}
+                    disabled={cat.id === selectedCategory}
+                  >
+                    {cat.title_en}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+            <Grid item xs={12} sm={5.9} md={3}>
+              <Button
+                variant={"contained"}
+                color={"primary"}
+                size={"large"}
+                sx={{
+                  height: "52px",
+                }}
+                onClick={onClose}
+                startIcon={<MdAdd />}
+                fullWidth
+              >
+                Add Product
+              </Button>
+              <CreateProductDrawer open={open} onClose={onClose} />
+            </Grid>
+          </Grid>
+        </Paper>
+
         <DataTable
           columns={cols}
           rows={prodData?.data?.data || []}
