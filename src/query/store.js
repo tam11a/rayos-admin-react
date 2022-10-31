@@ -48,13 +48,27 @@ export const useGetStoreByID = (store_id) => {
   });
 };
 
-const updateStore = (data, store_id) => {
-  return instance.post(`store/${store_id}`, data);
+const updateStore = ({ store_id, data }) => {
+  return instance.patch(`store/${store_id}`, data);
 };
 
 export const useUpdateStore = () => {
   const queryClient = useQueryClient();
   return useMutation(updateStore, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("get-all-store");
+      queryClient.invalidateQueries("get-store-by-id");
+    },
+  });
+};
+
+const toggleStore = (id) => {
+  return instance.put(`store/${id}`);
+};
+
+export const useToggleStore = () => {
+  const queryClient = useQueryClient();
+  return useMutation(toggleStore, {
     onSuccess: () => queryClient.invalidateQueries("get-all-store"),
   });
 };

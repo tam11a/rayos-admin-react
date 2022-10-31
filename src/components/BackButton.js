@@ -1,14 +1,21 @@
 import { ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import React from "react";
 import { BiArrowBack } from "react-icons/bi";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CFab from "./CFab";
 
 const BackButton = ({ primary, secondary, to, ...others }) => {
+  const navigate = useNavigate();
   return (
     <ListItem {...others} disablePadding>
       <ListItemIcon>
-        <CFab size={"small"} color={"default"} component={Link} to={to}>
+        <CFab
+          size={"small"}
+          color={"default"}
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
           <BiArrowBack />
         </CFab>
       </ListItemIcon>

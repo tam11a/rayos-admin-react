@@ -43,7 +43,7 @@ const ProductsByStore = () => {
     // isError: isSubCatError,
   } = useGetProductsByStoreID(sid, params);
   const { data: catData, isLoading: isCatLoading } = useGetAllCategory(params);
-
+  // console.log(catData);
   const onClose = () => setOpen(!open);
 
   const cols = [

@@ -20,7 +20,11 @@ import InputBox from "../../components/InputBox";
 import snackContext from "../../context/snackProvider";
 import DropZone from "../../components/DropZone";
 import ProductsByStore from "./ProductsByStore";
-import { useCreateStore, useUpdateStore } from "../../query/store";
+import {
+  useCreateStore,
+  useGetStoreByID,
+  useUpdateStore,
+} from "../../query/store";
 import { responseHandler } from "../../utilities/response-handler";
 
 const Index = () => {
@@ -33,15 +37,31 @@ const Index = () => {
     setValue,
     reset,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm();
 
-  const { mutateAsync: mutateUpdateStore, isLoading } = useUpdateStore(sid);
+  const { data: storeInfo, isLoading, isError } = useGetStoreByID(sid);
+  // console.log(storeInfo);
 
-  const handleUpdate = async (data, sid) => {
+  React.useEffect(() => {
+    if (!storeInfo) return;
+
+    if (!isDirty)
+      reset({
+        titleEn: storeInfo?.data?.data?.titleEn,
+        titleBn: storeInfo?.data?.data?.titleBn,
+        descriptionEn: storeInfo?.data?.data?.descriptionEn,
+        descriptionBn: storeInfo?.data?.data?.descriptionBn,
+      });
+  }, [storeInfo]);
+
+  const { mutateAsync: updateStore, isLoading: updateLoading } =
+    useUpdateStore();
+
+  const handleUpdate = async (data) => {
     const res = await responseHandler(
-      () => mutateUpdateStore({ ...data, store: sid }),
-      [201]
+      () => updateStore({ store_id: sid, data }),
+      [200]
     );
     console.log(res);
     if (res.status) {
@@ -115,14 +135,7 @@ const Index = () => {
                   minRows={5}
                   maxRows={6}
                 />
-                <Typography>Address </Typography>
-                <InputBox
-                  fullWidth
-                  placeholder="Enter Store Address"
-                  {...register("titleBn", {
-                    required: false,
-                  })}
-                />
+
                 <Button
                   variant={"contained"}
                   color={"primary"}
