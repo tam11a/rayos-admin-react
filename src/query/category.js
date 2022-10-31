@@ -33,6 +33,18 @@ export const useCreateCategory = () => {
   });
 };
 
+
+const createSubcategory = (data) => {
+  return instance.post("subcategory", data);
+};
+
+export const useCreateSubcategory = () => {
+  const queryClient = useQueryClient();
+  return useMutation(createSubcategory, {
+    onSuccess: () => queryClient.invalidateQueries("get-sub-category-cat"),
+  });
+};
+
 const updateCategory = ({ id, data }) => {
   return instance.patch(`category/${id}`, data);
 };

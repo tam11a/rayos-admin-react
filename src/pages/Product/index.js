@@ -8,35 +8,24 @@ import {
   MenuItem,
   Paper,
   Select,
-  Button,
   Avatar,
-  Stack,
-  Typography,
 } from "@mui/material";
 import DataTable from "../../components/DataTable";
 import { useGetAllProduct } from "../../query/product";
 import { useGetAllCategory } from "../../query/category";
 import ButtonSwitch from "../../components/ButtonSwitch";
-import moment from "moment";
 import tableOptionsStyle from "../../style/tableOptions";
 
-import { MdAdd } from "react-icons/md";
 import { IoMdEye } from "react-icons/io";
-import { FiEdit2 } from "react-icons/fi";
 import { getAttachment, rootURL } from "../../service/instance";
 
 import StateViewer from "../../components/StateViewer";
-import UpdateProductDrawer from "./UpdateProductDrawer";
-import CreateProductDrawer from "./CreateProductDrawer";
 import { FaSlackHash } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useGetStoreByID } from "../../query/store";
 
 const Index = () => {
-  const [open, setOpen] = React.useState(false);
-  const onClose = () => setOpen(!open);
   const [selectedCategory, setSelectedCategory] = React.useState("null");
-  const [storeId, setStoreId] = React.useState();
+
   const [params, setParams] = React.useState({
     limit: 10,
     page: 1,

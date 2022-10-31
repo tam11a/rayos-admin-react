@@ -15,11 +15,11 @@ import { BiReset } from "react-icons/bi";
 import { MdClose } from "react-icons/md";
 import ShowError from "../../components/ShowError";
 import snackContext from "../../context/snackProvider";
-import { useCreateCategory } from "../../query/category";
+import { useCreateSubcategory } from "../../query/category";
 import tableOptionsStyle from "../../style/tableOptions";
 import { responseHandler } from "../../utilities/response-handler";
 
-const CreateDrawer = ({ open, onClose }) => {
+const CreateSubcatDrawer = ({ open, onClose, categoryId }) => {
   const snack = React.useContext(snackContext);
   const {
     register,
@@ -28,10 +28,17 @@ const CreateDrawer = ({ open, onClose }) => {
     formState: { errors, isDirty },
   } = useForm();
 
-  const { mutateAsync: postCategory, isLoading } = useCreateCategory();
+  const { mutateAsync: postSubcategory, isLoading } = useCreateSubcategory();
 
   const createCategory = async (data) => {
-    const res = await responseHandler(() => postCategory(data), [201]);
+    const res = await responseHandler(
+      () =>
+        postSubcategory({
+          ...data,
+          category: categoryId,
+        }),
+      [201]
+    );
     if (res.status) {
       snack.createSnack(res.msg);
       reset();
@@ -57,8 +64,8 @@ const CreateDrawer = ({ open, onClose }) => {
         <List disablePadding>
           <ListItem>
             <ListItemText
-              primary={"Create Category"}
-              secondary={"Create Category for Products"}
+              primary={"Create Subcategory"}
+              secondary={"Create Subcategory for Products"}
             />
             {isDirty && (
               <IconButton
@@ -90,7 +97,7 @@ const CreateDrawer = ({ open, onClose }) => {
               rowGap: 1,
             }}
           >
-            Category Name *
+            Name *
             <InputBase
               sx={tableOptionsStyle}
               placeholder={"Enter Category Name"}
@@ -109,7 +116,7 @@ const CreateDrawer = ({ open, onClose }) => {
               rowGap: 1,
             }}
           >
-            Category Name [In Bengali]
+            Name [In Bengali]
             <InputBase
               sx={tableOptionsStyle}
               placeholder={"Enter Category Name [In Bengali]"}
@@ -118,62 +125,20 @@ const CreateDrawer = ({ open, onClose }) => {
             />
             <ShowError err={errors.titleBn} />
           </ListItem>
-          <ListItem
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              rowGap: 1,
-            }}
-          >
-            Description *
-            <InputBase
-              sx={{ ...tableOptionsStyle, height: "unset", py: 1 }}
-              placeholder={"Enter Description"}
-              multiline
-              minRows={5}
-              maxRows={6}
-              {...register("descriptionEn", {
-                required: true,
-              })}
-              fullWidth
-            />
-            <ShowError err={errors.descriptionEn} />
-          </ListItem>
-          <ListItem
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              rowGap: 1,
-            }}
-          >
-            Description [In Bengali]
-            <InputBase
-              sx={{ ...tableOptionsStyle, height: "unset", py: 1 }}
-              placeholder={"Enter Description [In Bengali]"}
-              multiline
-              minRows={5}
-              maxRows={6}
-              {...register("descriptionBn")}
-              fullWidth
-            />
-            <ShowError err={errors.descriptionBn} />
-          </ListItem>
-          <ListItem>
-            <Button
-              variant={"contained"}
-              type={"submit"}
-              disabled={isLoading}
-              fullWidth
-            >
-              Create
-            </Button>
-          </ListItem>
         </List>
+        <ListItem>
+          <Button
+            variant={"contained"}
+            type={"submit"}
+            disabled={isLoading}
+            fullWidth
+          >
+            Create
+          </Button>
+        </ListItem>
       </form>
     </Drawer>
   );
 };
 
-export default CreateDrawer;
+export default CreateSubcatDrawer;

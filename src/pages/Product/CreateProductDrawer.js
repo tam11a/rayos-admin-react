@@ -1,7 +1,5 @@
 import {
-  Box,
   Button,
-  Checkbox,
   Divider,
   Drawer,
   IconButton,
@@ -9,31 +7,20 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListSubheader,
   MenuItem,
   Select,
-  Stack,
-  Typography,
 } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { FiEdit2 } from "react-icons/fi";
-import { MdClose, MdDeleteForever, MdOutlineCheck } from "react-icons/md";
+import { MdClose } from "react-icons/md";
 import { useParams } from "react-router-dom";
-import DropZone from "../../components/DropZone";
 import ShowError from "../../components/ShowError";
 import snackContext from "../../context/snackProvider";
 import {
   useGetAllCategory,
   useGetSubCategoryFromCatID,
 } from "../../query/category";
-import {
-  useCreateProduct,
-  useDelProductImage,
-  useUpdateProduct,
-  useUploadProductImage,
-} from "../../query/product";
-import { rootURL } from "../../service/instance";
+import { useCreateProduct } from "../../query/product";
 import tableOptionsStyle from "../../style/tableOptions";
 import { responseHandler } from "../../utilities/response-handler";
 

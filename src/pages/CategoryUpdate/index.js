@@ -29,10 +29,14 @@ import { MdAdd } from "react-icons/md";
 import InputBox from "../../components/InputBox";
 import { responseHandler } from "../../utilities/response-handler";
 import { usePostImage } from "../../query/attachments";
+import CreateSubcatDrawer from "./CreateSubcatDrawer";
 
 const Index = () => {
   const snack = React.useContext(snackContext);
   const { cid } = useParams();
+
+  const [open, setOpen] = React.useState(false); // Create Subcategory Drawer
+  const onClose = () => setOpen(!open);
 
   const {
     register,
@@ -55,8 +59,8 @@ const Index = () => {
       });
   }, [categoryInfo]);
 
-  const [params] = React.useState({
-    limit: 100,
+  const [params, setParams] = React.useState({
+    limit: 10,
     page: 1,
     filters: [],
   });
@@ -101,12 +105,7 @@ const Index = () => {
       sortable: false,
       renderCell: (params) => (
         <>
-          <IconButton
-            component={Link}
-            size={"small"}
-            color={"primary"}
-            to={`/cat/${params.row?._id}`}
-          >
+          <IconButton size={"small"} color={"primary"}>
             <FaSlackHash />
           </IconButton>
         </>
@@ -232,7 +231,8 @@ const Index = () => {
           </Grid>
           <Grid item xs={12} md={4.7}>
             <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
-              Gallery <Chip label={"No API"} variant={'outlined'} color={'error'} />
+              Gallery{" "}
+              <Chip label={"No API"} variant={"outlined"} color={"error"} />
             </Typography>
             <CPaper
               sx={{
@@ -295,7 +295,7 @@ const Index = () => {
                   height: "52px",
                 }}
                 startIcon={<MdAdd />}
-                // onClick={() => setOpenCreate(!openCreate)}
+                onClick={onClose}
                 fullWidth
               >
                 Add Subcategory
@@ -312,20 +312,21 @@ const Index = () => {
           paginationMode={"server"}
           rowCount={subCatData?.data?.total || 0}
           page={(params?.page || 1) - 1}
-          // onPageChange={(newPage) =>
-          //   setParams({
-          //     ...params,
-          //     page: newPage + 1,
-          //   })
-          // }
+          onPageChange={(newPage) =>
+            setParams({
+              ...params,
+              page: newPage + 1,
+            })
+          }
           pageSize={params?.limit}
-          // onPageSizeChange={(pageSize) =>
-          //   setParams({
-          //     ...params,
-          //     limit: pageSize,
-          //   })
-          // }
+          onPageSizeChange={(pageSize) =>
+            setParams({
+              ...params,
+              limit: pageSize,
+            })
+          }
         />
+        <CreateSubcatDrawer open={open} onClose={onClose} categoryId={cid} />
       </Container>
     </>
   );
