@@ -21,6 +21,17 @@ const createProduct = (data) => {
   });
 };
 
+const updateProduct = (product_id) => {
+  return instance.post(`product/${product_id}`);
+};
+
+export const useUpdateProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation(updateProduct, {
+    onSuccess: () => queryClient.invalidateQueries("get-all-product"),
+  });
+};
+
 export const useCreateProduct = () => {
   const queryClient = useQueryClient();
   return useMutation(createProduct, {
@@ -38,17 +49,6 @@ const delProduct = (product_id) => {
 export const useDelProduct = () => {
   const queryClient = useQueryClient();
   return useMutation(delProduct, {
-    onSuccess: () => queryClient.invalidateQueries("get-all-product"),
-  });
-};
-
-const updateProduct = (data) => {
-  return instance.postForm(`product/update`, data);
-};
-
-export const useUpdateProduct = () => {
-  const queryClient = useQueryClient();
-  return useMutation(updateProduct, {
     onSuccess: () => queryClient.invalidateQueries("get-all-product"),
   });
 };
