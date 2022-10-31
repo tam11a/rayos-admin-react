@@ -13,16 +13,19 @@ import DataTable from "../../components/DataTable";
 import React from "react";
 import { MdAdd } from "react-icons/md";
 import tableOptionsStyle from "../../style/tableOptions";
-import { useGetAllStore } from "../../query/store";
+import { useGetAllStore, useToggleStore } from "../../query/store";
 import { FaSlackHash } from "react-icons/fa";
 import { getAttachment } from "../../service/instance";
 import ButtonSwitch from "../../components/ButtonSwitch";
 import CreateStoreDrawer from "./CreateStoreDrawer";
 import moment from "moment/moment";
 import { Link } from "react-router-dom";
+import { responseHandler } from "../../utilities/response-handler";
+import snackContext from "../../context/snackProvider";
 
 const Index = () => {
   const [open, setOpen] = React.useState(false);
+  const snack = React.useContext(snackContext);
   const onClose = () => setOpen(!open);
 
   const [params, setParams] = React.useState({
@@ -30,7 +33,14 @@ const Index = () => {
     page: 1,
   });
   const { data, isLoading } = useGetAllStore(params);
-  console.log(data);
+  const { mutateAsync: toggleStore } = useToggleStore();
+
+  const updateState = async (id) => {
+    const res = await responseHandler(() => toggleStore(id));
+    if (res.status) snack.createSnack(res.msg);
+    else snack.createSnack(res.msg, "error");
+  };
+  // console.log(data);
 
   const [openCreate, setOpenCreate] = React.useState(false);
 
@@ -117,9 +127,7 @@ const Index = () => {
       align: "center",
       width: 250,
       renderCell: (params) => (
-        <Typography>
-          {moment(params.row.createdAt).format("MMMM Do YYYY, h:mm")}
-        </Typography>
+        <Typography>{moment(params.row.createdAt).format("ll")}</Typography>
       ),
     },
     {
@@ -129,7 +137,13 @@ const Index = () => {
       align: "center",
       width: 120,
       renderCell: (params) => (
-        <ButtonSwitch checked={params.row.isActive} color={"success"} />
+        <ButtonSwitch
+          checked={params.row.isActive}
+          color={"success"}
+          onClick={() => {
+            updateState(params.row?._id);
+          }}
+        />
       ),
     },
   ];
