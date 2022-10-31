@@ -145,7 +145,7 @@ const Index = () => {
                     mt: 1,
                   }}
                   type={"submit"}
-                  disabled={isLoading}
+                  disabled={updateLoading || !isDirty}
                   fullWidth
                 >
                   Update Store Info
