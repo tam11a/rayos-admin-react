@@ -19,7 +19,7 @@ const Index = () => {
   const { mutateAsync: deleteFeedImage } = useDeleteFeedImage();
 
   const deleteImage = async (id) => {
-    const res = await responseHandler(() => deleteFeedImage(id), [201]);
+    const res = await responseHandler(() => deleteFeedImage(id));
     if (res.status) {
       snack.createSnack(res.msg);
     } else {
@@ -30,10 +30,12 @@ const Index = () => {
   const { mutateAsync: postFeedImage } = usePostFeedImage();
 
   const postImage = async (images) => {
-    const res = await responseHandler(() =>
-      postFeedImage({
-        "Files[]": images,
-      })
+    const res = await responseHandler(
+      () =>
+        postFeedImage({
+          "Files[]": images,
+        }),
+      [201]
     );
     if (res.status) {
       snack.createSnack(res.msg);

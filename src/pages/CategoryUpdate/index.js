@@ -1,35 +1,34 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import {
-  Avatar,
   Button,
+  Chip,
   Container,
   Grid,
   IconButton,
   InputBase,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   Paper,
   Typography,
 } from "@mui/material";
-import { BiArrowBack } from "react-icons/bi";
-import CFab from "../../components/CFab";
-import { fontWeight } from "@mui/system";
 import BackButton from "../../components/BackButton";
 import CPaper from "../../components/CPaper";
-import CatInput from "./CatInput";
 import DropZone from "../../components/DropZone";
 import DataTable from "../../components/DataTable";
 import snackContext from "../../context/snackProvider";
 import { useForm } from "react-hook-form";
-import { useGetSubCategoryFromCatID } from "../../query/category";
+import {
+  useGetCategory,
+  useGetSubCategoryFromCatID,
+  useUpdateCategory,
+} from "../../query/category";
 import { FaSlackHash } from "react-icons/fa";
 import { getAttachment } from "../../service/instance";
 import ButtonSwitch from "../../components/ButtonSwitch";
 import tableOptionsStyle from "../../style/tableOptions";
 import { MdAdd } from "react-icons/md";
 import InputBox from "../../components/InputBox";
+import { responseHandler } from "../../utilities/response-handler";
+import { usePostImage } from "../../query/attachments";
 
 const Index = () => {
   const snack = React.useContext(snackContext);
@@ -37,14 +36,24 @@ const Index = () => {
 
   const {
     register,
-    getValues,
-    setValue,
     reset,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm();
 
-  const [subcategoryId, setSubcategoryId] = React.useState();
+  const { data: categoryInfo, isLoading, isError } = useGetCategory(cid);
+
+  React.useEffect(() => {
+    if (!categoryInfo) return;
+
+    if (!isDirty)
+      reset({
+        titleEn: categoryInfo?.data?.data?.titleEn,
+        titleBn: categoryInfo?.data?.data?.titleBn,
+        descriptionEn: categoryInfo?.data?.data?.descriptionEn,
+        descriptionBn: categoryInfo?.data?.data?.descriptionBn,
+      });
+  }, [categoryInfo]);
 
   const [params] = React.useState({
     limit: 100,
@@ -57,7 +66,30 @@ const Index = () => {
     // isLoading: isSubCatLoading,
     isError: isSubCatError,
   } = useGetSubCategoryFromCatID(cid, params);
-  console.log(subCatData);
+
+  const { mutateAsync: updateCategory, isLoading: updateLoading } =
+    useUpdateCategory();
+
+  const updateCategoryFunc = async (data) => {
+    const res = await responseHandler(
+      () => updateCategory({ id: cid, data }),
+      [200]
+    );
+    if (res.status) snack.createSnack(res.msg);
+    else snack.createSnack(res.msg, "error");
+  };
+
+  const { mutateAsync: postImage } = usePostImage();
+
+  const uploadCategoryIcon = async (data) => {
+    const res = await responseHandler(() => postImage(data), [201]);
+    console.log(res);
+    if (res.status)
+      await updateCategoryFunc({
+        icon: res.data?.[0]?._id,
+      });
+    else snack.createSnack(res.msg, "error");
+  };
 
   const cols = [
     {
@@ -105,6 +137,7 @@ const Index = () => {
       ),
     },
   ];
+
   return (
     <>
       <Container
@@ -125,69 +158,96 @@ const Index = () => {
             mt: 2,
           }}
         >
-          <Grid item xs={12} sm={5.9} md={7.9}>
+          <Grid item xs={12} md={7}>
             <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
               Information
             </Typography>
-            <CPaper>
-              <Typography>Name (English)</Typography>
-              <InputBox
-                fullWidth
-                placeholder="Enter Category Name (English)"
-                {...register("titleEn", {
-                  required: true,
-                })}
-              />
-              <Typography>Name (Bengali)</Typography>
-              <InputBox
-                fullWidth
-                placeholder="Enter Category Name (Bengali)"
-                {...register("titleBn", {
-                  required: true,
-                })}
-              />
-              <Typography>Description (English)</Typography>
-              <InputBox
-                fullWidth
-                placeholder="Enter Description (English)"
-                {...register("descriptionEn", {
-                  required: true,
-                })}
-                multiline={true}
-                minRows={5}
-                maxRows={6}
-              />
-              <Typography>Description (Bengali)</Typography>
-              <InputBox
-                fullWidth
-                placeholder="Enter Description (Bengali)"
-                {...register("descriptionBn", {
-                  required: true,
-                })}
-                multiline={true}
-                minRows={5}
-                maxRows={6}
-              />
-              <Button
-                variant={"contained"}
-                color={"primary"}
-                size={"large"}
-                sx={{
-                  height: "52px",
+            <CPaper
+              sx={{
+                "& form > *": {
                   mt: 1,
-                }}
-                // onClick={() => setOpenCreate(!openCreate)}
-                fullWidth
-              >
-                Update Category
-              </Button>
+                },
+              }}
+            >
+              <DropZone
+                defaultValue={
+                  categoryInfo?.data?.data?.icon && {
+                    preview: getAttachment(categoryInfo?.data?.data?.icon?._id),
+                  }
+                }
+                onChange={uploadCategoryIcon}
+                onDelete={() => true}
+              />
+              <form onSubmit={handleSubmit(updateCategoryFunc)}>
+                <Typography>Name (English)</Typography>
+                <InputBox
+                  fullWidth
+                  placeholder="Enter Category Name (English)"
+                  {...register("titleEn", {
+                    required: true,
+                  })}
+                />
+                <Typography>Name (Bengali)</Typography>
+                <InputBox
+                  fullWidth
+                  placeholder="Enter Category Name (Bengali)"
+                  {...register("titleBn")}
+                />
+                <Typography>Description (English)</Typography>
+                <InputBox
+                  fullWidth
+                  placeholder="Enter Description (English)"
+                  {...register("descriptionEn", {
+                    required: true,
+                  })}
+                  multiline={true}
+                  minRows={5}
+                  maxRows={6}
+                />
+                <Typography>Description (Bengali)</Typography>
+                <InputBox
+                  fullWidth
+                  placeholder="Enter Description (Bengali)"
+                  {...register("descriptionBn")}
+                  multiline={true}
+                  minRows={5}
+                  maxRows={6}
+                />
+                <Button
+                  variant={"contained"}
+                  color={"primary"}
+                  size={"large"}
+                  sx={{
+                    height: "52px",
+                    mt: 1,
+                  }}
+                  type={"submit"}
+                  fullWidth
+                  disabled={updateLoading || isLoading || !isDirty}
+                >
+                  Update Category
+                </Button>
+              </form>
             </CPaper>
           </Grid>
-          <Grid item xs={12} sm={5.9} md={3.9}>
+          <Grid item xs={12} md={4.7}>
             <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
-              Image
+              Gallery <Chip label={"No API"} variant={'outlined'} color={'error'} />
             </Typography>
-            <CPaper>
+            <CPaper
+              sx={{
+                mt: 1,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                flexWrap: "wrap",
+                rowGap: 1,
+                columnGap: 1,
+              }}
+            >
+              <DropZone />
+              <DropZone />
               <DropZone />
             </CPaper>
           </Grid>

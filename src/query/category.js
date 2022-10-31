@@ -11,6 +11,17 @@ export const useGetAllCategory = (params) => {
   });
 };
 
+const getCategory = (id) => {
+  return instance.get(`category/${id}`);
+};
+
+export const useGetCategory = (id) => {
+  return useQuery(["get-category", id], () => getCategory(id), {
+    // refetchInterval: 20000,
+    enabled: !!id,
+  });
+};
+
 const createCategory = (data) => {
   return instance.post("category", data);
 };
@@ -21,6 +32,21 @@ export const useCreateCategory = () => {
     onSuccess: () => queryClient.invalidateQueries("get-all-category"),
   });
 };
+
+const updateCategory = ({ id, data }) => {
+  return instance.patch(`category/${id}`, data);
+};
+
+export const useUpdateCategory = () => {
+  const queryClient = useQueryClient();
+  return useMutation(updateCategory, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("get-all-category");
+      queryClient.invalidateQueries("get-category");
+    },
+  });
+};
+
 
 const getSubCategoryFromCatID = (category_id, params) => {
   return instance.get(
