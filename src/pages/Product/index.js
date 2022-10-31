@@ -195,8 +195,8 @@ const Index = () => {
         <StateViewer
           stateList={[
             {
-              num: data?.data?.value?.total_product,
-              title: "Total",
+              num: data?.data?.total,
+              title: "Total Products",
             },
             {
               num: data?.data?.value?.total_publish_product,
@@ -223,7 +223,7 @@ const Index = () => {
             alignItems={"center"}
             justifyContent={"space-between"}
           >
-            <Grid item xs={12} md={5.7}>
+            <Grid item xs={12} md={5.9}>
               <InputBase
                 placeholder="Search Product"
                 sx={tableOptionsStyle}
@@ -236,7 +236,7 @@ const Index = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={5.9} md={3}>
+            <Grid item xs={12} md={5.9}>
               <Select
                 sx={{
                   ...tableOptionsStyle,
@@ -265,7 +265,7 @@ const Index = () => {
                 ))}
               </Select>
             </Grid>
-            <Grid item xs={12} sm={5.9} md={3}>
+            {/* <Grid item xs={12} sm={5.9} md={3}>
               <Button
                 variant={"contained"}
                 color={"primary"}
@@ -280,7 +280,7 @@ const Index = () => {
                 Add Product
               </Button>
               <CreateProductDrawer open={open} onClose={onClose} />
-            </Grid>
+            </Grid> */}
           </Grid>
         </Paper>
 
