@@ -32,3 +32,18 @@ export const usePostFeedImage = () => {
     onSuccess: () => queryClient.invalidateQueries("get-feed-images"),
   });
 };
+
+
+const postImage = (imageList) => {
+  return instance.postForm(`attachments`, {
+    "Files[]": [...imageList],
+  });
+};
+
+export const usePostImage = () => {
+  // const queryClient = useQueryClient();
+  return useMutation(postImage, {
+    // onSuccess: () => queryClient.invalidateQueries("get-feed-images"),
+  });
+};
+
