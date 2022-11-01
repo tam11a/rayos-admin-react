@@ -141,7 +141,7 @@ const Index = () => {
               />
             </CPaper>
             <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
-              Gallary
+              Images
             </Typography>
             <CPaper>
               <DropZone />
