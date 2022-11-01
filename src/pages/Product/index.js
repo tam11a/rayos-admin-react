@@ -33,7 +33,9 @@ const Index = () => {
   });
 
   const { data: catData, isLoading: isCatLoading } = useGetAllCategory(params);
+  // console.log(catData);
   const { data, isLoading } = useGetAllProduct(params);
+  // console.log(params);
 
   const cols = [
     {
@@ -64,7 +66,7 @@ const Index = () => {
     {
       headerName: "Image",
       headerAlign: "center",
-      field: "receiver_number",
+      field: "icon",
       align: "center",
       width: 80,
       renderCell: (params) => (
@@ -96,14 +98,15 @@ const Index = () => {
     {
       headerName: "Category",
       headerAlign: "center",
-      field: "category_id",
+      field: "category",
       width: 200,
       align: "center",
       renderCell: (params) => (
         <>
-          {catData?.data?.data?.map((cat) => {
+          {params.row.category.titleEn}
+          {/* {data?.data?.data?.map((cat) => {
             return cat.titleEn;
-          })[0] || "-"}
+          })[0] || "-"} */}
         </>
       ),
     },
@@ -243,13 +246,13 @@ const Index = () => {
                 <MenuItem value={"null"} disabled>
                   Select Category
                 </MenuItem>
-                {catData?.data?.value?.map((cat) => (
+                {catData?.data?.data?.map((cat) => (
                   <MenuItem
-                    key={cat.id}
-                    value={cat.id}
-                    disabled={cat.id === selectedCategory}
+                    key={cat._id}
+                    value={cat._id}
+                    disabled={cat._id === selectedCategory}
                   >
-                    {cat.title_en}
+                    {cat.titleEn}
                   </MenuItem>
                 ))}
               </Select>

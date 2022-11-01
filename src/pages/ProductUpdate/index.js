@@ -9,10 +9,8 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import { Stack } from "@mui/system";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { MdDeleteForever } from "react-icons/md";
 import { useParams } from "react-router-dom";
 import BackButton from "../../components/BackButton";
 import CPaper from "../../components/CPaper";
@@ -24,19 +22,22 @@ import {
   useGetAllCategory,
   useGetSubCategoryFromCatID,
 } from "../../query/category";
+import { useGetProductByID, useUpdateProduct } from "../../query/product";
 import tableOptionsStyle from "../../style/tableOptions";
+import { responseHandler } from "../../utilities/response-handler";
 import VariantInput from "./VariantInput";
 
 const Index = () => {
   const snack = React.useContext(snackContext);
   const { pid } = useParams();
-
-  const [categoryId, setCategoryId] = React.useState();
-  const [subcategoryId, setSubcategoryId] = React.useState();
-
-  React.useEffect(() => {
-    setValue("category_id", categoryId);
-  }, [categoryId]);
+  const {
+    register,
+    setValue,
+    getValues,
+    reset,
+    watch,
+    formState: { errors, isDirty },
+  } = useForm();
 
   const [params] = React.useState({
     limit: 1000,
@@ -44,24 +45,43 @@ const Index = () => {
     filters: [],
   });
 
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
+  const { data: productInfo } = useGetProductByID(pid);
 
-  const {
-    data: catData,
-    // isLoading: isCatLoading
-  } = useGetAllCategory(params);
+  React.useEffect(() => {
+    if (!productInfo) return;
 
-  const {
-    data: subCatData,
-    // isLoading: isSubCatLoading,
-    isError: isSubCatError,
-  } = useGetSubCategoryFromCatID(categoryId, params);
+    if (!isDirty)
+      reset({
+        titleEn: productInfo?.data?.data?.titleEn,
+        titleBn: productInfo?.data?.data?.titleBn,
+        descriptionEn: productInfo?.data?.data?.descriptionEn,
+        descriptionBn: productInfo?.data?.data?.descriptionBn,
+        buyPrice: productInfo?.data?.data?.buyPrice,
+        sellPrice: productInfo?.data?.data?.sellPrice,
+        category: productInfo?.data?.data?.category?._id,
+        subcategory: productInfo?.data?.data?.subcategory?._id,
+      });
+  }, [productInfo]);
+
+  const { mutateAsync: updateProduct, isLoading: updateLoading } =
+    useUpdateProduct();
+
+  const handleUpdate = async (data) => {
+    const res = await responseHandler(
+      () => updateProduct({ product_id: pid, data }),
+      [200]
+    );
+    if (res.status) {
+      snack.createSnack(res.msg);
+    } else {
+      snack.createSnack(res.msg, "error");
+    }
+  };
+
+  const { data: catData } = useGetAllCategory(params);
+
+  const { data: subCatData, isError: isSubCatError } =
+    useGetSubCategoryFromCatID(getValues()["category"], params);
 
   return (
     <>
@@ -75,6 +95,7 @@ const Index = () => {
           primary={"Back to Product"}
           secondary={"Update Product"}
         />
+
         <Grid
           container
           rowGap={1}
@@ -87,30 +108,25 @@ const Index = () => {
             <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
               Information
             </Typography>
+
             <CPaper>
               <Typography>Name (English)</Typography>
               <InputBox
                 fullWidth
                 placeholder="Enter Product Name (English)"
-                {...register("titleEn", {
-                  required: true,
-                })}
+                {...register("titleEn")}
               />
               <Typography>Name (Bengali)</Typography>
               <InputBox
                 fullWidth
                 placeholder="Enter Product Name (Bengali)"
-                {...register("titleBn", {
-                  required: true,
-                })}
+                {...register("titleBn")}
               />
               <Typography>Description (English)</Typography>
               <InputBox
                 fullWidth
                 placeholder="Enter Product Description (English)"
-                {...register("descriptionEn", {
-                  required: true,
-                })}
+                {...register("descriptionEn")}
                 multiline={true}
                 minRows={5}
                 maxRows={6}
@@ -119,9 +135,7 @@ const Index = () => {
               <InputBox
                 fullWidth
                 placeholder="Enter Prooduct Description (Bengali)"
-                {...register("descriptionBn", {
-                  required: true,
-                })}
+                {...register("descriptionBn")}
                 multiline={true}
                 minRows={5}
                 maxRows={6}
@@ -134,6 +148,7 @@ const Index = () => {
               <DropZone />
             </CPaper>
           </Grid>
+
           <Grid item xs={12} sm={5.9} md={4.9}>
             <Typography variant={"h6"} sx={{ fontWeight: "500", mt: 1 }}>
               Additional Information
@@ -151,23 +166,16 @@ const Index = () => {
                 Category
                 <Select
                   sx={tableOptionsStyle}
-                  value={categoryId || "null"}
-                  onChange={(e) => {
-                    setCategoryId(e.target.value);
-                    setValue("category", e.target.value);
-                  }}
+                  value={getValues()?.category || "null"}
                   placeholder={"Select Category"}
                   fullWidth
+                  {...register("category")}
                 >
                   <MenuItem value={"null"} disabled>
                     Select Category
                   </MenuItem>
                   {catData?.data?.data?.map((cat) => (
-                    <MenuItem
-                      key={cat._id}
-                      value={cat._id}
-                      // disabled={cat.id === selectedCategory}
-                    >
+                    <MenuItem key={cat._id} value={cat._id}>
                       {cat.titleEn}
                     </MenuItem>
                   ))}
@@ -187,48 +195,33 @@ const Index = () => {
                 <Select
                   sx={tableOptionsStyle}
                   placeholder={"Select Sub Category"}
-                  value={isSubCatError ? "null" : subcategoryId || "null"}
-                  onChange={(e) => {
-                    setSubcategoryId(e.target.value);
-                    setValue(
-                      "subcategory",
-                      e.target.value !== "null" ? e.target.value : null
-                    );
-                  }}
+                  value={getValues()?.subcategory || "null"}
                   disabled={!subCatData?.data?.total}
                   fullWidth
+                  {...register("subcategory")}
                 >
                   <MenuItem value={"null"} disabled>
                     Select Sub Category
                   </MenuItem>
                   {subCatData?.data?.data?.map((cat) => (
-                    <MenuItem
-                      key={cat._id}
-                      value={cat._id}
-                      // disabled={cat.id === selectedCategory}
-                    >
+                    <MenuItem key={cat._id} value={cat._id}>
                       {cat.titleEn}
                     </MenuItem>
                   ))}
                 </Select>
                 <ShowError err={errors.subcategory} />
               </ListItem>
-
               <Typography>BuyPrice</Typography>
               <InputBox
                 fullWidth
                 placeholder="Enter Buy Price"
-                {...register("titleEn", {
-                  required: true,
-                })}
+                {...register("buyPrice")}
               />
               <Typography>Sell Price</Typography>
               <InputBox
                 fullWidth
                 placeholder="Enter Sell Price"
-                {...register("titleEn", {
-                  required: true,
-                })}
+                {...register("sellPrice")}
               />
             </CPaper>
             <Typography variant={"h6"} sx={{ fontWeight: "500", mt: 1 }}>
@@ -276,7 +269,11 @@ const Index = () => {
                 height: "52px",
                 mt: 1,
               }}
-              // onClick={() => setOpenCreate(!openCreate)}
+              type={"submit"}
+              disabled={updateLoading || !isDirty}
+              onClick={() => {
+                handleUpdate(getValues());
+              }}
               fullWidth
             >
               Update Product
