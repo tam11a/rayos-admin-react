@@ -89,7 +89,7 @@ const Index = () => {
       field: "owner",
       type: "date",
       align: "center",
-      width: 120,
+      width: 180,
       renderCell: (params) => (
         <Chip
           avatar={
@@ -103,21 +103,14 @@ const Index = () => {
         />
       ),
     },
-    {
-      headerName: "Store Address",
-      headerAlign: "center",
-      field: "address",
-      align: "center",
-      width: 200,
-    },
 
     {
       headerName: "Total Products",
       headerAlign: "center",
-      field: "totalProduct",
+      field: "totalProducts",
       type: "date",
       align: "center",
-      width: 120,
+      width: 160,
     },
     {
       headerName: "Created At",
@@ -125,7 +118,7 @@ const Index = () => {
       field: "createdAt",
       type: "date",
       align: "center",
-      width: 250,
+      width: 200,
       renderCell: (params) => (
         <Typography>{moment(params.row.createdAt).format("ll")}</Typography>
       ),

@@ -21,14 +21,31 @@ const createProduct = (data) => {
   });
 };
 
-const updateProduct = (product_id) => {
-  return instance.post(`product/${product_id}`);
+const getProductByID = (product_id) => {
+  return instance.get(`product/${product_id}`);
+};
+
+export const useGetProductByID = (product_id) => {
+  return useQuery(
+    ["get-product-by-id", product_id],
+    () => getProductByID(product_id),
+    {
+      // refetchInterval: 20000,
+    }
+  );
+};
+
+const updateProduct = ({ product_id, data }) => {
+  return instance.patch(`product/${product_id}`, data);
 };
 
 export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
   return useMutation(updateProduct, {
-    onSuccess: () => queryClient.invalidateQueries("get-all-product"),
+    onSuccess: () => {
+      queryClient.invalidateQueries("get-all-product");
+      queryClient.invalidateQueries("get-product-by-id");
+    },
   });
 };
 
