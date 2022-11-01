@@ -242,12 +242,7 @@ const Index = () => {
                   sx={tableOptionsStyle}
                   placeholder={"Select Sub Category"}
                   value={watch("variantType") || "null"}
-                  onChange={(e) => {
-                    setValue(
-                      "variantType",
-                      e.target.value !== "null" ? e.target.value : null
-                    );
-                  }}
+                  {...register("variantType")}
                   fullWidth
                 >
                   <MenuItem value={"null"} disabled>
