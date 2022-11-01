@@ -108,12 +108,11 @@ const Index = () => {
             <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
               Information
             </Typography>
-
             <CPaper>
-              <Typography>Name (English)</Typography>
+              <Typography>Name</Typography>
               <InputBox
                 fullWidth
-                placeholder="Enter Product Name (English)"
+                placeholder="Enter Product Name"
                 {...register("titleEn")}
               />
               <Typography>Name (Bengali)</Typography>
@@ -122,10 +121,10 @@ const Index = () => {
                 placeholder="Enter Product Name (Bengali)"
                 {...register("titleBn")}
               />
-              <Typography>Description (English)</Typography>
+              <Typography>Description</Typography>
               <InputBox
                 fullWidth
-                placeholder="Enter Product Description (English)"
+                placeholder="Enter Product Description"
                 {...register("descriptionEn")}
                 multiline={true}
                 minRows={5}
@@ -142,7 +141,7 @@ const Index = () => {
               />
             </CPaper>
             <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
-              Image
+              Images
             </Typography>
             <CPaper>
               <DropZone />
