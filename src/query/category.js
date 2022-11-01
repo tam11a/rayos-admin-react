@@ -45,6 +45,17 @@ export const useCreateSubcategory = () => {
   });
 };
 
+const updateSubcategory = ({ id, data }) => {
+  return instance.patch(`subcategory/${id}`, data);
+};
+
+export const useUpdateSubcategory = () => {
+  const queryClient = useQueryClient();
+  return useMutation(updateSubcategory, {
+    onSuccess: () => queryClient.invalidateQueries("get-sub-category-cat"),
+  });
+};
+
 const updateCategory = ({ id, data }) => {
   return instance.patch(`category/${id}`, data);
 };
@@ -58,7 +69,6 @@ export const useUpdateCategory = () => {
     },
   });
 };
-
 
 const getSubCategoryFromCatID = (category_id, params) => {
   return instance.get(
@@ -76,4 +86,26 @@ export const useGetSubCategoryFromCatID = (category_id, params) => {
       retry: 0,
     }
   );
+};
+
+const toggleCategory = (id) => {
+  return instance.put(`category/${id}`);
+};
+
+export const useToggleCategory = () => {
+  const queryClient = useQueryClient();
+  return useMutation(toggleCategory, {
+    onSuccess: () => queryClient.invalidateQueries("get-all-category"),
+  });
+};
+
+const toggleSubcategory = (id) => {
+  return instance.put(`subcategory/${id}`);
+};
+
+export const useToggleSubcategory = () => {
+  const queryClient = useQueryClient();
+  return useMutation(toggleSubcategory, {
+    onSuccess: () => queryClient.invalidateQueries("get-sub-category-cat"),
+  });
 };

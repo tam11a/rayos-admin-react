@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 
 import DataTable from "../../components/DataTable";
-import { useGetAllCategory } from "../../query/category";
+import { useGetAllCategory, useToggleCategory } from "../../query/category";
 import { getAttachment, rootURL } from "../../service/instance";
 import ButtonSwitch from "../../components/ButtonSwitch";
 import tableOptionsStyle from "../../style/tableOptions";
@@ -23,8 +23,11 @@ import { MdAdd } from "react-icons/md";
 import CreateDrawer from "./CreateDrawer";
 import { FaSlackHash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { responseHandler } from "../../utilities/response-handler";
+import snackContext from "../../context/snackProvider";
 
 const Index = () => {
+  const snack = React.useContext(snackContext);
   const [params, setParams] = React.useState({
     limit: 5,
     page: 1,
@@ -33,6 +36,14 @@ const Index = () => {
   // console.log(data);
 
   const [openCreate, setOpenCreate] = React.useState(false);
+
+  const { mutateAsync: toggleState } = useToggleCategory();
+
+  const updateState = async (id) => {
+    const res = await responseHandler(() => toggleState(id));
+    if (res.status) snack.createSnack(res.msg);
+    else snack.createSnack(res.msg, "error");
+  };
 
   const cols = [
     {
@@ -96,7 +107,11 @@ const Index = () => {
       align: "center",
       sortable: false,
       renderCell: (params) => (
-        <ButtonSwitch checked={params.row.isActive} color={"success"} />
+        <ButtonSwitch
+          checked={params.row.isActive}
+          color={"success"}
+          onClick={() => updateState(params?.row?._id)}
+        />
       ),
     },
     // {

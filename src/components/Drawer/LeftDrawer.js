@@ -122,7 +122,7 @@ const LeftDrawer = ({ open, setOpen }) => {
       sx={{
         color: "primary.main",
       }}
-      onclick={() => setOpen(false)}
+      onClick={() => setOpen(false)}
     >
       {drawerGenData.map((item, index) => (
         <ListItemButton
@@ -156,6 +156,7 @@ const LeftDrawer = ({ open, setOpen }) => {
           <ListItem
             sx={{
               bgcolor: "primary.contrastText",
+              minHeight: "60px",
             }}
           >
             <ListItemIcon
@@ -187,7 +188,12 @@ const LeftDrawer = ({ open, setOpen }) => {
               bgcolor: "primary.contrastText",
             }}
           >
-            <ListItemText primary={"General"} />
+            <ListItemText
+              primary={"Additional Settings"}
+              primaryTypographyProps={{
+                fontWeight: 600,
+              }}
+            />
           </ListItem>
           {generalList()}
         </List>

@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form";
 import {
   useGetCategory,
   useGetSubCategoryFromCatID,
+  useToggleSubcategory,
   useUpdateCategory,
 } from "../../query/category";
 import { FaSlackHash } from "react-icons/fa";
@@ -30,6 +31,7 @@ import InputBox from "../../components/InputBox";
 import { responseHandler } from "../../utilities/response-handler";
 import { usePostImage } from "../../query/attachments";
 import CreateSubcatDrawer from "./CreateSubcatDrawer";
+import SubcatDrawer from "./SubcatDrawer";
 
 const Index = () => {
   const snack = React.useContext(snackContext);
@@ -95,6 +97,14 @@ const Index = () => {
     else snack.createSnack(res.msg, "error");
   };
 
+  const { mutateAsync: toggleState } = useToggleSubcategory();
+
+  const updateState = async (id) => {
+    const res = await responseHandler(() => toggleState(id));
+    if (res.status) snack.createSnack(res.msg);
+    else snack.createSnack(res.msg, "error");
+  };
+
   const cols = [
     {
       headerName: "",
@@ -103,13 +113,7 @@ const Index = () => {
       align: "center",
       width: 50,
       sortable: false,
-      renderCell: (params) => (
-        <>
-          <IconButton size={"small"} color={"primary"}>
-            <FaSlackHash />
-          </IconButton>
-        </>
-      ),
+      renderCell: (params) => <SubCatHash info={params?.row} />,
     },
     {
       headerName: "Name",
@@ -132,7 +136,11 @@ const Index = () => {
       align: "center",
       sortable: false,
       renderCell: (params) => (
-        <ButtonSwitch checked={params.row.isActive} color={"success"} />
+        <ButtonSwitch
+          checked={params?.row?.isActive}
+          color={"success"}
+          onClick={() => updateState(params?.row?._id)}
+        />
       ),
     },
   ];
@@ -231,12 +239,10 @@ const Index = () => {
           </Grid>
           <Grid item xs={12} md={4.7}>
             <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
-              Gallery{" "}
-              <Chip label={"No API"} variant={"outlined"} color={"error"} />
+              Gallery
             </Typography>
             <CPaper
               sx={{
-                mt: 1,
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
@@ -328,6 +334,19 @@ const Index = () => {
         />
         <CreateSubcatDrawer open={open} onClose={onClose} categoryId={cid} />
       </Container>
+    </>
+  );
+};
+
+const SubCatHash = ({ info }) => {
+  const [open, setOpen] = React.useState(false);
+  const onClose = () => setOpen(!open);
+  return (
+    <>
+      <IconButton size={"small"} color={"primary"} onClick={onClose}>
+        <FaSlackHash />
+      </IconButton>
+      <SubcatDrawer open={open} onClose={onClose} info={info} />
     </>
   );
 };
