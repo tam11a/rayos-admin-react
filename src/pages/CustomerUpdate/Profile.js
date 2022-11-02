@@ -2,6 +2,7 @@ import {
   Avatar,
   Box,
   Button,
+  CircularProgress,
   Container,
   Divider,
   Fab,
@@ -19,6 +20,8 @@ import { objToFormData } from "../../utilities/json-form";
 import {
   useGetCustomerByID,
   useGetCustomerProfile,
+  useToggleCustomer,
+  useUpdateCustomer,
   useUpdateUserProfile,
 } from "../../query/customer";
 import { responseHandler } from "../../utilities/response-handler";
@@ -26,271 +29,320 @@ import snackContext from "../../context/snackProvider";
 import { FaPhoneAlt } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import CInput from "../Login/CInput";
+import { useParams } from "react-router-dom";
+import { getAttachment } from "../../service/instance";
+import { Icon } from "@iconify/react";
+import { usePostImage } from "../../query/attachments";
+import ButtonSwitch from "../../components/ButtonSwitch";
 
-const Profile = ({ uid }) => {
+const Profile = () => {
   const authCntxt = React.useContext(authContext);
   const snack = React.useContext(snackContext);
+  const { cid } = useParams();
+  const [imgVal, setImgVal] = React.useState();
 
-  const { register, setValue, handleSubmit } = useForm();
+  const {
+    register,
+    getValues,
+    setValue,
+    reset,
+    handleSubmit,
+    formState: { errors, isDirty },
+  } = useForm();
 
-  // const { mutateAsync: updateUserProfile } = useUpdateUserProfile();
+  const { data: userData } = useGetCustomerByID(cid);
+  // console.log(userData);
+  const { mutateAsync: toggleCustomer } = useToggleCustomer();
 
-  // const updateHandler = async (e) => {
-  //   let info = {
-  //     bkash: e.bkash,
-  //     cc: e.cc,
-  //     company_link: e.company_link,
-  //   };
-  //   delete e.phone;
-  //   delete e.bkash;
-  //   delete e.company_link;
-  //   delete e.cc;
-  //   e = {
-  //     ...e,
-  //     info: JSON.stringify(JSON.stringify(info)),
-  //   };
-  //   const res = await responseHandler(() => updateUserProfile(e));
-  //   if (res.status) {
-  //     snack.createSnack(res.msg);
-  //   } else {
-  //     snack.createSnack(res.data, "error");
-  //   }
-  // };
+  const updateState = async (id) => {
+    const res = await responseHandler(() => toggleCustomer(id));
+    if (res.status) snack.createSnack(res.msg);
+    else snack.createSnack(res.msg, "error");
+  };
 
-  const { data: userData } = useGetCustomerByID(uid);
-  console.log(userData);
+  React.useEffect(() => {
+    if (!userData) return;
 
-  // React.useEffect(() => {
-  //   if (!userData) return;
-  //   // console.log(authCntxt.userInfo);
-  //   setValue("user_id", userData?.data?.value?.user_id);
-  //   setValue("full_name", userData?.data?.value?.full_name);
-  //   setValue("company_name", userData?.data?.value?.company_name);
-  //   setValue("phone", userData?.data?.value?.user?.phone);
-  //   setValue("address", userData?.data?.value?.address);
-  //   if (userData?.data?.value?.info) {
-  //     let additionalInfo = JSON.parse(userData?.data?.value?.info);
-  //     setValue("cc", additionalInfo.cc);
-  //     setValue("bkash", additionalInfo.bkash);
-  //     setValue("company_link", additionalInfo.company_link);
-  //   }
-  // }, [userData]);
+    if (!isDirty)
+      reset({
+        userName: userData?.data?.data?.userName,
+        fullName: userData?.data?.data?.fullName,
+        email: userData?.data?.data?.email,
+        phone: userData?.data?.data?.phone,
+      });
+  }, [userData]);
+  const { mutateAsync: updateCustomer, isLoading: updateLoading } =
+    useUpdateCustomer();
 
-  // const [imgVal, setImgVal] = React.useState();
-  // const uploadImg = async () => {
-  //   const res = await responseHandler(() =>
-  //     updateUserProfile({
-  //       image: imgVal,
-  //       full_name: userData?.data?.value?.full_name,
-  //       company_name: userData?.data?.value?.company_name,
-  //       address: userData?.data?.value?.address,
-  //       user_id: uid,
-  //     })
-  //   );
-  //   if (res.status) {
-  //     snack.createSnack(res.msg);
-  //     setImgVal();
-  //   } else {
-  //     snack.createSnack(res.data, "error");
-  //   }
-  // };
-  // React.useEffect(() => {
-  //   if (!imgVal) return;
-  //   // setImgVal();
-  //   uploadImg();
-  // }, [imgVal]);
+  const handleUpdate = async (data) => {
+    const res = await responseHandler(
+      () => updateCustomer({ customer_id: cid, data }),
+      [200]
+    );
+    console.log(res);
+    if (res.status) {
+      snack.createSnack(res.msg);
+    } else {
+      snack.createSnack(res.msg, "error");
+    }
+  };
+  const { mutateAsync: postImage, isLoading: attachmentLoading } =
+    usePostImage();
 
-  //   console.log(userData);
+  const uploadImg = async () => {
+    const res1 = await responseHandler(() => postImage([imgVal]), [201]);
+    if (res1.status) {
+      await handleUpdate({ image: res1.data?.[0]?._id });
+    } else {
+      snack.createSnack(res1.data, "error");
+    }
+  };
+
+  React.useEffect(() => {
+    if (!imgVal) return;
+    // setImgVal();
+    uploadImg();
+  }, [imgVal]);
+
   return (
-    <div></div>
-    // <>
-    //   <Container
-    //     sx={{
-    //       display: "flex",
-    //       alignItems: "center",
-    //       justifyContent: "center",
-    //       pb: 1,
-    //     }}
-    //   >
-    //     <Grid
-    //       container
-    //       spacing={4}
-    //       sx={{
-    //         display: "flex",
-    //         alignItems: "center",
-    //         justifyContent: "center",
-    //         mt: 1,
-    //       }}
-    //     >
-    //       <Grid
-    //         item
-    //         xs={12}
-    //         sx={{
-    //           display: "flex",
-    //           flexDirection: { xs: "column", sm: "row" },
-    //           alignItems: "center",
-    //           rowGap: 2,
-    //           columnGap: 4,
-    //           justifyContent: {
-    //             xs: "center",
-    //             //   sm: "flex-start",
-    //           },
-    //         }}
-    //       >
-    //         <Box
-    //           sx={{
-    //             position: "relative",
-    //           }}
-    //           component={"form"}
-    //         >
-    //           <Avatar
-    //             sx={{
-    //               width: "150px",
-    //               height: "150px",
-    //             }}
-    //             // src={authRootURL + userData?.data?.value?.image}
-    //             alt={userData?.data?.value?.full_name}
-    //           />
-    //           <Tooltip title={"Upload Photo"}>
-    //             <Fab
-    //               size="small"
-    //               sx={{
-    //                 position: "absolute",
-    //                 top: 100,
-    //                 right: 0,
-    //               }}
-    //               color={"secondary"}
-    //               component="label"
-    //             >
-    //               <FiEdit2 />
-    //               <input
-    //                 hidden
-    //                 accept="image/*"
-    //                 type="file"
-    //                 onChange={(e) => {
-    //                   setImgVal(e.target.files[0]);
-    //                 }}
-    //               />
-    //             </Fab>
-    //           </Tooltip>
-    //         </Box>
-    //         <Stack
-    //           direction={"column"}
-    //           sx={{
-    //             alignItems: {
-    //               xs: "center",
-    //               sm: "flex-start",
-    //             },
-    //           }}
-    //         >
-    //           <Typography variant={"h6"}>
-    //             {userData?.data?.value?.full_name}
-    //           </Typography>
-    //           <Typography
-    //             variant={"subtitle2"}
-    //             sx={{
-    //               display: "flex",
-    //               alignItems: "center",
-    //               columnGap: 1,
-    //               mt: {
-    //                 sm: 1,
-    //               },
-    //             }}
-    //           >
-    //             <Hidden smDown>
-    //               <FaPhoneAlt />
-    //             </Hidden>
-    //             <span>{userData?.data?.value?.user?.phone}</span>
-    //           </Typography>
-    //         </Stack>
-    //       </Grid>
+    <>
+      <Container
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          pb: 1,
+        }}
+      >
+        <Grid
+          container
+          spacing={4}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            mt: 1,
+          }}
+        >
+          <Grid
+            item
+            xs={12}
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              alignItems: "center",
+              rowGap: 2,
+              columnGap: 4,
+              justifyContent: {
+                xs: "center",
+              },
+            }}
+          >
+            <Box
+              sx={{
+                position: "relative",
+                minHeight: "150px",
+                minWidth: "150px",
+              }}
+              component={"form"}
+            >
+              {attachmentLoading || updateLoading ? (
+                <Box
+                  sx={{
+                    borderRadius: "50%",
+                    position: "relative",
+                    height: "150px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <CircularProgress color={"black"} />
+                </Box>
+              ) : (
+                <Avatar
+                  sx={{
+                    width: "150px",
+                    height: "150px",
+                  }}
+                  src={getAttachment(userData?.data?.data?.image)}
+                  alt={userData?.data?.data?.fullName}
+                />
+              )}
+              <Tooltip title={"Upload Photo"}>
+                <Fab
+                  size="small"
+                  sx={{
+                    position: "absolute",
+                    top: 100,
+                    right: 0,
+                  }}
+                  color={"secondary"}
+                  component="label"
+                >
+                  <FiEdit2 />
+                  <input
+                    hidden
+                    accept="image/*"
+                    type="file"
+                    onChange={(e) => {
+                      setImgVal(e.target.files[0]);
+                    }}
+                  />
+                </Fab>
+              </Tooltip>
+            </Box>
+            <Stack
+              direction={"column"}
+              sx={{
+                alignItems: {
+                  xs: "center",
+                  sm: "flex-start",
+                },
+              }}
+            >
+              <Stack direction={"row"} alignItems={"center"} columnGap={1}>
+                <Typography variant={"h6"}>
+                  {userData?.data?.data?.userName}
+                </Typography>
+                <ButtonSwitch
+                  checked={userData?.data?.data?.isActive}
+                  color={"success"}
+                  onClick={() => {
+                    updateState(userData?.data?.data?._id);
+                  }}
+                />
+              </Stack>
+              <Typography
+                variant={"subtitle2"}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  columnGap: 1,
+                  mt: {
+                    sm: 1,
+                  },
+                }}
+              >
+                <Hidden smDown>
+                  <Icon icon="uiw:mail" />
+                </Hidden>
+                <span>{userData?.data?.data?.email}</span>
+              </Typography>
+              <Typography
+                variant={"subtitle2"}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  columnGap: 1,
+                  mt: {
+                    sm: 1,
+                  },
+                }}
+              >
+                <Hidden smDown>
+                  <FaPhoneAlt />
+                </Hidden>
+                <span>{userData?.data?.data?.phone}</span>
+              </Typography>
+            </Stack>
+          </Grid>
 
-    //       <Grid item xs={12} md={6}>
-    //         <form onSubmit={handleSubmit(updateHandler)}>
-    //           <Paper
-    //             // elevation={2}
-    //             sx={{
-    //               p: {
-    //                 xs: 1,
-    //                 md: 2,
-    //               },
-    //               boxShadow: {
-    //                 xs: 2,
-    //                 md: 6,
-    //               },
-    //             }}
-    //             component={Stack}
-    //             direction={"column"}
-    //             rowGap={1}
-    //           >
-    //             <Hidden mdDown>
-    //               <Typography
-    //                 variant={"h5"}
-    //                 sx={{
-    //                   p: 1,
-    //                 }}
-    //               >
-    //                 ACCOUNT SETTINGS
-    //               </Typography>
-    //               <Divider />
-    //             </Hidden>
-    //             <Typography variant="button">Name *</Typography>
-    //             <CInput
-    //               placeholder="Full Name"
-    //               fullWidth
-    //               {...register("full_name")}
-    //             />
-    //             <Typography variant="button">Company Name *</Typography>
-    //             <CInput
-    //               placeholder="Company Name"
-    //               fullWidth
-    //               {...register("company_name")}
-    //             />
-    //             <Typography variant="button">Company Link</Typography>
-    //             <CInput
-    //               placeholder="Company Link"
-    //               fullWidth
-    //               {...register("company_link")}
-    //             />
-    //             <Typography variant="button">Phone *</Typography>
-    //             <CInput
-    //               placeholder="Phone Number"
-    //               readOnly
-    //               disabled
-    //               fullWidth
-    //               {...register("phone")}
-    //             />
-    //             <Typography variant="button">Address *</Typography>
-    //             <CInput
-    //               placeholder="Address"
-    //               fullWidth
-    //               {...register("address")}
-    //             />
-    //             <Typography variant="button">Additional Info</Typography>
-    //             <CInput
-    //               placeholder="Bank Account"
-    //               startAdornment={<Box sx={{ mr: 1 }}>CC:</Box>}
-    //               fullWidth
-    //               {...register("cc")}
-    //             />
-    //             <CInput
-    //               placeholder="BKash Number"
-    //               startAdornment={<Box sx={{ mr: 1 }}>BKash:</Box>}
-    //               fullWidth
-    //               inputProps={{
-    //                 type: "tel",
-    //               }}
-    //               {...register("bkash")}
-    //             />
-    //             <Button variant="contained" color={"black"} type={"submit"}>
-    //               Update
-    //             </Button>
-    //           </Paper>
-    //         </form>
-    //       </Grid>
-    //     </Grid>
-    //   </Container>
-    // </>
+          <Grid item xs={12} md={6}>
+            {/* <form onSubmit={handleSubmit(updateHandler)}> */}
+            <Paper
+              // elevation={2}
+              sx={{
+                p: {
+                  xs: 1,
+                  md: 2,
+                },
+                boxShadow: {
+                  xs: 2,
+                  md: 6,
+                },
+                maxWidth: "350px",
+                mx: "auto",
+              }}
+              component={Stack}
+              direction={"column"}
+              rowGap={1}
+            >
+              <Hidden mdDown>
+                <Typography
+                  variant={"h5"}
+                  sx={{
+                    p: 1,
+                  }}
+                >
+                  ACCOUNT SETTINGS
+                </Typography>
+                <Divider />
+              </Hidden>
+              <form onSubmit={handleSubmit(handleUpdate)}>
+                <Typography variant="button">Username </Typography>
+                <CInput
+                  placeholder="Username"
+                  fullWidth
+                  {...register("userName")}
+                />
+                <Typography variant="button">Name </Typography>
+                <CInput
+                  placeholder="Full Name"
+                  fullWidth
+                  {...register("fullName")}
+                />
+                <Typography variant="button">Phone </Typography>
+                <CInput
+                  placeholder="Phone Number"
+                  readOnly
+                  disabled
+                  fullWidth
+                  {...register("phone")}
+                />
+                <Typography variant="button">email </Typography>
+                <CInput
+                  placeholder="Full Name"
+                  fullWidth
+                  {...register("email")}
+                />
+                {/* <Typography variant="button">Address </Typography>
+              <CInput
+                placeholder="Address"
+                fullWidth
+                {...register("address")}
+              /> */}
+                {/* <Typography variant="button">Additional Info</Typography> */}
+                {/* <CInput
+                placeholder="Bank Account"
+                startAdornment={<Box sx={{ mr: 1 }}>CC:</Box>}
+                fullWidth
+                {...register("cc")}
+              />
+              <CInput
+                placeholder="BKash Number"
+                startAdornment={<Box sx={{ mr: 1 }}>BKash:</Box>}
+                fullWidth
+                inputProps={{
+                  type: "tel",
+                }}
+                {...register("bkash")}
+              /> */}
+                <Button
+                  variant="contained"
+                  color={"black"}
+                  type={"submit"}
+                  disabled={updateLoading || !isDirty}
+                  fullWidth
+                >
+                  Update
+                </Button>
+              </form>
+            </Paper>
+          </Grid>
+        </Grid>
+      </Container>
+    </>
   );
 };
 

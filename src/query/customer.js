@@ -12,7 +12,7 @@ export const useGetAllCustomer = (params) => {
 };
 
 const getCustomerByID = (customer_id) => {
-  return instance.get(`product/${customer_id}`);
+  return instance.get(`customer/${customer_id}`);
 };
 
 export const useGetCustomerByID = (customer_id) => {
@@ -46,6 +46,9 @@ const toggleCustomer = (id) => {
 export const useToggleCustomer = () => {
   const queryClient = useQueryClient();
   return useMutation(toggleCustomer, {
-    onSuccess: () => queryClient.invalidateQueries("get-all-customer"),
+    onSuccess: () => {
+      queryClient.invalidateQueries("get-all-customer");
+      queryClient.invalidateQueries("get-customer-by-id");
+    },
   });
 };

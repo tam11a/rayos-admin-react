@@ -1,21 +1,32 @@
 import { Container } from "@mui/material";
 import React from "react";
-import { useParams, Link, Navigate } from "react-router-dom";
+import {
+  useParams,
+  Link,
+  Navigate,
+  useSearchParams,
+  Route,
+  Routes,
+} from "react-router-dom";
 
 import CTab from "../../components/CTab";
 import CTabs from "../../components/CTabs";
 import Profile from "./Profile";
+import UserOrder from "./UserOrder";
 // import UserOrder from "./UserOrder";
 // import Wallet from "./Wallet";
 
 const Index = () => {
   const { uid, path_url } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  //   console.log(searchParams.getAll());
 
   return (
     <>
       <Container sx={{ pt: 1 }}>
         <CTabs
-          value={path_url}
+          value={searchParams.get("tab")}
           sx={{
             width: "fit-content",
             minWidth: {
@@ -28,40 +39,20 @@ const Index = () => {
           }}
         >
           <CTab
-            value={"profile"}
+            value={null}
             label={"User Profile"}
-            component={Link}
-            // to={`/user/${uid}/profile`}
+            onClick={() => {
+              delete searchParams.tab;
+              setSearchParams({ ...searchParams });
+            }}
           />
           <CTab
-            // value={"order"}
+            value={"order"}
             label={"User Order"}
-            component={Link}
-            // to={`/user/${uid}/order`}
+            onClick={() => setSearchParams({ ...searchParams, tab: "order" })}
           />
         </CTabs>
-        {/* {path_url === "profile" ? (
-          <>
-            <Profile uid={uid} />
-          </>
-        ) : (
-          <>
-            <Navigate to={`/customer/${uid}`} />
-          </>
-        )} */}
-        {/* {path_url === "profile" ? (
-          <>
-            <Profile uid={uid} />
-          </>
-        ) : path_url === "order" ? (
-          <>
-            <UserOrder uid={uid} />
-          </>
-        ) : (
-          <>
-            <Navigate to={`/user/${uid}/profile`} />
-          </>
-        )} */}
+        {searchParams.get("tab") === "order" ? <UserOrder /> : <Profile />}
       </Container>
     </>
   );

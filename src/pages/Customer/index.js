@@ -53,7 +53,7 @@ const Index = () => {
   // get user data
   const { data, isLoading } = useGetAllCustomer(params);
 
-  // console.log(data);
+  console.log(data);
 
   const cols = [
     // {
@@ -98,13 +98,13 @@ const Index = () => {
         />
       ),
     },
-    {
-      headerName: "Username",
-      headerAlign: "center",
-      field: "userName",
-      align: "center",
-      width: 150,
-    },
+    // {
+    //   headerName: "Username",
+    //   headerAlign: "center",
+    //   field: "userName",
+    //   align: "center",
+    //   width: 150,
+    // },
     {
       headerName: "Full Name",
       headerAlign: "center",
