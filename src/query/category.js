@@ -82,7 +82,7 @@ export const useGetSubCategoryFromCatID = (category_id, params) => {
     () => getSubCategoryFromCatID(category_id, params),
     {
       // refetchInterval: 20000,
-      enabled: !!category_id,
+      enabled: !!category_id && category_id !== "null",
       retry: 0,
     }
   );

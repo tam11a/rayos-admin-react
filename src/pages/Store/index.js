@@ -40,9 +40,6 @@ const Index = () => {
     if (res.status) snack.createSnack(res.msg);
     else snack.createSnack(res.msg, "error");
   };
-  // console.log(data);
-
-  const [openCreate, setOpenCreate] = React.useState(false);
 
   const cols = [
     {
