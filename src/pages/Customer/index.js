@@ -53,28 +53,7 @@ const Index = () => {
   // get user data
   const { data, isLoading } = useGetAllCustomer(params);
 
-  console.log(data);
-
   const cols = [
-    // {
-    //   headerName: "",
-    //   field: "_id",
-    //   width: 60,
-    //   headerAlign: "center",
-    //   align: "center",
-    //   renderCell: (params) => (
-    //     <>
-    //       <IconButton
-    //         component={Link}
-    //         size={"small"}
-    //         color={"primary"}
-    //         to={`/store/${params.row?._id}`}
-    //       >
-    //         <FaSlackHash />
-    //       </IconButton>
-    //     </>
-    //   ),
-    // },
     {
       headerName: "#",
       headerAlign: "center",
@@ -92,9 +71,9 @@ const Index = () => {
           }
           label={params.row?.userName}
           variant="outlined"
-          // onClick={`/customer/${params.row?._id}`}
           to={`/customer/${params.row?._id}`}
           component={Link}
+          onClick={() => {}}
         />
       ),
     },
