@@ -12,45 +12,32 @@ import {
 import moment from "moment";
 import DataTable from "../../components/DataTable";
 import StateViewer from "../../components/StateViewer";
-import {
-  useCancelOrder,
-  useCompleteOrder,
-  useConfirmOrder,
-  useGetOrderListByUser,
-} from "../../query/order";
+import { useGetUserOrderListByID } from "../../query/order";
 import tableOptionsStyle from "../../style/tableOptions";
 import { IoMdEye } from "react-icons/io";
 import snackContext from "../../context/snackProvider";
 import { responseHandler } from "../../utilities/response-handler";
 import invoiceContext from "../../context/invoiceProvider";
+import { useParams } from "react-router-dom";
 
-/**
- * get-all-pending-user
- * get-all-confirm-user
- * get-all-deliver-user
- * get-all-cancel-user
- *
- */
 const UserOrder = ({ uid }) => {
-  const invoice = React.useContext(invoiceContext);
   const snack = React.useContext(snackContext);
+  const { cid } = useParams();
   const [params, setParams] = React.useState({
     method: "confirm",
     limit: 10,
     page: 1,
     filters: [],
   });
-  const { data, isLoading } = useGetOrderListByUser(uid, params);
+  const { data, isLoading } = useGetUserOrderListByID(cid, params);
+  console.log(data);
 
   // useMutations
-  const { mutateAsync: mutateConfirmOrder } = useConfirmOrder();
-  const { mutateAsync: mutateCompleteOrder } = useCompleteOrder();
-  const { mutateAsync: mutateCancelOrder } = useCancelOrder();
 
   const cols = [
     {
       headerName: "Invoice",
-      field: "show_info",
+      field: "_id",
       width: 100,
       align: "center",
       headerAlign: "center",
@@ -58,9 +45,9 @@ const UserOrder = ({ uid }) => {
         <>
           <IconButton
             size={"small"}
-            onClick={() => {
-              invoice.showInvoice(d.row.id);
-            }}
+            // onClick={() => {
+            //   invoice.showInvoice(d.row.id);
+            // }}
           >
             <IoMdEye />
           </IconButton>
@@ -68,39 +55,41 @@ const UserOrder = ({ uid }) => {
       ),
       sortable: false,
     },
+    // {
+    //   headerName: "Name",
+    //   field: "receiver_name",
+    //   width: 200,
+    //   sortable: false,
+    // // },
+    // {
+    //   headerName: "Phone",
+    //   field: "receiver_number",
+    //   width: 120,
+    //   sortable: false,
+    // },
     {
-      headerName: "Name",
-      field: "receiver_name",
+      headerName: "Address",
+      headerAlign: "center",
+      field: "shipping",
+      align: "center",
       width: 200,
       sortable: false,
     },
-    {
-      headerName: "Phone",
-      field: "receiver_number",
-      width: 120,
-      sortable: false,
-    },
-    {
-      headerName: "Address",
-      field: "receiver_address",
-      width: 250,
-      sortable: false,
-    },
-    {
-      headerName: "Date",
-      field: "created_at",
-      width: 170,
-      headerAlign: "center",
-      renderCell: (d) => {
-        return <p>{moment(d.row.created_at).format("DD/MM/YYYY hh:mm a")}</p>;
-      },
-      sortable: false,
-    },
+    // {
+    //   headerName: "Date",
+    //   field: "created_at",
+    //   width: 170,
+    //   headerAlign: "center",
+    //   renderCell: (d) => {
+    //     return <p>{moment(d.row.created_at).format("DD/MM/YYYY hh:mm a")}</p>;
+    //   },
+    //   sortable: false,
+    // },
     {
       headerName: "Status",
+      headerAlign: "center",
       field: "status",
       width: 120,
-      headerAlign: "center",
       align: "center",
       renderCell: (d) => {
         var color;
@@ -139,53 +128,47 @@ const UserOrder = ({ uid }) => {
     },
     {
       headerName: "Method",
-      field: "payment_method",
+      field: "paymentMethod",
       align: "center",
       headerAlign: "center",
       sortable: false,
     },
     {
-      headerName: "BI Price",
-      field: "sub_total",
+      headerName: "Product Total",
+      field: "totalSellPrice",
       align: "center",
       headerAlign: "center",
       sortable: false,
     },
     {
-      headerName: "PND Fee",
-      field: "pnd_total_fee",
-      align: "center",
+      headerName: "Shipping Fee",
       headerAlign: "center",
+      field: "shippingFee",
+      align: "center",
       sortable: false,
     },
     {
-      headerName: "Delivery Fee",
-      field: "shipping_total_cost",
-      align: "center",
+      headerName: "Voucher",
       headerAlign: "center",
-      sortable: false,
-    },
-    {
-      headerName: "Reseller Price",
-      field: "reseller_total_income",
+      field: "voucher",
       align: "center",
       width: 120,
-      headerAlign: "center",
+      renderCell: (params) => params.row?.voucher || "-",
       sortable: false,
     },
     {
-      headerName: "Reseller Profit",
-      field: "reseller_profit",
-      align: "center",
-      width: 120,
+      headerName: "Discount",
       headerAlign: "center",
+      field: "discount",
+      align: "center",
       sortable: false,
     },
+
     {
       headerName: "Total Price",
-      field: "total_amount",
-      align: "center",
       headerAlign: "center",
+      field: "total",
+      align: "center",
       sortable: false,
     },
     {
@@ -202,39 +185,39 @@ const UserOrder = ({ uid }) => {
               disabled={
                 d.row.status === "delivered" || d.row.status === "cancel"
               }
-              onChange={async (e) => {
-                if (e.target.value === "in progress") {
-                  const res = await responseHandler(
-                    () => mutateConfirmOrder(d.row.id),
-                    [200]
-                  );
-                  if (res.status) {
-                    snack.createSnack(res.msg);
-                  } else {
-                    snack.createSnack(res.msg, "error");
-                  }
-                } else if (e.target.value === "delivered") {
-                  const res = await responseHandler(
-                    () => mutateCompleteOrder(d.row.id),
-                    [200]
-                  );
-                  if (res.status) {
-                    snack.createSnack(res.msg);
-                  } else {
-                    snack.createSnack(res.msg, "error");
-                  }
-                } else if (e.target.value === "cancel") {
-                  const res = await responseHandler(
-                    () => mutateCancelOrder(d.row.id),
-                    [200]
-                  );
-                  if (res.status) {
-                    snack.createSnack(res.msg);
-                  } else {
-                    snack.createSnack(res.msg, "error");
-                  }
-                }
-              }}
+              // onChange={async (e) => {
+              //   if (e.target.value === "in progress") {
+              //     const res = await responseHandler(
+              //       () => mutateConfirmOrder(d.row.id),
+              //       [200]
+              //     );
+              //     if (res.status) {
+              //       snack.createSnack(res.msg);
+              //     } else {
+              //       snack.createSnack(res.msg, "error");
+              //     }
+              //   } else if (e.target.value === "delivered") {
+              //     const res = await responseHandler(
+              //       () => mutateCompleteOrder(d.row.id),
+              //       [200]
+              //     );
+              //     if (res.status) {
+              //       snack.createSnack(res.msg);
+              //     } else {
+              //       snack.createSnack(res.msg, "error");
+              //     }
+              //   } else if (e.target.value === "cancel") {
+              //     const res = await responseHandler(
+              //       () => mutateCancelOrder(d.row.id),
+              //       [200]
+              //     );
+              //     if (res.status) {
+              //       snack.createSnack(res.msg);
+              //     } else {
+              //       snack.createSnack(res.msg, "error");
+              //     }
+              //   }
+              // }}
               fullWidth
             >
               <MenuItem value={"new"} disabled>
@@ -266,24 +249,24 @@ const UserOrder = ({ uid }) => {
       field: "invoice_print",
       align: "center",
       headerAlign: "center",
-      renderCell: (d) => {
-        return (
-          <>
-            <IconButton
-              size={"small"}
-              onClick={() => {
-                console.log(d.row);
-                window.open(
-                  "https://admin.pndservicebd.com/orderdetails.html?id=" +
-                    d.row.id
-                );
-              }}
-            >
-              <IoMdEye />
-            </IconButton>
-          </>
-        );
-      },
+      // renderCell: (d) => {
+      //   return (
+      //     <>
+      //       <IconButton
+      //         size={"small"}
+      //         onClick={() => {
+      //           console.log(d.row);
+      //           window.open(
+      //             "https://admin.pndservicebd.com/orderdetails.html?id=" +
+      //               d.row.id
+      //           );
+      //         }}
+      //       >
+      //         <IoMdEye />
+      //       </IconButton>
+      //     </>
+      //   );
+      // },
       sortable: false,
     },
   ];
@@ -298,8 +281,8 @@ const UserOrder = ({ uid }) => {
         <StateViewer
           stateList={[
             {
-              num: "-",
-              title: "Total Delivered Order",
+              num: data?.data?.total,
+              title: "Total Order",
             },
             {
               num: "-",
@@ -409,10 +392,10 @@ const UserOrder = ({ uid }) => {
             my: 2,
           }}
           columns={cols}
-          rows={data?.data?.value?.data || []}
+          rows={data?.data?.data || []}
           isLoading={isLoading}
           paginationMode={"server"}
-          rowCount={data?.data?.value?.total || 0}
+          rowCount={data?.data?.total || 0}
           page={(params?.page || 1) - 1}
           onPageChange={(newPage) => {
             console.log(newPage + 1);

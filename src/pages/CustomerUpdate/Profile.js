@@ -36,7 +36,6 @@ import { usePostImage } from "../../query/attachments";
 import ButtonSwitch from "../../components/ButtonSwitch";
 
 const Profile = () => {
-  const authCntxt = React.useContext(authContext);
   const snack = React.useContext(snackContext);
   const { cid } = useParams();
   const [imgVal, setImgVal] = React.useState();

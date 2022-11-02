@@ -9,12 +9,26 @@ const getAllOrder = (params) => {
     queryString += `&filters[]=${filter}`;
   });
   return instance.get(queryString);
-};;
+};
 
 export const useGetAllOrder = (params) => {
   return useQuery(["get-all-order", params], () => getAllOrder(params), {
     // refetchInterval: 20000,
   });
+};
+
+const getUserOrderListByID = (user_id) => {
+  return instance.get(`order/user/${user_id}`);
+};
+
+export const useGetUserOrderListByID = (user_id) => {
+  return useQuery(
+    ["get-user-orderlist-by-id", user_id],
+    () => getUserOrderListByID(user_id),
+    {
+      // refetchInterval: 20000,
+    }
+  );
 };
 
 const getOrderListByUser = (userId, params) => {
