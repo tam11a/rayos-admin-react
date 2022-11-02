@@ -54,7 +54,7 @@ const LeftDrawer = ({ open, setOpen }) => {
       name: "Customer",
       icon: <IoIosPeople />,
       to: "/customer-list",
-      disabled: true,
+      disabled: false,
     },
     {
       name: "Product",

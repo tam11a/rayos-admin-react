@@ -21,6 +21,7 @@ import {
   useCancelUser,
   useConfirmUser,
   useGetAllCustomer,
+  useToggleCustomer,
 } from "../../query/customer";
 import ButtonSwitch from "../../components/ButtonSwitch";
 
@@ -29,6 +30,8 @@ import tableOptionsStyle from "../../style/tableOptions";
 import { responseHandler } from "../../utilities/response-handler";
 import snackContext from "../../context/snackProvider";
 import { Link } from "react-router-dom";
+import { FaSlackHash } from "react-icons/fa";
+import { getAttachment } from "../../service/instance";
 
 const Index = () => {
   const snack = React.useContext(snackContext);
@@ -39,10 +42,13 @@ const Index = () => {
     filters: [],
   });
 
-  // useMutations
-  const { mutateAsync: mutateConfirmUser } = useConfirmUser();
-  const { mutateAsync: mutateCancelUser } = useCancelUser();
-  const { mutateAsync: mutateBlockUser } = useBlockUser();
+  const { mutateAsync: toggleCustomer } = useToggleCustomer();
+
+  const updateState = async (id) => {
+    const res = await responseHandler(() => toggleCustomer(id));
+    if (res.status) snack.createSnack(res.msg);
+    else snack.createSnack(res.msg, "error");
+  };
 
   // get user data
   const { data, isLoading } = useGetAllCustomer(params);
@@ -50,27 +56,61 @@ const Index = () => {
   // console.log(data);
 
   const cols = [
+    // {
+    //   headerName: "",
+    //   field: "_id",
+    //   width: 60,
+    //   headerAlign: "center",
+    //   align: "center",
+    //   renderCell: (params) => (
+    //     <>
+    //       <IconButton
+    //         component={Link}
+    //         size={"small"}
+    //         color={"primary"}
+    //         to={`/store/${params.row?._id}`}
+    //       >
+    //         <FaSlackHash />
+    //       </IconButton>
+    //     </>
+    //   ),
+    // },
     {
       headerName: "#",
-      field: "show_info",
-      width: 60,
       headerAlign: "center",
-      align: "center",
+      field: "receiver_number",
+      align: "left",
+      width: 120,
+      sortable: false,
       renderCell: (params) => (
-        <>
-          <IconButton component={Link} to={`/user/${params.row?.id}`}>
-            <IoMdEye />
-          </IconButton>
-        </>
+        <Chip
+          avatar={
+            <Avatar
+              alt={params.row?.userName}
+              src={getAttachment(params.row?.image)}
+            />
+          }
+          label={params.row?.userName}
+          variant="outlined"
+          // onClick={`/customer/${params.row?._id}`}
+          to={`/customer/${params.row?._id}`}
+          component={Link}
+        />
       ),
     },
     {
-      headerName: "Name",
+      headerName: "Username",
       headerAlign: "center",
-      field: "userprofile.full_name",
+      field: "userName",
       align: "center",
-      width: 200,
-      renderCell: (params) => params.row.userprofile?.full_name || "-",
+      width: 150,
+    },
+    {
+      headerName: "Full Name",
+      headerAlign: "center",
+      field: "fullName",
+      align: "center",
+      width: 150,
     },
     {
       headerName: "Phone",
@@ -83,134 +123,32 @@ const Index = () => {
       headerName: "Email",
       headerAlign: "center",
       field: "email",
+      width: 250,
+      align: "center",
+    },
+    {
+      headerName: "Total Orders",
+      headerAlign: "center",
+      field: "totalOrders",
+      align: "center",
       width: 120,
-      align: "center",
+      renderCell: (params) => params.row?.totalOrders || "-",
     },
     {
-      headerName: "Company or Page name",
+      headerName: "Status",
       headerAlign: "center",
-      field: "userprofile.company_name",
+      field: "status",
       align: "center",
-      width: 200,
-      renderCell: (params) => params.row.userprofile?.company_name || "-",
-    },
-    {
-      headerName: "Address",
-      headerAlign: "center",
-      field: "userprofile.address",
-      width: 230,
-      align: "center",
-      renderCell: (params) => params.row.userprofile?.address || "-",
-    },
-    // {
-    //   headerName: "Total Order",
-    //   headerAlign: "center",
-    //   field: "quantity",
-    //   align: "center",
-    // },
-    // {
-    //   headerName: "Total Earn",
-    //   headerAlign: "center",
-    //   field: "discount",
-    //   align: "center",
-    // },
-    // {
-    //   headerName: "Total Pending",
-    //   headerAlign: "center",
-    //   field: "total_pending",
-    //   align: "center",
-    // },
-    {
-      headerName: "Action",
-      headerAlign: "center",
-      field: "actions",
-      align: "center",
-      width: 320,
-      renderCell: (params) =>
-        params.row.status === "pending" ? (
-          <>
-            <ButtonGroup variant="contained" size="small">
-              <Button
-                color="success"
-                onClick={async () => {
-                  const res = await responseHandler(
-                    () => mutateConfirmUser(params.row.id),
-                    [200]
-                  );
-                  if (res.status) {
-                    snack.createSnack(res.msg);
-                  } else {
-                    snack.createSnack(res.msg, "error");
-                  }
-                }}
-              >
-                Accept
-              </Button>
-              <Button
-                color="black"
-                onClick={async () => {
-                  const res = await responseHandler(
-                    () => mutateCancelUser(params.row.id),
-                    [200]
-                  );
-                  if (res.status) {
-                    snack.createSnack(res.msg);
-                  } else {
-                    snack.createSnack(res.msg, "error");
-                  }
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                color="error"
-                onClick={async () => {
-                  const res = await responseHandler(
-                    () => mutateBlockUser(params.row.id),
-                    [200]
-                  );
-                  if (res.status) {
-                    snack.createSnack(res.msg);
-                  } else {
-                    snack.createSnack(res.msg, "error");
-                  }
-                }}
-              >
-                Block
-              </Button>
-            </ButtonGroup>
-          </>
-        ) : (
-          <>
-            <ButtonSwitch
-              checked={params.row.status === "active"}
-              color={"success"}
-              onClick={async () => {
-                if (params.row.status === "active") {
-                  const res = await responseHandler(
-                    () => mutateBlockUser(params.row.id),
-                    [200]
-                  );
-                  if (res.status) {
-                    snack.createSnack(res.msg);
-                  } else {
-                    snack.createSnack(res.msg, "error");
-                  }
-                } else {
-                  const res = await responseHandler(
-                    () => mutateConfirmUser(params.row.id),
-                    [200]
-                  );
-                  if (res.status) {
-                    snack.createSnack(res.msg);
-                  } else {
-                    snack.createSnack(res.msg, "error");
-                  }
-                }
-              }}
-            />
-          </>
-        ),
+      width: 120,
+      renderCell: (params) => (
+        <ButtonSwitch
+          checked={params.row?.isActive}
+          color={"success"}
+          onClick={() => {
+            updateState(params.row?._id);
+          }}
+        />
+      ),
     },
   ];
   return (
@@ -223,7 +161,7 @@ const Index = () => {
         <StateViewer
           stateList={[
             {
-              num: data?.data?.value?.total_user,
+              num: data?.data?.total,
               title: "Active User",
             },
             {
@@ -291,7 +229,6 @@ const Index = () => {
               >
                 <MenuItem value={"all"}>All</MenuItem>
                 <MenuItem value={"filters[]=status=active&"}>Active</MenuItem>
-                <MenuItem value={"filters[]=status=pending&"}>Pending</MenuItem>
                 <MenuItem value={"filters[]=status=block&"}>Blocked</MenuItem>
               </Select>
             </Grid>
@@ -303,10 +240,11 @@ const Index = () => {
             my: 2,
           }}
           columns={cols}
-          rows={data?.data?.value?.data?.data || []}
+          rows={data?.data?.data || []}
           isLoading={isLoading}
           paginationMode={"server"}
-          rowCount={data?.data?.value?.data?.total || 0}
+          rowCount={data?.data?.total || 0}
+          getRowId={(row) => row._id}
           page={(params?.page || 1) - 1}
           onPageChange={(newPage) =>
             setParams({
@@ -325,6 +263,6 @@ const Index = () => {
       </Container>
     </>
   );
-};;;;;;;;;;;;;;;;;;
+};
 
 export default Index;

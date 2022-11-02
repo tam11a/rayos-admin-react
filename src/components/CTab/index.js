@@ -4,7 +4,7 @@ import { Tab } from "@mui/material";
 const Index = styled(Tab)(({ theme }) => ({
   textTransform: "none",
   fontSize: { xs: "0.7rem", md: "1rem" },
-  fontWeight: "bold",
+  fontWeight: "600",
   borderRadius: "50px",
   "&:hover": {
     opacity: 1,

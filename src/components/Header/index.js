@@ -63,20 +63,21 @@ const Index = () => {
                     <Route index element={"Dashboard"} />
                     <Route path={"order-list"} element={"Order List"} />
                     <Route path={"store"} element={"Store List"} />
-                    <Route path={"store/:pid"} element={"Store"} />
+                    <Route path={"store/:pid"} element={"Store Info"} />
                     <Route path={"customer-list"} element={"Customer List"} />
+                    <Route path={"customer/:cid"} element={"Customer Info"} />
                     <Route path={"product-list"} element={"Product List"} />
-                    <Route path={"prod/:pid"} element={"Product"} />
+                    <Route path={"prod/:pid"} element={"Product Info"} />
                     <Route path={"images"} element={"Images"} />
                     <Route path={"settings"} element={"Settings"} />
                     <Route path={"category"} element={"Category List"} />
-                    <Route path={"cat/:cid"} element={"Category"} />
+                    <Route path={"cat/:cid"} element={"Category Info"} />
                     <Route
                       path={"user/:uid/profile"}
                       element={"User Profile"}
                     />
                     <Route path={"user/:uid/order"} element={"User Orders"} />
-                    <Route path={"user/:uid/wallet"} element={"User Wallet"} />
+                    {/* <Route path={"user/:uid/wallet"} element={"User Wallet"} /> */}
 
                     <Route path={"*"} element={""} />
                   </Routes>

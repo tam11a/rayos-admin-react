@@ -4,9 +4,9 @@ import { useParams, Link, Navigate } from "react-router-dom";
 
 import CTab from "../../components/CTab";
 import CTabs from "../../components/CTabs";
-import Profile from "../CustomerUpdate/Profile";
-import UserOrder from "../CustomerUpdate/UserOrder";
-import Wallet from "./Wallet";
+import Profile from "./Profile";
+// import UserOrder from "./UserOrder";
+// import Wallet from "./Wallet";
 
 const Index = () => {
   const { uid, path_url } = useParams();
@@ -31,22 +31,25 @@ const Index = () => {
             value={"profile"}
             label={"User Profile"}
             component={Link}
-            to={`/user/${uid}/profile`}
+            // to={`/user/${uid}/profile`}
           />
           <CTab
-            value={"order"}
+            // value={"order"}
             label={"User Order"}
             component={Link}
-            to={`/user/${uid}/order`}
-          />
-          <CTab
-            value={"wallet"}
-            label={"User Wallet"}
-            component={Link}
-            to={`/user/${uid}/wallet`}
+            // to={`/user/${uid}/order`}
           />
         </CTabs>
-        {path_url === "profile" ? (
+        {/* {path_url === "profile" ? (
+          <>
+            <Profile uid={uid} />
+          </>
+        ) : (
+          <>
+            <Navigate to={`/customer/${uid}`} />
+          </>
+        )} */}
+        {/* {path_url === "profile" ? (
           <>
             <Profile uid={uid} />
           </>
@@ -54,15 +57,11 @@ const Index = () => {
           <>
             <UserOrder uid={uid} />
           </>
-        ) : path_url === "wallet" ? (
-          <>
-            <Wallet uid={uid} />
-          </>
         ) : (
           <>
             <Navigate to={`/user/${uid}/profile`} />
           </>
-        )}
+        )} */}
       </Container>
     </>
   );

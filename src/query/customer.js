@@ -2,109 +2,50 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import instance from "../service/instance";
 
 const getAllCustomer = (params) => {
-  let queryString = `admin/get-all-user?${
-    params.method !== "all" ? params.method : ""
-  }limit=${params.limit}&page=${params.page}`; // /${params.limit}?page=${params.page}
-  params.filters?.map((filter) => {
-    queryString += `&filters[]=${filter}`;
-  });
-  return instance.get(queryString);
+  return instance.get("customer", params);
 };
 
 export const useGetAllCustomer = (params) => {
   return useQuery(["get-all-customer", params], () => getAllCustomer(params), {
-    // refetchInterval: 20000,
-    retry: 0,
+    // enabled: !!id,
   });
 };
 
-// confirm user
-const confirmUser = (id) => {
-  return instance.put(`admin/user-register/confirm/${id}`);
+const getCustomerByID = (customer_id) => {
+  return instance.get(`product/${customer_id}`);
 };
 
-export const useConfirmUser = () => {
+export const useGetCustomerByID = (customer_id) => {
+  return useQuery(
+    ["get-customer-by-id", customer_id],
+    () => getCustomerByID(customer_id),
+    {
+      // refetchInterval: 20000,
+    }
+  );
+};
+
+const updateCustomer = ({ customer_id, data }) => {
+  return instance.patch(`customer/${customer_id}`, data);
+};
+
+export const useUpdateCustomer = () => {
   const queryClient = useQueryClient();
-  return useMutation(confirmUser, {
+  return useMutation(updateCustomer, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("get-all-store");
+      queryClient.invalidateQueries("get-store-by-id");
+    },
+  });
+};
+
+const toggleCustomer = (id) => {
+  return instance.put(`customer/${id}`);
+};
+
+export const useToggleCustomer = () => {
+  const queryClient = useQueryClient();
+  return useMutation(toggleCustomer, {
     onSuccess: () => queryClient.invalidateQueries("get-all-customer"),
-  });
-};
-
-// block user
-const blockUser = (id) => {
-  return instance.put(`admin/user-register/block/${id}`);
-};
-
-export const useBlockUser = () => {
-  const queryClient = useQueryClient();
-  return useMutation(blockUser, {
-    onSuccess: () => queryClient.invalidateQueries("get-all-customer"),
-  });
-};
-
-// cancel user
-const cancelUser = (id) => {
-  return instance.put(`admin/user-register/cancel/${id}`);
-};
-
-export const useCancelUser = () => {
-  const queryClient = useQueryClient();
-  return useMutation(cancelUser, {
-    onSuccess: () => queryClient.invalidateQueries("get-all-customer"),
-  });
-};
-
-const getUserProfile = (id) => {
-  return instance.get("admin/user-profile/" + id);
-};
-
-export const useGetCustomerProfile = (id) => {
-  return useQuery(["customer-info", id], () => getUserProfile(id), {
-    enabled: !!id,
-  });
-};
-
-const updateUserProfile = (data) => {
-  return instance.postForm("admin/update/user-profile", data);
-};
-
-export const useUpdateUserProfile = () => {
-  const queryClient = useQueryClient();
-  return useMutation(updateUserProfile, {
-    onSuccess: () => queryClient.invalidateQueries("customer-info"),
-  });
-};
-
-const getWalletInfo = (userId) => {
-  return instance.get(`info/admin/get-user/${userId}`);
-};
-
-export const useGetWalletInfo = (userId) => {
-  return useQuery(["get-user-wallet", userId], () => getWalletInfo(userId), {
-    enabled: !!userId,
-  });
-};
-
-//customer wallet
-
-const sendAmountToUser = (data) => {
-  return instance.post(`info/send-amount`, data);
-};
-
-export const useSendAmountToUser = () => {
-  const queryClient = useQueryClient();
-  return useMutation(sendAmountToUser, {
-    onSuccess: () => queryClient.invalidateQueries("get-user-wallet"),
-  });
-};
-
-const updateAmountToUser = (data) => {
-  return instance.post(`info/update-amount`, data);
-};
-
-export const useUpdateAmountToUser = () => {
-  const queryClient = useQueryClient();
-  return useMutation(updateAmountToUser, {
-    onSuccess: () => queryClient.invalidateQueries("get-user-wallet"),
   });
 };
