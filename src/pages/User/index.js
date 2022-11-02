@@ -4,8 +4,8 @@ import { useParams, Link, Navigate } from "react-router-dom";
 
 import CTab from "../../components/CTab";
 import CTabs from "../../components/CTabs";
-import Profile from "./Profile";
-import UserOrder from "./UserOrder";
+import Profile from "../CustomerUpdate/Profile";
+import UserOrder from "../CustomerUpdate/UserOrder";
 import Wallet from "./Wallet";
 
 const Index = () => {
