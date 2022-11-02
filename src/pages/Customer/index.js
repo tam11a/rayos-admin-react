@@ -77,13 +77,13 @@ const Index = () => {
         />
       ),
     },
-    {
-      headerName: "Username",
-      headerAlign: "center",
-      field: "userName",
-      align: "center",
-      width: 150,
-    },
+    // {
+    //   headerName: "Username",
+    //   headerAlign: "center",
+    //   field: "userName",
+    //   align: "center",
+    //   width: 150,
+    // },
     {
       headerName: "Full Name",
       headerAlign: "center",

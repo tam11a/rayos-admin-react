@@ -37,7 +37,7 @@ const AppRoute = () => {
               <Route path="store" element={<Store />} />
               <Route path="store/:sid" element={<StoreUpdate />} />
               <Route path="customer-list" element={<Customer />} />
-              <Route path="customer/:cid" element={<CustomerUpdate />} />
+              <Route path="customer/:cid/*" element={<CustomerUpdate />} />
               <Route path="product-list" element={<Product />} />
               <Route path="prod/:pid" element={<ProductUpdate />} />
 
