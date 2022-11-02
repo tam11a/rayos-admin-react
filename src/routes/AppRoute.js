@@ -11,14 +11,15 @@ import Order from "../pages/Order";
 import Store from "../pages/Store";
 import StoreUpdate from "../pages/StoreUpdate";
 import Customer from "../pages/Customer";
+import CustomerUpdate from "../pages/CustomerUpdate";
 import Product from "../pages/Product";
 import ProductUpdate from "../pages/ProductUpdate";
 import Category from "../pages/Category";
 import CategoryUpdate from "../pages/CategoryUpdate";
-import User from "../pages/User";
+// import User from "../pages/User";
 import Images from "../pages/Images";
-import UserOrder from "../pages/User/UserOrder";
-import Wallet from "../pages/User/Wallet";
+// import UserOrder from "../pages/User/UserOrder";
+// import Wallet from "../pages/User/Wallet";
 
 const AppRoute = () => {
   const authCntxt = React.useContext(authContext);
@@ -35,13 +36,13 @@ const AppRoute = () => {
               <Route path="order-list" element={<Order />} />
               <Route path="store" element={<Store />} />
               <Route path="store/:sid" element={<StoreUpdate />} />
-
               <Route path="customer-list" element={<Customer />} />
+              <Route path="customer/:cid" element={<CustomerUpdate />} />
               <Route path="product-list" element={<Product />} />
               <Route path="prod/:pid" element={<ProductUpdate />} />
 
-              <Route path="user/:uid" element={<Navigate to={"profile"} />} />
-              <Route path="user/:uid/:path_url" element={<User />} />
+              {/* <Route path="user/:uid" element={<Navigate to={"profile"} />} />
+              <Route path="user/:uid/:path_url" element={<User />} /> */}
               <Route path="images" element={<Images />} />
               <Route path="settings" element={<>Settings</>} />
               <Route path="create-order" element={<>Create Order</>} />
