@@ -8,6 +8,7 @@ import { authContext } from "../context/AuthProvider";
 
 // pages
 import Order from "../pages/Order";
+import OrderDetails from "../pages/OrderDetails";
 import Store from "../pages/Store";
 import StoreUpdate from "../pages/StoreUpdate";
 import Customer from "../pages/Customer";
@@ -34,6 +35,8 @@ const AppRoute = () => {
               <Route index element={<Dashboard />} />
               {/* <Route path="/login" element={<>Order Lists</>} /> */}
               <Route path="order-list" element={<Order />} />
+              <Route path="order-details/:oid" element={<OrderDetails />} />
+
               <Route path="store" element={<Store />} />
               <Route path="store/:sid" element={<StoreUpdate />} />
               <Route path="customer-list" element={<Customer />} />

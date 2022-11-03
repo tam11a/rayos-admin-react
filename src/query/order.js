@@ -2,13 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import instance from "../service/instance";
 
 const getAllOrder = (params) => {
-  let queryString = `order/get-all-order?${
-    params.method !== "all" ? params.method : ""
-  }orders=created_at-DESC&limit=${params.limit}&page=${params.page}`; // /${params.limit}?page=${params.page}
-  params.filters?.map((filter) => {
-    queryString += `&filters[]=${filter}`;
-  });
-  return instance.get(queryString);
+  return instance.get(`order?limit=${params.limit}&page=${params.page}`);
 };
 
 export const useGetAllOrder = (params) => {
@@ -31,21 +25,16 @@ export const useGetUserOrderListByID = (user_id) => {
   );
 };
 
-const getOrderListByUser = (userId, params) => {
-  let queryString = `order/get-all-${params.method}-user/${userId}?orders=created_at-DESC&limit=${params.limit}&page=${params.page}`;
-  params.filters?.map((filter) => {
-    queryString += `&filters[]=${filter}`;
-  });
-  return instance.get(queryString);
+const getProductsByOrderID = (order_id) => {
+  return instance.get(`order/${order_id}/products`);
 };
 
-export const useGetOrderListByUser = (userId, params) => {
+export const useGetProductsByOrderID = (order_id) => {
   return useQuery(
-    ["get-order-by-user", userId, params],
-    () => getOrderListByUser(userId, params),
+    ["get-products-by-order-id", order_id],
+    () => getProductsByOrderID(order_id),
     {
-      enabled: !!userId,
-      retry: 0,
+      // refetchInterval: 20000,
     }
   );
 };
