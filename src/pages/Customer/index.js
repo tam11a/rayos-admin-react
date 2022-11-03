@@ -60,6 +60,7 @@ const Index = () => {
       field: "receiver_number",
       align: "left",
       width: 120,
+      // flex: 1,
       sortable: false,
       renderCell: (params) => (
         <Chip
@@ -90,12 +91,14 @@ const Index = () => {
       field: "fullName",
       align: "center",
       width: 150,
+      flex: 1,
     },
     {
       headerName: "Phone",
       headerAlign: "center",
       field: "phone",
       align: "center",
+      flex: 1,
       width: 160,
     },
     {
@@ -103,6 +106,7 @@ const Index = () => {
       headerAlign: "center",
       field: "email",
       width: 250,
+      flex: 2,
       align: "center",
     },
     {
@@ -111,6 +115,7 @@ const Index = () => {
       field: "totalOrders",
       align: "center",
       width: 120,
+      // flex: 1,
       renderCell: (params) => params.row?.totalOrders || "-",
     },
     {
@@ -118,6 +123,7 @@ const Index = () => {
       headerAlign: "center",
       field: "status",
       align: "center",
+      // flex: 1,
       width: 120,
       renderCell: (params) => (
         <ButtonSwitch
