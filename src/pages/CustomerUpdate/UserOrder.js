@@ -18,38 +18,43 @@ import { IoMdEye } from "react-icons/io";
 import snackContext from "../../context/snackProvider";
 import { responseHandler } from "../../utilities/response-handler";
 import invoiceContext from "../../context/invoiceProvider";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { FaSlackHash } from "react-icons/fa";
 
 const UserOrder = ({ uid }) => {
   const snack = React.useContext(snackContext);
+
   const { cid } = useParams();
+
   const [params, setParams] = React.useState({
     method: "confirm",
     limit: 10,
     page: 1,
     filters: [],
   });
+
   const { data, isLoading } = useGetUserOrderListByID(cid, params);
+
   console.log(data);
 
   // useMutations
 
   const cols = [
     {
-      headerName: "Invoice",
-      field: "_id",
+      headerName: "",
+      field: "id",
       width: 100,
       align: "center",
       headerAlign: "center",
-      renderCell: (d) => (
+      renderCell: (params) => (
         <>
           <IconButton
+            component={Link}
             size={"small"}
-            // onClick={() => {
-            //   invoice.showInvoice(d.row.id);
-            // }}
+            color={"primary"}
+            to={`/order/${params.row?._id}`}
           >
-            <IoMdEye />
+            <FaSlackHash />
           </IconButton>
         </>
       ),
@@ -57,10 +62,10 @@ const UserOrder = ({ uid }) => {
     },
     // {
     //   headerName: "Name",
-    //   field: "receiver_name",
+    //   field: "user.userName",
     //   width: 200,
     //   sortable: false,
-    // // },
+    // },
     // {
     //   headerName: "Phone",
     //   field: "receiver_number",
@@ -183,60 +188,39 @@ const UserOrder = ({ uid }) => {
               size={"small"}
               value={d.row.status}
               disabled={
-                d.row.status === "delivered" || d.row.status === "cancel"
+                d.row.status === "Delivered" || d.row.status === "Canceled"
               }
-              // onChange={async (e) => {
-              //   if (e.target.value === "in progress") {
-              //     const res = await responseHandler(
-              //       () => mutateConfirmOrder(d.row.id),
-              //       [200]
-              //     );
-              //     if (res.status) {
-              //       snack.createSnack(res.msg);
-              //     } else {
-              //       snack.createSnack(res.msg, "error");
-              //     }
-              //   } else if (e.target.value === "delivered") {
-              //     const res = await responseHandler(
-              //       () => mutateCompleteOrder(d.row.id),
-              //       [200]
-              //     );
-              //     if (res.status) {
-              //       snack.createSnack(res.msg);
-              //     } else {
-              //       snack.createSnack(res.msg, "error");
-              //     }
-              //   } else if (e.target.value === "cancel") {
-              //     const res = await responseHandler(
-              //       () => mutateCancelOrder(d.row.id),
-              //       [200]
-              //     );
-              //     if (res.status) {
-              //       snack.createSnack(res.msg);
-              //     } else {
-              //       snack.createSnack(res.msg, "error");
-              //     }
-              //   }
-              // }}
               fullWidth
             >
-              <MenuItem value={"new"} disabled>
+              <MenuItem value={"Pending"} disabled>
                 Pending
               </MenuItem>
               <MenuItem
-                value={"in progress"}
-                disabled={d.row.status === "in progress"}
+                value={"Confirmed"}
+                disabled={d.row.status === "Confirmed"}
               >
-                Confirm
+                Confirmed
+              </MenuItem>
+              <MenuItem value={"Shipped"} disabled={d.row.status === "Shipped"}>
+                Shipped
               </MenuItem>
               <MenuItem
-                value={"delivered"}
-                disabled={d.row.status === "delivered"}
+                value={"Delivered"}
+                disabled={d.row.status === "Delivered"}
               >
                 Delivered
               </MenuItem>
-              <MenuItem value={"cancel"} disabled={d.row.status === "cancel"}>
-                Cancel
+              <MenuItem
+                value={"Canceled"}
+                disabled={d.row.status === "Canceled"}
+              >
+                Canceled
+              </MenuItem>
+              <MenuItem
+                value={"Returned"}
+                disabled={d.row.status === "Returned"}
+              >
+                Returned
               </MenuItem>
             </Select>
           </>
@@ -244,31 +228,31 @@ const UserOrder = ({ uid }) => {
       },
       sortable: false,
     },
-    {
-      headerName: "Invoice",
-      field: "invoice_print",
-      align: "center",
-      headerAlign: "center",
-      // renderCell: (d) => {
-      //   return (
-      //     <>
-      //       <IconButton
-      //         size={"small"}
-      //         onClick={() => {
-      //           console.log(d.row);
-      //           window.open(
-      //             "https://admin.pndservicebd.com/orderdetails.html?id=" +
-      //               d.row.id
-      //           );
-      //         }}
-      //       >
-      //         <IoMdEye />
-      //       </IconButton>
-      //     </>
-      //   );
-      // },
-      sortable: false,
-    },
+    // {
+    //   headerName: "Invoice",
+    //   field: "invoice_print",
+    //   align: "center",
+    //   headerAlign: "center",
+    //   // renderCell: (d) => {
+    //   //   return (
+    //   //     <>
+    //   //       <IconButton
+    //   //         size={"small"}
+    //   //         onClick={() => {
+    //   //           console.log(d.row);
+    //   //           window.open(
+    //   //             "https://admin.pndservicebd.com/orderdetails.html?id=" +
+    //   //               d.row.id
+    //   //           );
+    //   //         }}
+    //   //       >
+    //   //         <IoMdEye />
+    //   //       </IconButton>
+    //   //     </>
+    //   //   );
+    //   // },
+    //   sortable: false,
+    // },
   ];
 
   return (
