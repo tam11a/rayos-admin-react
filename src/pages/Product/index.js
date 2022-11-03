@@ -70,31 +70,34 @@ const Index = () => {
       align: "center",
       width: 80,
       renderCell: (params) => (
-        <Avatar src={getAttachment(params.row.image)} variant="square" />
+        <Avatar
+          src={getAttachment(params.row.image)}
+          variant="square"
+          alt={params.row.titleEn}
+        />
       ),
     },
     {
       headerName: "Product Name",
-      headerAlign: "center",
+      headerAlign: "left",
       field: "titleEn",
-      align: "center",
+      align: "left",
       width: 200,
     },
-
-    {
-      headerName: "Variants",
-      headerAlign: "center",
-      field: "colors",
-      width: 80,
-      align: "center",
-      renderCell: () => (
-        <>
-          <IconButton size={"small"}>
-            <IoMdEye />
-          </IconButton>
-        </>
-      ),
-    },
+    // {
+    //   headerName: "Variants",
+    //   headerAlign: "center",
+    //   field: "colors",
+    //   width: 80,
+    //   align: "center",
+    //   renderCell: () => (
+    //     <>
+    //       <IconButton size={"small"}>
+    //         <IoMdEye />
+    //       </IconButton>
+    //     </>
+    //   ),
+    // },
     {
       headerName: "Category",
       headerAlign: "center",
@@ -103,10 +106,19 @@ const Index = () => {
       align: "center",
       renderCell: (params) => (
         <>
-          {params.row.category.titleEn}
-          {/* {data?.data?.data?.map((cat) => {
-            return cat.titleEn;
-          })[0] || "-"} */}
+          <Chip
+            avatar={
+              <Avatar
+                alt={params.row.category.titleEn}
+                src={getAttachment(params.row.category.icon)}
+              />
+            }
+            label={params.row.category.titleEn}
+            variant="outlined"
+            to={`/cat/${params.row.category._id}`}
+            component={Link}
+            onClick={() => {}}
+          />
         </>
       ),
     },
@@ -215,7 +227,7 @@ const Index = () => {
             alignItems={"center"}
             justifyContent={"space-between"}
           >
-            <Grid item xs={12} md={5.9}>
+            <Grid item xs={12} md={8.2}>
               <InputBase
                 placeholder="Search Product"
                 sx={tableOptionsStyle}
@@ -228,7 +240,7 @@ const Index = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} md={5.9}>
+            <Grid item xs={12} md={3.6}>
               <Select
                 sx={{
                   ...tableOptionsStyle,

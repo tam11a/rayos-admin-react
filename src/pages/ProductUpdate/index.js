@@ -25,6 +25,7 @@ import {
 import { useGetProductByID, useUpdateProduct } from "../../query/product";
 import tableOptionsStyle from "../../style/tableOptions";
 import { responseHandler } from "../../utilities/response-handler";
+import CreateVariantInput from "./CreateVariantInput";
 import VariantInput from "./VariantInput";
 
 const Index = () => {
@@ -57,11 +58,14 @@ const Index = () => {
         descriptionEn: productInfo?.data?.data?.descriptionEn,
         descriptionBn: productInfo?.data?.data?.descriptionBn,
         buyPrice: productInfo?.data?.data?.buyPrice,
+        variantType: productInfo?.data?.data?.variantType,
         sellPrice: productInfo?.data?.data?.sellPrice,
         category: productInfo?.data?.data?.category?._id,
         subcategory: productInfo?.data?.data?.subcategory?._id,
       });
   }, [productInfo]);
+
+  // console.log(productInfo?.data?.data);
 
   const { mutateAsync: updateProduct, isLoading: updateLoading } =
     useUpdateProduct();
@@ -81,7 +85,9 @@ const Index = () => {
   const { data: catData } = useGetAllCategory(params);
 
   const { data: subCatData, isError: isSubCatError } =
-    useGetSubCategoryFromCatID(getValues()["category"], params);
+    useGetSubCategoryFromCatID(watch("category"), params);
+
+  // React.useEffect(() => setValue("subcategory", "null"), [watch("category")]);
 
   return (
     <>
@@ -109,36 +115,80 @@ const Index = () => {
               Information
             </Typography>
             <CPaper>
-              <Typography>Name</Typography>
-              <InputBox
-                fullWidth
-                placeholder="Enter Product Name"
-                {...register("titleEn")}
-              />
-              <Typography>Name (Bengali)</Typography>
-              <InputBox
-                fullWidth
-                placeholder="Enter Product Name (Bengali)"
-                {...register("titleBn")}
-              />
-              <Typography>Description</Typography>
-              <InputBox
-                fullWidth
-                placeholder="Enter Product Description"
-                {...register("descriptionEn")}
-                multiline={true}
-                minRows={5}
-                maxRows={6}
-              />
-              <Typography>Description (Bengali)</Typography>
-              <InputBox
-                fullWidth
-                placeholder="Enter Prooduct Description (Bengali)"
-                {...register("descriptionBn")}
-                multiline={true}
-                minRows={5}
-                maxRows={6}
-              />
+              <ListItem
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  rowGap: 1,
+                  p: 0,
+                }}
+              >
+                <Typography>Name</Typography>
+                <InputBox
+                  fullWidth
+                  placeholder="Enter Product Name"
+                  {...register("titleEn")}
+                />
+                <ShowError err={errors.titleEn} />
+              </ListItem>
+              <ListItem
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  rowGap: 1,
+                  p: 0,
+                }}
+              >
+                <Typography>Name (Bengali)</Typography>
+                <InputBox
+                  fullWidth
+                  placeholder="Enter Product Name (Bengali)"
+                  {...register("titleBn")}
+                />
+                <ShowError err={errors.titleBn} />
+              </ListItem>
+              <ListItem
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  rowGap: 1,
+                  p: 0,
+                }}
+              >
+                <Typography>Description</Typography>
+                <InputBox
+                  fullWidth
+                  placeholder="Enter Product Description"
+                  {...register("descriptionEn")}
+                  multiline={true}
+                  minRows={5}
+                  maxRows={6}
+                />
+                <ShowError err={errors.descriptionEn} />
+              </ListItem>
+              <ListItem
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  rowGap: 1,
+                  p: 0,
+                }}
+              >
+                <Typography>Description (Bengali)</Typography>
+                <InputBox
+                  fullWidth
+                  placeholder="Enter Prooduct Description (Bengali)"
+                  {...register("descriptionBn")}
+                  multiline={true}
+                  minRows={5}
+                  maxRows={6}
+                />
+                <ShowError err={errors.descriptionBn} />
+              </ListItem>
             </CPaper>
             <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
               Images
@@ -149,7 +199,7 @@ const Index = () => {
           </Grid>
 
           <Grid item xs={12} sm={5.9} md={4.9}>
-            <Typography variant={"h6"} sx={{ fontWeight: "500", mt: 1 }}>
+            <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
               Additional Information
             </Typography>
             <CPaper>
@@ -165,10 +215,10 @@ const Index = () => {
                 Category
                 <Select
                   sx={tableOptionsStyle}
-                  value={getValues()?.category || "null"}
                   placeholder={"Select Category"}
                   fullWidth
                   {...register("category")}
+                  value={watch("category") || "null"}
                 >
                   <MenuItem value={"null"} disabled>
                     Select Category
@@ -194,10 +244,10 @@ const Index = () => {
                 <Select
                   sx={tableOptionsStyle}
                   placeholder={"Select Sub Category"}
-                  value={getValues()?.subcategory || "null"}
                   disabled={!subCatData?.data?.total}
                   fullWidth
                   {...register("subcategory")}
+                  value={watch("subcategory") || "null"}
                 >
                   <MenuItem value={"null"} disabled>
                     Select Sub Category
@@ -210,18 +260,40 @@ const Index = () => {
                 </Select>
                 <ShowError err={errors.subcategory} />
               </ListItem>
-              <Typography>BuyPrice</Typography>
-              <InputBox
-                fullWidth
-                placeholder="Enter Buy Price"
-                {...register("buyPrice")}
-              />
-              <Typography>Sell Price</Typography>
-              <InputBox
-                fullWidth
-                placeholder="Enter Sell Price"
-                {...register("sellPrice")}
-              />
+              <ListItem
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  rowGap: 1,
+                  p: 0,
+                }}
+              >
+                <Typography>BuyPrice</Typography>
+                <InputBox
+                  fullWidth
+                  placeholder="Enter Buy Price"
+                  {...register("buyPrice")}
+                />
+                <ShowError err={errors.buyPrice} />
+              </ListItem>
+              <ListItem
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  rowGap: 1,
+                  p: 0,
+                }}
+              >
+                <Typography>Sell Price</Typography>
+                <InputBox
+                  fullWidth
+                  placeholder="Enter Sell Price"
+                  {...register("sellPrice")}
+                />
+                <ShowError err={errors.sellPrice} />
+              </ListItem>
             </CPaper>
             <Typography variant={"h6"} sx={{ fontWeight: "500", mt: 1 }}>
               Variants
@@ -240,20 +312,32 @@ const Index = () => {
                 <Select
                   sx={tableOptionsStyle}
                   placeholder={"Select Sub Category"}
-                  value={watch("variantType") || "null"}
                   {...register("variantType")}
+                  value={watch("variantType") || "null"}
                   fullWidth
                 >
                   <MenuItem value={"null"} disabled>
                     Select a Variant Type
                   </MenuItem>
-                  <MenuItem value={"Size"}>Size</MenuItem>
-                  <MenuItem value={"Color"}>Color</MenuItem>
-                  <MenuItem value={"Variant"}>Variant</MenuItem>
+                  <MenuItem value={"size"}>Size</MenuItem>
+                  <MenuItem value={"color"}>Color</MenuItem>
+                  <MenuItem value={"variant"}>Variant</MenuItem>
                 </Select>
                 <ShowError err={errors.variantType} />
               </ListItem>
-              <VariantInput />
+              {productInfo?.data?.data?.variants?.map?.((variant) => (
+                <ListItem
+                  key={variant._id}
+                  disablePadding
+                  sx={{
+                    py: 0.5,
+                  }}
+                >
+                  <VariantInput variant={variant} />
+                </ListItem>
+              ))}
+
+              <CreateVariantInput product_id={pid} />
             </CPaper>
             <Button
               variant={"contained"}
@@ -264,7 +348,7 @@ const Index = () => {
                 mt: 1,
               }}
               type={"submit"}
-              disabled={updateLoading || !isDirty}
+              disabled={updateLoading}
               onClick={() => {
                 handleUpdate(getValues());
               }}
@@ -277,5 +361,5 @@ const Index = () => {
       </Container>
     </>
   );
-};
+};;;;;;;;;;
 export default Index;

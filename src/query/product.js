@@ -91,3 +91,27 @@ export const useDelProductImage = () => {
     onSuccess: () => queryClient.invalidateQueries("get-all-product"),
   });
 };
+
+
+const updateVariant = ({ id, data }) => {
+  return instance.patch(`variant/${id}`, data);
+};
+
+export const useUpdateVariant = () => {
+  const queryClient = useQueryClient();
+  return useMutation(updateVariant, {
+    onSuccess: () => queryClient.invalidateQueries("get-product-by-id"),
+  });
+};
+
+const createVariant = ({ id, data }) => {
+  return instance.post(`variant/${id}`, data);
+};
+
+export const useCreateVariant = () => {
+  const queryClient = useQueryClient();
+  return useMutation(createVariant, {
+    onSuccess: () => queryClient.invalidateQueries("get-product-by-id"),
+  });
+};
+
