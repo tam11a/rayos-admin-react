@@ -91,42 +91,45 @@ const UserOrder = ({ uid }) => {
     {
       headerName: "Status",
       headerAlign: "center",
+      align: "center",
       field: "status",
       width: 120,
+      headerAlign: "center",
       align: "center",
-      // renderCell: (d) => {
-      //   var color;
-      //   var text;
-      //   switch (d.row.status) {
-      //     case "new":
-      //       color = "info";
-      //       text = "Pending";
-      //       break;
-      //     case "in progress":
-      //       color = "warning";
-      //       text = "Confirm";
-      //       break;
-      //     case "cancel":
-      //       color = "error";
-      //       break;
-      //     case "delivered":
-      //       color = "success";
-      //       break;
-      //     default:
-      //       color = "default";
-      //       break;
-      //   }
-      //   return (
-      //     <Chip
-      //       label={text || d.row.status}
-      //       color={color}
-      //       size={"small"}
-      //       sx={{
-      //         textTransform: "uppercase",
-      //       }}
-      //     />
-      //   );
-      // },
+      renderCell: (d) => {
+        var color;
+        var text;
+        switch (d.row.status) {
+          case "Pending":
+            color = "info";
+            break;
+          case "Shipped":
+          case "Confirmed":
+            color = "black";
+            break;
+          case "Canceled":
+          case "Returned":
+            color = "error";
+            break;
+          case "Delivered":
+            color = "success";
+            break;
+          default:
+            color = "default";
+            break;
+        }
+        return (
+          <Chip
+            label={text || d.row.status}
+            color={color}
+            size={"small"}
+            sx={{
+              textTransform: "uppercase",
+              fontWeight: "600",
+            }}
+          />
+        );
+      },
       sortable: false,
     },
     {

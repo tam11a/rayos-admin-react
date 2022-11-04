@@ -145,8 +145,9 @@ const Index = () => {
           case "Pending":
             color = "info";
             break;
+          case "Shipped":
           case "Confirmed":
-            color = "warning";
+            color = "black";
             break;
           case "Canceled":
           case "Returned":
@@ -164,9 +165,9 @@ const Index = () => {
             label={text || d.row.status}
             color={color}
             size={"small"}
-            variant={"outlined"}
             sx={{
               textTransform: "uppercase",
+              fontWeight: "600",
             }}
           />
         );
