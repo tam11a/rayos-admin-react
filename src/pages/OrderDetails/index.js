@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Button,
+  CircularProgress,
   Divider,
   FormControlLabel,
   Grid,
@@ -28,6 +29,8 @@ import { Link, useParams } from "react-router-dom";
 import snackContext from "../../context/snackProvider";
 import { useGetProductsByOrderID } from "../../query/order";
 import { getAttachment } from "../../service/instance";
+import { FaPhoneAlt } from "react-icons/fa";
+import { GrMail } from "react-icons/gr";
 
 const Index = () => {
   const snack = React.useContext(snackContext);
@@ -43,10 +46,10 @@ const Index = () => {
   const [productInfo, setProductInfo] = React.useState([]);
 
   React.useEffect(() => {
-    setProductInfo(orderInfo?.data?.data || []);
+    setProductInfo(orderInfo?.data?.data?.products || []);
   }, [isLoading]);
 
-  console.log(productInfo);
+  console.log(orderInfo);
 
   return (
     <>
@@ -59,6 +62,102 @@ const Index = () => {
           rowGap={2}
         >
           <Grid item xs={12} md={8}>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", sm: "row" },
+                alignItems: "center",
+                rowGap: 2,
+                columnGap: 3,
+                justifyContent: {
+                  xs: "center",
+                  sm: "flex-start",
+                },
+                my: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  position: "relative",
+                  minHeight: "100px",
+                  minWidth: "100px",
+                }}
+                component={"form"}
+              >
+                {isLoading ? (
+                  <Box
+                    sx={{
+                      borderRadius: "0%",
+                      position: "relative",
+                      height: "100px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <CircularProgress color={"black"} />
+                  </Box>
+                ) : (
+                  <Avatar
+                    sx={{
+                      width: "100px",
+                      height: "100px",
+                    }}
+                    src={getAttachment(orderInfo?.data?.data?.user?.image)}
+                    alt={orderInfo?.data?.data?.user?.userName}
+                  />
+                )}
+              </Box>
+              <Stack
+                direction={"column"}
+                sx={{
+                  alignItems: {
+                    xs: "center",
+                    sm: "flex-start",
+                  },
+                }}
+              >
+                <Stack direction={"row"} alignItems={"center"} columnGap={1}>
+                  <Typography variant={"h6"}>
+                    {orderInfo?.data?.data?.user?.userName}
+                  </Typography>
+                </Stack>
+                <Typography
+                  variant={"subtitle2"}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    columnGap: 1,
+                    mt: {
+                      sm: 1,
+                    },
+                  }}
+                >
+                  <Hidden smDown>
+                    <GrMail />
+                  </Hidden>
+                  <span>{orderInfo?.data?.data?.user?.email}</span>
+                </Typography>
+                <Typography
+                  variant={"subtitle2"}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    columnGap: 1,
+                    mt: {
+                      sm: 1,
+                    },
+                  }}
+                >
+                  <Hidden smDown>
+                    <FaPhoneAlt />
+                  </Hidden>
+                  <span>{orderInfo?.data?.data?.user?.phone}</span>
+                </Typography>
+              </Stack>
+            </Grid>
             <Typography
               variant="h6"
               sx={{
@@ -81,7 +180,7 @@ const Index = () => {
                 return (
                   <>
                     <ListItem
-                      key={prodItem._id}
+                      key={prodItem?.product?._id}
                       disablePadding
                       sx={{
                         px: 1,
@@ -184,178 +283,6 @@ const Index = () => {
                 );
               })}
             </Paper>
-            <Hidden smDown>
-              <Stack
-                direction={"row"}
-                sx={{
-                  my: 2,
-                  width: "100%",
-                  justifyContent: "",
-                }}
-              >
-                <Box
-                  sx={{
-                    flex: 1,
-                    maxWidth: { xs: "unset", sm: "250px" },
-                  }}
-                >
-                  <Stack
-                    direction={"row"}
-                    alignItems={"center"}
-                    justifyContent={"space-between"}
-                    sx={{
-                      width: "100%",
-                    }}
-                  >
-                    <Typography variant="button">Subtotal :</Typography>
-                    <Typography>{""} ৳</Typography>
-                  </Stack>
-                  <Stack
-                    direction={"row"}
-                    alignItems={"center"}
-                    justifyContent={"space-between"}
-                    sx={{
-                      width: "100%",
-                    }}
-                  >
-                    <Typography variant="button">Delivery :</Typography>
-                    <Typography>{0} ৳</Typography>
-                  </Stack>
-                  <Divider
-                    sx={{
-                      my: 1,
-                    }}
-                  />
-                  <Stack
-                    direction={"row"}
-                    alignItems={"center"}
-                    justifyContent={"space-between"}
-                    sx={{
-                      width: "100%",
-                      mb: 2,
-                    }}
-                  >
-                    <Typography variant="button">total :</Typography>
-                    <Typography>{""} ৳</Typography>
-                  </Stack>
-                </Box>
-              </Stack>
-            </Hidden>
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            md={4}
-            sx={{
-              pl: {
-                xs: 0,
-                md: 2,
-              },
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{
-                mb: 1,
-                fontWeight: "bold",
-              }}
-            >
-              Payment & Shipping
-            </Typography>
-            <Paper
-              elevation={0}
-              sx={{
-                mb: 1,
-                boxShadow: {
-                  xs: 0,
-                  md: 5,
-                },
-              }}
-            >
-              <List>
-                <ListItem>
-                  <Typography variant={"body1"} fontWeight={"bold"}>
-                    Payment Method
-                  </Typography>
-                </ListItem>
-                <ListItem
-                  sx={{
-                    pt: 0,
-                  }}
-                >
-                  <RadioGroup
-                    defaultValue="cod"
-                    sx={{
-                      "& *": {
-                        fontWeight: "600",
-                      },
-                    }}
-                  >
-                    <FormControlLabel
-                      value="cod"
-                      control={<Radio color={"warning"} />}
-                      label="Cash On Delivery"
-                    />
-                  </RadioGroup>
-                </ListItem>
-                {/* <Divider />
-              <ListItem>
-                <Typography variant={"body1"} fontWeight={"bold"}>
-                  Shipping Info
-                </Typography>
-              </ListItem> */}
-              </List>
-            </Paper>
-            <Hidden xsUp>
-              <Stack
-                direction={"row"}
-                alignItems={"center"}
-                justifyContent={"space-between"}
-                sx={{
-                  width: "100%",
-                }}
-              >
-                <Typography variant="button">Subtotal :</Typography>
-                <Typography>{""} ৳</Typography>
-              </Stack>
-              <Stack
-                direction={"row"}
-                alignItems={"center"}
-                justifyContent={"space-between"}
-                sx={{
-                  width: "100%",
-                }}
-              >
-                <Typography variant="button">Delivery :</Typography>
-                <Typography>{0} ৳</Typography>
-              </Stack>
-              <Divider
-                sx={{
-                  my: 1,
-                }}
-              />
-              <Stack
-                direction={"row"}
-                alignItems={"center"}
-                justifyContent={"space-between"}
-                sx={{
-                  width: "100%",
-                  mb: 2,
-                }}
-              >
-                <Typography variant="button">total :</Typography>
-                <Typography>{""} ৳</Typography>
-              </Stack>
-            </Hidden>
-            {/* <Button
-              variant={"contained"}
-              color={"black"}
-            //   disabled={!cartCntxt.total || isLoading}
-              fullWidth
-              onClick={onCalculateOrder}
-            >
-              Proceed to Checkout
-            </Button> */}
           </Grid>
         </Grid>
       </Container>

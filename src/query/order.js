@@ -26,7 +26,7 @@ export const useGetUserOrderListByID = (user_id) => {
 };
 
 const getProductsByOrderID = (order_id) => {
-  return instance.get(`order/${order_id}/products`);
+  return instance.get(`order/${order_id}`);
 };
 
 export const useGetProductsByOrderID = (order_id) => {
