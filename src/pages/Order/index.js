@@ -142,18 +142,17 @@ const Index = () => {
         var color;
         var text;
         switch (d.row.status) {
-          case "new":
+          case "Pending":
             color = "info";
-            text = "Pending";
             break;
-          case "in progress":
+          case "Confirmed":
             color = "warning";
-            text = "Confirm";
             break;
-          case "cancel":
+          case "Canceled":
+          case "Returned":
             color = "error";
             break;
-          case "delivered":
+          case "Delivered":
             color = "success";
             break;
           default:
@@ -165,6 +164,7 @@ const Index = () => {
             label={text || d.row.status}
             color={color}
             size={"small"}
+            variant={"outlined"}
             sx={{
               textTransform: "uppercase",
             }}
@@ -224,7 +224,7 @@ const Index = () => {
               size={"small"}
               value={d.row.status}
               disabled={
-                d.row.status === "Delivered" || d.row.status === "Canceled"
+                d.row.status === "Returned" || d.row.status === "Canceled"
               }
               fullWidth
             >
@@ -366,7 +366,7 @@ const Index = () => {
               </Select>
             </Grid> */}
             <Grid item xs={12} sm={3}>
-              {/* <Select
+              <Select
                 sx={{
                   ...tableOptionsStyle,
                 }}
@@ -377,37 +377,48 @@ const Index = () => {
                     method: e.target.value,
                   })
                 }
-                // disabled={params.method === "delivered"}
                 fullWidth
               >
                 <MenuItem value={"all"} disabled={params.method === "all"}>
                   All
                 </MenuItem>
                 <MenuItem
-                  value={"filters[]=status=new&"}
-                  disabled={params.method === "filters[]=status=new&"} // new
+                  value={"Pending"}
+                  disabled={params.method === "Pending"}
                 >
                   Pending
                 </MenuItem>
                 <MenuItem
-                  value={"filters[]=status=in progress&"}
-                  disabled={params.method === "filters[]=status=in progress&"} // in progress
+                  value={"Confirmed"}
+                  disabled={params.method === "Confirmed"}
                 >
                   Confirmed
                 </MenuItem>
                 <MenuItem
-                  value={"filters[]=status=delivered&"}
-                  disabled={params.method === "filters[]=status=delivered&"} // delivered
+                  value={"Shipped"}
+                  disabled={params.method === "Shipped"}
+                >
+                  Shipped
+                </MenuItem>
+                <MenuItem
+                  value={"Delivered"}
+                  disabled={params.method === "Delivered"}
                 >
                   Delivered
                 </MenuItem>
                 <MenuItem
-                  value={"filters[]=status=cancel&"}
-                  disabled={params.method === "filters[]=status=cancel&"} // cancel
+                  value={"Canceled"}
+                  disabled={params.method === "Canceled"}
                 >
                   Canceled
                 </MenuItem>
-              </Select> */}
+                <MenuItem
+                  value={"Returned"}
+                  disabled={params.method === "Returned"}
+                >
+                  Returned
+                </MenuItem>
+              </Select>
             </Grid>
           </Grid>
         </Paper>
@@ -439,3 +450,10 @@ const Index = () => {
 };
 
 export default Index;
+
+
+
+
+
+
+

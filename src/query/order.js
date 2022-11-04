@@ -2,7 +2,11 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import instance from "../service/instance";
 
 const getAllOrder = (params) => {
-  return instance.get(`order?limit=${params.limit}&page=${params.page}`);
+  return instance.get(
+    `order?${
+      params.method && params.method !== "all" ? `status=${params.method}&` : ""
+    }limit=${params.limit}&page=${params.page}`
+  );
 };
 
 export const useGetAllOrder = (params) => {
@@ -11,14 +15,18 @@ export const useGetAllOrder = (params) => {
   });
 };
 
-const getUserOrderListByID = (user_id) => {
-  return instance.get(`order/user/${user_id}`);
+const getUserOrderListByID = (user_id, params) => {
+  return instance.get(
+    `order/user/${user_id}?${
+      params.method && params.method !== "all" ? `status=${params.method}&` : ""
+    }limit=${params.limit}&page=${params.page}`
+  );
 };
 
-export const useGetUserOrderListByID = (user_id) => {
+export const useGetUserOrderListByID = (user_id, params) => {
   return useQuery(
-    ["get-user-orderlist-by-id", user_id],
-    () => getUserOrderListByID(user_id),
+    ["get-user-orderlist-by-id", user_id, params],
+    () => getUserOrderListByID(user_id, params),
     {
       // refetchInterval: 20000,
     }

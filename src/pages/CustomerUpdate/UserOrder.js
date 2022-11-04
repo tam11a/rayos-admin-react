@@ -27,6 +27,7 @@ const UserOrder = ({ uid }) => {
   const { cid } = useParams();
 
   const [params, setParams] = React.useState({
+    method: "all",
     limit: 10,
     page: 1,
     filters: [],
@@ -325,7 +326,7 @@ const UserOrder = ({ uid }) => {
               </Select>
             </Grid> */}
             <Grid item xs={12} sm={3}>
-              {/* <Select
+              <Select
                 sx={{
                   ...tableOptionsStyle,
                 }}
@@ -336,34 +337,48 @@ const UserOrder = ({ uid }) => {
                     method: e.target.value,
                   })
                 }
-                // disabled={params.method === "delivered"}
                 fullWidth
               >
+                <MenuItem value={"all"} disabled={params.method === "all"}>
+                  All
+                </MenuItem>
                 <MenuItem
-                  value={"pending"}
-                  disabled={params.method === "pending"} // new
+                  value={"Pending"}
+                  disabled={params.method === "Pending"}
                 >
                   Pending
                 </MenuItem>
                 <MenuItem
-                  value={"confirm"}
-                  disabled={params.method === "confirm"} // in progress
+                  value={"Confirmed"}
+                  disabled={params.method === "Confirmed"}
                 >
                   Confirmed
                 </MenuItem>
                 <MenuItem
-                  value={"deliver"}
-                  disabled={params.method === "deliver"} // delivered
+                  value={"Shipped"}
+                  disabled={params.method === "Shipped"}
+                >
+                  Shipped
+                </MenuItem>
+                <MenuItem
+                  value={"Delivered"}
+                  disabled={params.method === "Delivered"}
                 >
                   Delivered
                 </MenuItem>
                 <MenuItem
-                  value={"cancel"}
-                  disabled={params.method === "cancel"} // cancel
+                  value={"Canceled"}
+                  disabled={params.method === "Canceled"}
                 >
                   Canceled
                 </MenuItem>
-              </Select> */}
+                <MenuItem
+                  value={"Returned"}
+                  disabled={params.method === "Returned"}
+                >
+                  Returned
+                </MenuItem>
+              </Select>
             </Grid>
           </Grid>
         </Paper>
