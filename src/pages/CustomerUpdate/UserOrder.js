@@ -27,15 +27,12 @@ const UserOrder = ({ uid }) => {
   const { cid } = useParams();
 
   const [params, setParams] = React.useState({
-    method: "confirm",
     limit: 10,
     page: 1,
     filters: [],
   });
 
   const { data, isLoading } = useGetUserOrderListByID(cid, params);
-
-  console.log(data);
 
   // useMutations
 
@@ -96,39 +93,39 @@ const UserOrder = ({ uid }) => {
       field: "status",
       width: 120,
       align: "center",
-      renderCell: (d) => {
-        var color;
-        var text;
-        switch (d.row.status) {
-          case "new":
-            color = "info";
-            text = "Pending";
-            break;
-          case "in progress":
-            color = "warning";
-            text = "Confirm";
-            break;
-          case "cancel":
-            color = "error";
-            break;
-          case "delivered":
-            color = "success";
-            break;
-          default:
-            color = "default";
-            break;
-        }
-        return (
-          <Chip
-            label={text || d.row.status}
-            color={color}
-            size={"small"}
-            sx={{
-              textTransform: "uppercase",
-            }}
-          />
-        );
-      },
+      // renderCell: (d) => {
+      //   var color;
+      //   var text;
+      //   switch (d.row.status) {
+      //     case "new":
+      //       color = "info";
+      //       text = "Pending";
+      //       break;
+      //     case "in progress":
+      //       color = "warning";
+      //       text = "Confirm";
+      //       break;
+      //     case "cancel":
+      //       color = "error";
+      //       break;
+      //     case "delivered":
+      //       color = "success";
+      //       break;
+      //     default:
+      //       color = "default";
+      //       break;
+      //   }
+      //   return (
+      //     <Chip
+      //       label={text || d.row.status}
+      //       color={color}
+      //       size={"small"}
+      //       sx={{
+      //         textTransform: "uppercase",
+      //       }}
+      //     />
+      //   );
+      // },
       sortable: false,
     },
     {
@@ -181,51 +178,51 @@ const UserOrder = ({ uid }) => {
       field: "action",
       width: 150,
       headerAlign: "center",
-      renderCell: (d) => {
-        return (
-          <>
-            <Select
-              size={"small"}
-              value={d.row.status}
-              disabled={
-                d.row.status === "Delivered" || d.row.status === "Canceled"
-              }
-              fullWidth
-            >
-              <MenuItem value={"Pending"} disabled>
-                Pending
-              </MenuItem>
-              <MenuItem
-                value={"Confirmed"}
-                disabled={d.row.status === "Confirmed"}
-              >
-                Confirmed
-              </MenuItem>
-              <MenuItem value={"Shipped"} disabled={d.row.status === "Shipped"}>
-                Shipped
-              </MenuItem>
-              <MenuItem
-                value={"Delivered"}
-                disabled={d.row.status === "Delivered"}
-              >
-                Delivered
-              </MenuItem>
-              <MenuItem
-                value={"Canceled"}
-                disabled={d.row.status === "Canceled"}
-              >
-                Canceled
-              </MenuItem>
-              <MenuItem
-                value={"Returned"}
-                disabled={d.row.status === "Returned"}
-              >
-                Returned
-              </MenuItem>
-            </Select>
-          </>
-        );
-      },
+      // renderCell: (d) => {
+      //   return (
+      //     <>
+      //       <Select
+      //         size={"small"}
+      //         value={d.row.status}
+      //         disabled={
+      //           d.row.status === "Delivered" || d.row.status === "Canceled"
+      //         }
+      //         fullWidth
+      //       >
+      //         <MenuItem value={"Pending"} disabled>
+      //           Pending
+      //         </MenuItem>
+      //         <MenuItem
+      //           value={"Confirmed"}
+      //           disabled={d.row.status === "Confirmed"}
+      //         >
+      //           Confirmed
+      //         </MenuItem>
+      //         <MenuItem value={"Shipped"} disabled={d.row.status === "Shipped"}>
+      //           Shipped
+      //         </MenuItem>
+      //         <MenuItem
+      //           value={"Delivered"}
+      //           disabled={d.row.status === "Delivered"}
+      //         >
+      //           Delivered
+      //         </MenuItem>
+      //         <MenuItem
+      //           value={"Canceled"}
+      //           disabled={d.row.status === "Canceled"}
+      //         >
+      //           Canceled
+      //         </MenuItem>
+      //         <MenuItem
+      //           value={"Returned"}
+      //           disabled={d.row.status === "Returned"}
+      //         >
+      //           Returned
+      //         </MenuItem>
+      //       </Select>
+      //     </>
+      //   );
+      // },
       sortable: false,
     },
     // {
@@ -328,7 +325,7 @@ const UserOrder = ({ uid }) => {
               </Select>
             </Grid> */}
             <Grid item xs={12} sm={3}>
-              <Select
+              {/* <Select
                 sx={{
                   ...tableOptionsStyle,
                 }}
@@ -366,7 +363,7 @@ const UserOrder = ({ uid }) => {
                 >
                   Canceled
                 </MenuItem>
-              </Select>
+              </Select> */}
             </Grid>
           </Grid>
         </Paper>

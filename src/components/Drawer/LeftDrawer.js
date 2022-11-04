@@ -42,7 +42,7 @@ const LeftDrawer = ({ open, setOpen }) => {
       name: "Order",
       icon: <CgBox />,
       to: "/order-list",
-      disabled: true,
+      disabled: false,
     },
     {
       name: "Store",

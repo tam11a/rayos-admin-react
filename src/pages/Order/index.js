@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Chip,
   Container,
   Grid,
@@ -7,6 +8,7 @@ import {
   MenuItem,
   Paper,
   Select,
+  Typography,
 } from "@mui/material";
 import moment from "moment";
 import React from "react";
@@ -23,6 +25,9 @@ import tableOptionsStyle from "../../style/tableOptions";
 import snackContext from "../../context/snackProvider";
 import { responseHandler } from "../../utilities/response-handler";
 import invoiceContext from "../../context/invoiceProvider";
+import { getAttachment } from "../../service/instance";
+import { Link } from "react-router-dom";
+import { FaSlackHash } from "react-icons/fa";
 /**
  * get-all-pending
  * get-all-confirm
@@ -41,19 +46,19 @@ const Index = () => {
   });
 
   const { data, isLoading } = useGetAllOrder(params);
-  // console.log(data);
+  console.log(data);
 
   // useMutations
-  const { mutateAsync: mutateConfirmOrder } = useConfirmOrder();
-  const { mutateAsync: mutateCompleteOrder } = useCompleteOrder();
-  const { mutateAsync: mutateCancelOrder } = useCancelOrder();
+  // const { mutateAsync: mutateConfirmOrder } = useConfirmOrder();
+  // const { mutateAsync: mutateCompleteOrder } = useCompleteOrder();
+  // const { mutateAsync: mutateCancelOrder } = useCancelOrder();
 
   const cols = [
     {
       // headerName: "#",
       // field: "show_info",
       // width: 60,
-      headerName: "Invoice",
+      headerName: "Order Details",
       field: "show_info",
       width: 100,
       align: "center",
@@ -61,12 +66,12 @@ const Index = () => {
       renderCell: (d) => (
         <>
           <IconButton
+            component={Link}
             size={"small"}
-            onClick={() => {
-              invoice.showInvoice(d.row.id);
-            }}
+            color={"primary"}
+            to={`/order-details/${d.row?._id}`}
           >
-            <IoMdEye />
+            <FaSlackHash />
           </IconButton>
         </>
       ),
@@ -74,34 +79,61 @@ const Index = () => {
     },
     {
       headerName: "Name",
+      headerAlign: "center",
+      align: "center",
       field: "receiver_name",
-      width: 200,
+      width: 150,
       sortable: false,
+      renderCell: (params) => (
+        <Chip
+          avatar={
+            <Avatar
+              alt={params.row?.user?.userName}
+              src={getAttachment(params.row?.user?.image)}
+            />
+          }
+          label={params.row.user.userName}
+          variant="outlined"
+          to={`/customer/${params.row?.user?._id}`}
+          component={Link}
+          onClick={() => {}}
+        />
+      ),
     },
     {
       headerName: "Phone",
-      field: "receiver_number",
+      headerAlign: "center",
+      align: "center",
+      field: "phone",
       width: 120,
       sortable: false,
     },
     {
       headerName: "Address",
-      field: "receiver_address",
-      width: 250,
+      headerAlign: "center",
+      align: "center",
+      field: "address",
+      width: 200,
       sortable: false,
     },
     {
       headerName: "Date",
-      field: "created_at",
+      headerAlign: "center",
+      align: "center",
+      field: "createdAt",
       width: 170,
       headerAlign: "center",
-      renderCell: (d) => {
-        return <p>{moment(d.row.created_at).format("DD/MM/YYYY hh:mm a")}</p>;
+      renderCell: (params) => {
+        return (
+          <Typography>{moment(params.row.createdAt).format("ll")}</Typography>
+        );
       },
       sortable: false,
     },
     {
       headerName: "Status",
+      headerAlign: "center",
+      align: "center",
       field: "status",
       width: 120,
       headerAlign: "center",
@@ -143,59 +175,47 @@ const Index = () => {
     },
     {
       headerName: "Method",
-      field: "payment_method",
-      align: "center",
       headerAlign: "center",
-      sortable: false,
-    },
-    {
-      headerName: "BI Price",
-      field: "sub_total",
       align: "center",
-      headerAlign: "center",
-      sortable: false,
-    },
-    {
-      headerName: "PND Fee",
-      field: "pnd_total_fee",
+      field: "paymentMethod",
       align: "center",
       headerAlign: "center",
       sortable: false,
     },
     {
       headerName: "Delivery Fee",
-      field: "shipping_total_cost",
+      headerAlign: "center",
+      align: "center",
+      field: "shippingFee",
       align: "center",
       headerAlign: "center",
       sortable: false,
     },
     {
-      headerName: "Reseller Price",
-      field: "reseller_total_income",
+      headerName: "Voucher",
+      headerAlign: "center",
       align: "center",
-      width: 120,
+      field: "voucher",
+      align: "center",
       headerAlign: "center",
       sortable: false,
-    },
-    {
-      headerName: "Reseller Profit",
-      field: "reseller_profit",
-      align: "center",
-      width: 120,
-      headerAlign: "center",
-      sortable: false,
+      renderCell: (params) => params.row?.voucher || "-",
     },
     {
       headerName: "Total Price",
-      field: "total_amount",
+      headerAlign: "center",
+      align: "center",
+      field: "total",
       align: "center",
       headerAlign: "center",
       sortable: false,
     },
     {
       headerName: "Action",
+      headerAlign: "center",
+      align: "center",
       field: "action",
-      width: 150,
+      width: 200,
       headerAlign: "center",
       renderCell: (d) => {
         return (
@@ -204,60 +224,39 @@ const Index = () => {
               size={"small"}
               value={d.row.status}
               disabled={
-                d.row.status === "delivered" || d.row.status === "cancel"
+                d.row.status === "Delivered" || d.row.status === "Canceled"
               }
-              onChange={async (e) => {
-                if (e.target.value === "in progress") {
-                  const res = await responseHandler(
-                    () => mutateConfirmOrder(d.row.id),
-                    [200]
-                  );
-                  if (res.status) {
-                    snack.createSnack(res.msg);
-                  } else {
-                    snack.createSnack(res.msg, "error");
-                  }
-                } else if (e.target.value === "delivered") {
-                  const res = await responseHandler(
-                    () => mutateCompleteOrder(d.row.id),
-                    [200]
-                  );
-                  if (res.status) {
-                    snack.createSnack(res.msg);
-                  } else {
-                    snack.createSnack(res.msg, "error");
-                  }
-                } else if (e.target.value === "cancel") {
-                  const res = await responseHandler(
-                    () => mutateCancelOrder(d.row.id),
-                    [200]
-                  );
-                  if (res.status) {
-                    snack.createSnack(res.msg);
-                  } else {
-                    snack.createSnack(res.msg, "error");
-                  }
-                }
-              }}
               fullWidth
             >
-              <MenuItem value={"new"} disabled>
+              <MenuItem value={"Pending"} disabled>
                 Pending
               </MenuItem>
               <MenuItem
-                value={"in progress"}
-                disabled={d.row.status === "in progress"}
+                value={"Confirmed"}
+                disabled={d.row.status === "Confirmed"}
               >
-                Confirm
+                Confirmed
+              </MenuItem>
+              <MenuItem value={"Shipped"} disabled={d.row.status === "Shipped"}>
+                Shipped
               </MenuItem>
               <MenuItem
-                value={"delivered"}
-                disabled={d.row.status === "delivered"}
+                value={"Delivered"}
+                disabled={d.row.status === "Delivered"}
               >
                 Delivered
               </MenuItem>
-              <MenuItem value={"cancel"} disabled={d.row.status === "cancel"}>
-                Cancel
+              <MenuItem
+                value={"Canceled"}
+                disabled={d.row.status === "Canceled"}
+              >
+                Canceled
+              </MenuItem>
+              <MenuItem
+                value={"Returned"}
+                disabled={d.row.status === "Returned"}
+              >
+                Returned
               </MenuItem>
             </Select>
           </>
@@ -267,6 +266,8 @@ const Index = () => {
     },
     {
       headerName: "Invoice",
+      headerAlign: "center",
+      align: "center",
       field: "invoice_print",
       align: "center",
       headerAlign: "center",
@@ -277,10 +278,10 @@ const Index = () => {
               size={"small"}
               onClick={() => {
                 // console.log(d.row);
-                window.open(
-                  "https://admin.pndservicebd.com/orderdetails.html?id=" +
-                    d.row.id
-                );
+                // window.open(
+                //   "https://admin.pndservicebd.com/orderdetails.html?id=" +
+                //     d.row.id
+                // );
               }}
             >
               <IoMdEye />
@@ -365,7 +366,7 @@ const Index = () => {
               </Select>
             </Grid> */}
             <Grid item xs={12} sm={3}>
-              <Select
+              {/* <Select
                 sx={{
                   ...tableOptionsStyle,
                 }}
@@ -406,16 +407,16 @@ const Index = () => {
                 >
                   Canceled
                 </MenuItem>
-              </Select>
+              </Select> */}
             </Grid>
           </Grid>
         </Paper>
         <DataTable
           columns={cols}
-          rows={data?.data?.value?.data?.data || []}
+          rows={data?.data?.data || []}
           isLoading={isLoading}
           paginationMode={"server"}
-          rowCount={data?.data?.value?.data?.total || 0}
+          rowCount={data?.data?.total || 0}
           page={(params?.page || 1) - 1}
           onPageChange={(newPage) =>
             setParams({

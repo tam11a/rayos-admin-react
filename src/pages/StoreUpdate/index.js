@@ -63,7 +63,7 @@ const Index = () => {
       () => updateStore({ store_id: sid, data }),
       [200]
     );
-    console.log(res);
+    // console.log(res);
     if (res.status) {
       snack.createSnack(res.msg);
     } else {
