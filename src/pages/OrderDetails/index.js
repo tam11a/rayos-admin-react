@@ -35,6 +35,8 @@ import { getAttachment } from "../../service/instance";
 import { FaFileInvoice, FaFileInvoiceDollar, FaPhoneAlt } from "react-icons/fa";
 import { TbFileInvoice } from "react-icons/tb";
 import { GrMail } from "react-icons/gr";
+import Steppers from "./Steppers";
+import OrderStatus from "../../components/OrderStatus";
 
 const Index = () => {
   const snack = React.useContext(snackContext);
@@ -52,8 +54,6 @@ const Index = () => {
   React.useEffect(() => {
     setProductInfo(orderInfo?.data?.data?.products || []);
   }, [isLoading]);
-
-  console.log(orderInfo);
 
   return (
     <>
@@ -167,62 +167,39 @@ const Index = () => {
                 </Stack>
               </Box>
             </Stack>
-            <Stack spacing={1} direction="row">
+            <Stack spacing={1} direction="row" alignItems={"center"}>
               <Box>
-                <Tooltip title="Invoice">
-                  <IconButton
-                    // color={"black"}
-                    variant="outlined"
-                    sx={{ border: "1px solid", borderRadius: "2px" }}
-                  >
-                    <FaFileInvoiceDollar />
-                  </IconButton>
+                <Tooltip title="Download Invoice">
+                  <Button startIcon={<FaFileInvoice />} size={'small'} variant={"contained"}>
+                    Invoice
+                  </Button>
                 </Tooltip>
               </Box>
-              <Select
-                size={"small"}
-                // value={d.row.status}
-                // disabled={
-                //   d.row.status === "Delivered" || d.row.status === "Canceled"
-                // }
-                sx={{ width: "200px" }}
-                fullWidth
-              >
-                <MenuItem value={"Pending"} disabled>
-                  Pending
-                </MenuItem>
-                <MenuItem
-                  value={"Confirmed"}
-                  // disabled={d.row.status === "Confirmed"}
-                >
-                  Confirmed
-                </MenuItem>
-                <MenuItem
-                  value={"Shipped"}
-                  // disabled={d.row.status === "Shipped"}
-                >
-                  Shipped
-                </MenuItem>
-                <MenuItem
-                  value={"Delivered"}
-                  // disabled={d.row.status === "Delivered"}
-                >
-                  Delivered
-                </MenuItem>
-                <MenuItem
-                  value={"Canceled"}
-                  // disabled={d.row.status === "Canceled"}
-                >
-                  Canceled
-                </MenuItem>
-                <MenuItem
-                  value={"Returned"}
-                  // disabled={d.row.status === "Returned"}
-                >
-                  Returned
-                </MenuItem>
-              </Select>
+              <OrderStatus status={orderInfo?.data?.data?.status} id={orderInfo?.data?.data?._id} />
             </Stack>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography
+              variant="h6"
+              sx={{
+                mb: 1,
+                fontWeight: "bold",
+              }}
+            >
+              Order Track
+            </Typography>
+            <Paper
+              elevation={0}
+              sx={{
+                boxShadow: {
+                  xs: 0,
+                  md: 5,
+                },
+                p: { xs: 0, md: 2 },
+              }}
+            >
+              <Steppers timelines={orderInfo?.data?.data?.timeline || []} />
+            </Paper>
           </Grid>
           <Grid
             item
@@ -260,107 +237,105 @@ const Index = () => {
               >
                 {productInfo.map((prodItem) => {
                   return (
-                    <>
-                      <ListItem
-                        key={prodItem?.product?._id}
-                        disablePadding
-                        sx={{
-                          px: 1,
-                          pr: { xs: 1, md: 2 },
-                          py: 0.5,
-                        }}
-                      >
-                        <ListItemAvatar>
-                          <Avatar
-                            src={getAttachment(prodItem?.product?.image)}
-                            sx={{
-                              borderRadius: 1,
-                              height: "55px",
-                              width: "55px",
-                              background: "transparent",
-                              color: "primary.dark",
-                              mr: 1,
-                            }}
-                          >
-                            <IoIosImages
-                              style={{
-                                fontSize: "1.8em",
-                              }}
-                            />
-                          </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
+                    <ListItem
+                      key={prodItem?.product?._id}
+                      disablePadding
+                      sx={{
+                        px: 1,
+                        pr: { xs: 1, md: 2 },
+                        py: 0.5,
+                      }}
+                    >
+                      <ListItemAvatar>
+                        <Avatar
+                          src={getAttachment(prodItem?.product?.image)}
                           sx={{
-                            flex: 1,
-                          }}
-                          primary={
-                            <>
-                              <b>{prodItem?.product?.titleEn || "-"}</b>
-                            </>
-                          }
-                          secondary={
-                            <>
-                              {prodItem?.product?.variantType}:{" "}
-                              <span
-                                style={{
-                                  fontWeight: 600,
-                                }}
-                              >
-                                {prodItem?.variant?.titleEn || "-"}
-                              </span>{" "}
-                              &times;{" "}
-                              <span
-                                style={{
-                                  fontWeight: 600,
-                                }}
-                              >
-                                {prodItem?.product?.sellPrice || 0}
-                              </span>{" "}
-                              ৳ &times;{" "}
-                              <span
-                                style={{
-                                  fontWeight: 600,
-                                }}
-                              >
-                                {prodItem?.quantity || 0}
-                              </span>{" "}
-                            </>
-                          }
-                          primaryTypographyProps={{
-                            noWrap: true,
-                            sx: {
-                              color: "black.main",
-                              textDecoration: "none",
-                            },
-                            // component: Link,
-                            // to: `/product/${cart?.variant?.product?._id}`,
-                          }}
-                          secondaryTypographyProps={{
-                            noWrap: true,
-                            sx: {
-                              textDecoration: "none",
-                              "& span": {
-                                color: "black.main",
-                              },
-                            },
-                            // component: Link,
-                            // to: `/product/${cart?.variant?.product?._id}`,
-                          }}
-                        />
-                        <Typography
-                          variant="h6"
-                          color={"black"}
-                          sx={{
-                            minWidth: "15px",
-                            textAlign: "center",
+                            borderRadius: 1,
+                            height: "55px",
+                            width: "55px",
+                            background: "transparent",
+                            color: "primary.dark",
+                            mr: 1,
                           }}
                         >
-                          {prodItem?.quantity * prodItem?.product?.sellPrice ||
-                            0}{" "}
-                          ৳
-                        </Typography>
-                      </ListItem>
-                    </>
+                          <IoIosImages
+                            style={{
+                              fontSize: "1.8em",
+                            }}
+                          />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        sx={{
+                          flex: 1,
+                        }}
+                        primary={
+                          <>
+                            <b>{prodItem?.product?.titleEn || "-"}</b>
+                          </>
+                        }
+                        secondary={
+                          <>
+                            {prodItem?.product?.variantType}:{" "}
+                            <span
+                              style={{
+                                fontWeight: 600,
+                              }}
+                            >
+                              {prodItem?.variant?.titleEn || "-"}
+                            </span>{" "}
+                            &times;{" "}
+                            <span
+                              style={{
+                                fontWeight: 600,
+                              }}
+                            >
+                              {prodItem?.product?.sellPrice || 0}
+                            </span>{" "}
+                            ৳ &times;{" "}
+                            <span
+                              style={{
+                                fontWeight: 600,
+                              }}
+                            >
+                              {prodItem?.quantity || 0}
+                            </span>{" "}
+                          </>
+                        }
+                        primaryTypographyProps={{
+                          noWrap: true,
+                          sx: {
+                            color: "black.main",
+                            textDecoration: "none",
+                          },
+                          // component: Link,
+                          // to: `/product/${cart?.variant?.product?._id}`,
+                        }}
+                        secondaryTypographyProps={{
+                          noWrap: true,
+                          sx: {
+                            textDecoration: "none",
+                            "& span": {
+                              color: "black.main",
+                            },
+                          },
+                          // component: Link,
+                          // to: `/product/${cart?.variant?.product?._id}`,
+                        }}
+                      />
+                      <Typography
+                        variant="body1"
+                        color={"black"}
+                        sx={{
+                          fontWeight: "bold",
+                          minWidth: "15px",
+                          textAlign: "center",
+                        }}
+                      >
+                        {prodItem?.quantity * prodItem?.product?.sellPrice || 0}{" "}
+                        ৳
+                      </Typography>
+                    </ListItem>
                   );
                 })}
               </Paper>
@@ -373,7 +348,7 @@ const Index = () => {
                   fontWeight: "bold",
                 }}
               >
-                Additional Information
+                Shipping Information
               </Typography>
               <Paper
                 elevation={0}
@@ -382,7 +357,7 @@ const Index = () => {
                     xs: 0,
                     md: 5,
                   },
-                  p: 2,
+                  p: { xs: 0, md: 2 },
                 }}
               >
                 <Stack
@@ -402,6 +377,30 @@ const Index = () => {
                   }}
                 />
                 <Stack
+                  direction={"row"}
+                  alignItems={"center"}
+                  justifyContent={"space-between"}
+                  sx={{
+                    width: "100%",
+                  }}
+                >
+                  <Typography variant="button">Receiver Name :</Typography>
+                  <b>-</b>
+                </Stack>
+                <Stack
+                  direction={"row"}
+                  alignItems={"center"}
+                  justifyContent={"space-between"}
+                  sx={{
+                    width: "100%",
+                  }}
+                >
+                  <Typography variant="button">
+                    Receiver Phone Number :
+                  </Typography>
+                  <b>-</b>
+                </Stack>
+                <Stack
                   direction={{ xs: "row", md: "column" }}
                   alignItems={{ xs: "center", md: "flex-start" }}
                   justifyContent={"space-between"}
@@ -410,15 +409,30 @@ const Index = () => {
                   }}
                 >
                   <Typography variant="button">Shipping Address :</Typography>
-                  <Typography variant="body2" fontWeight={600}>
-                    {orderInfo?.data?.data?.shipping}
-                  </Typography>
+                  <b>-</b>
                 </Stack>
-                <Divider
-                  sx={{
-                    my: 2,
-                  }}
-                />
+              </Paper>
+
+              <Typography
+                variant="h6"
+                sx={{
+                  mt: 3,
+                  mb: 1,
+                  fontWeight: "bold",
+                }}
+              >
+                Additional Information
+              </Typography>
+              <Paper
+                elevation={0}
+                sx={{
+                  // boxShadow: {
+                  //   xs: 0,
+                  //   md: 5,
+                  // },
+                  p: { xs: 0, md: 2 },
+                }}
+              >
                 <Stack
                   direction={"row"}
                   alignItems={"center"}

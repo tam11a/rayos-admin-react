@@ -28,6 +28,7 @@ import invoiceContext from "../../context/invoiceProvider";
 import { getAttachment } from "../../service/instance";
 import { Link } from "react-router-dom";
 import { FaSlackHash } from "react-icons/fa";
+import OrderStatus from "../../components/OrderStatus";
 /**
  * get-all-pending
  * get-all-confirm
@@ -46,7 +47,7 @@ const Index = () => {
   });
 
   const { data, isLoading } = useGetAllOrder(params);
-  console.log(data);
+  // console.log(data);
 
   // useMutations
   // const { mutateAsync: mutateConfirmOrder } = useConfirmOrder();
@@ -58,7 +59,7 @@ const Index = () => {
       // headerName: "#",
       // field: "show_info",
       // width: 60,
-      headerName: "Order Details",
+      headerName: "",
       field: "show_info",
       width: 100,
       align: "center",
@@ -79,10 +80,11 @@ const Index = () => {
     },
     {
       headerName: "Name",
-      headerAlign: "center",
-      align: "center",
+      headerAlign: "left",
+      align: "left",
       field: "receiver_name",
-      width: 150,
+      flex: 1,
+      minWidth: 150,
       sortable: false,
       renderCell: (params) => (
         <Chip
@@ -100,24 +102,24 @@ const Index = () => {
         />
       ),
     },
+    // {
+    //   headerName: "Phone",
+    //   headerAlign: "center",
+    //   align: "center",
+    //   field: "user.userName",
+    //   width: 120,
+    //   sortable: false,
+    // },
+    // {
+    //   headerName: "Address",
+    //   headerAlign: "center",
+    //   align: "center",
+    //   field: "address",
+    //   width: 200,
+    //   sortable: false,
+    // },
     {
-      headerName: "Phone",
-      headerAlign: "center",
-      align: "center",
-      field: "phone",
-      width: 120,
-      sortable: false,
-    },
-    {
-      headerName: "Address",
-      headerAlign: "center",
-      align: "center",
-      field: "address",
-      width: 200,
-      sortable: false,
-    },
-    {
-      headerName: "Date",
+      headerName: "Order Date",
       headerAlign: "center",
       align: "center",
       field: "createdAt",
@@ -125,10 +127,9 @@ const Index = () => {
       headerAlign: "center",
       renderCell: (params) => {
         return (
-          <Typography>{moment(params.row.createdAt).format("ll")}</Typography>
+          <Typography>{moment(params.row.createdAt).format("lll")}</Typography>
         );
       },
-      sortable: false,
     },
     {
       headerName: "Status",
@@ -138,40 +139,9 @@ const Index = () => {
       width: 120,
       headerAlign: "center",
       align: "center",
-      renderCell: (d) => {
-        var color;
-        var text;
-        switch (d.row.status) {
-          case "Pending":
-            color = "info";
-            break;
-          case "Shipped":
-          case "Confirmed":
-            color = "black";
-            break;
-          case "Canceled":
-          case "Returned":
-            color = "error";
-            break;
-          case "Delivered":
-            color = "success";
-            break;
-          default:
-            color = "default";
-            break;
-        }
-        return (
-          <Chip
-            label={text || d.row.status}
-            color={color}
-            size={"small"}
-            sx={{
-              textTransform: "uppercase",
-              fontWeight: "600",
-            }}
-          />
-        );
-      },
+      renderCell: (d) => (
+        <OrderStatus id={d.row._id} status={d.row.status} size={"small"} />
+      ),
       sortable: false,
     },
     {
@@ -211,60 +181,60 @@ const Index = () => {
       headerAlign: "center",
       sortable: false,
     },
-    {
-      headerName: "Action",
-      headerAlign: "center",
-      align: "center",
-      field: "action",
-      width: 200,
-      headerAlign: "center",
-      renderCell: (d) => {
-        return (
-          <>
-            <Select
-              size={"small"}
-              value={d.row.status}
-              disabled={
-                d.row.status === "Returned" || d.row.status === "Canceled"
-              }
-              fullWidth
-            >
-              <MenuItem value={"Pending"} disabled>
-                Pending
-              </MenuItem>
-              <MenuItem
-                value={"Confirmed"}
-                disabled={d.row.status === "Confirmed"}
-              >
-                Confirmed
-              </MenuItem>
-              <MenuItem value={"Shipped"} disabled={d.row.status === "Shipped"}>
-                Shipped
-              </MenuItem>
-              <MenuItem
-                value={"Delivered"}
-                disabled={d.row.status === "Delivered"}
-              >
-                Delivered
-              </MenuItem>
-              <MenuItem
-                value={"Canceled"}
-                disabled={d.row.status === "Canceled"}
-              >
-                Canceled
-              </MenuItem>
-              <MenuItem
-                value={"Returned"}
-                disabled={d.row.status === "Returned"}
-              >
-                Returned
-              </MenuItem>
-            </Select>
-          </>
-        );
-      },
-      sortable: false,
-    },
+    // {
+    //   headerName: "Action",
+    //   headerAlign: "center",
+    //   align: "center",
+    //   field: "action",
+    //   width: 200,
+    //   headerAlign: "center",
+    //   renderCell: (d) => {
+    //     return (
+    //       <>
+    //         <Select
+    //           size={"small"}
+    //           value={d.row.status}
+    //           disabled={
+    //             d.row.status === "Returned" || d.row.status === "Canceled"
+    //           }
+    //           fullWidth
+    //         >
+    //           <MenuItem value={"Pending"} disabled>
+    //             Pending
+    //           </MenuItem>
+    //           <MenuItem
+    //             value={"Confirmed"}
+    //             disabled={d.row.status === "Confirmed"}
+    //           >
+    //             Confirmed
+    //           </MenuItem>
+    //           <MenuItem value={"Shipped"} disabled={d.row.status === "Shipped"}>
+    //             Shipped
+    //           </MenuItem>
+    //           <MenuItem
+    //             value={"Delivered"}
+    //             disabled={d.row.status === "Delivered"}
+    //           >
+    //             Delivered
+    //           </MenuItem>
+    //           <MenuItem
+    //             value={"Canceled"}
+    //             disabled={d.row.status === "Canceled"}
+    //           >
+    //             Canceled
+    //           </MenuItem>
+    //           <MenuItem
+    //             value={"Returned"}
+    //             disabled={d.row.status === "Returned"}
+    //           >
+    //             Returned
+    //           </MenuItem>
+    //         </Select>
+    //       </>
+    //     );
+    //   },
+    //   sortable: false,
+    // },
     {
       headerName: "Invoice",
       headerAlign: "center",

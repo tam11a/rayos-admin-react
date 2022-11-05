@@ -47,47 +47,18 @@ export const useGetProductsByOrderID = (order_id) => {
   );
 };
 
-// confirm order
-const confirmOrder = (id) => {
-  return instance.put(`order/confirm-order/${id}`);
+// order status
+const updateOrderStatus = ({id, status}) => {
+  return instance.put(`order/${id}?status=${status}`);
 };
 
-export const useConfirmOrder = () => {
+export const useUpdateOrderStatus = () => {
   const queryClient = useQueryClient();
-  return useMutation(confirmOrder, {
+  return useMutation(updateOrderStatus, {
     onSuccess: () => {
       queryClient.invalidateQueries("get-all-order");
-      queryClient.invalidateQueries("get-order-by-user");
-    },
-  });
-};
-
-// complete order
-const completeOrder = (id) => {
-  return instance.put(`order/complete-order/${id}`);
-};
-
-export const useCompleteOrder = () => {
-  const queryClient = useQueryClient();
-  return useMutation(completeOrder, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("get-all-order");
-      queryClient.invalidateQueries("get-order-by-user");
-    },
-  });
-};
-
-// cancel order
-const cancelOrder = (id) => {
-  return instance.put(`order/cancel-order/${id}`);
-};
-
-export const useCancelOrder = () => {
-  const queryClient = useQueryClient();
-  return useMutation(cancelOrder, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("get-all-order");
-      queryClient.invalidateQueries("get-order-by-user");
+      queryClient.invalidateQueries("get-user-orderlist-by-id");
+      queryClient.invalidateQueries("get-products-by-order-id");
     },
   });
 };

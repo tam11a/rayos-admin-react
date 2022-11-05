@@ -78,7 +78,6 @@ const Profile = () => {
       () => updateCustomer({ customer_id: cid, data }),
       [200]
     );
-    console.log(res);
     if (res.status) {
       snack.createSnack(res.msg);
     } else {
