@@ -42,6 +42,7 @@ const Steppers = ({ timelines }) => {
   const getSeverity = (status) => {
     switch (status) {
       case "Confirmed":
+        return "warning";
       case "Delivered":
         return "success";
       case "Canceled":
@@ -86,6 +87,7 @@ const Steppers = ({ timelines }) => {
                     sx={{
                       fontSize: "1.2em",
                     }}
+                    color={getSeverity(timeline.status)}
                   >
                     {showIcon(timeline.status)}
                   </Icon>
