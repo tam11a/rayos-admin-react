@@ -103,7 +103,7 @@ const Index = () => {
       ),
     },
     // {
-    //   headerName: "Phone",
+    //   headerName: "Reciever Phone",
     //   headerAlign: "center",
     //   align: "center",
     //   field: "user.userName",
@@ -421,10 +421,3 @@ const Index = () => {
 };
 
 export default Index;
-
-
-
-
-
-
-

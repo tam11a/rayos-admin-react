@@ -15,13 +15,14 @@ import { useGetAllProduct } from "../../query/product";
 import { useGetAllCategory } from "../../query/category";
 import ButtonSwitch from "../../components/ButtonSwitch";
 import tableOptionsStyle from "../../style/tableOptions";
-
+import { BiCategoryAlt } from "react-icons/bi";
 import { IoMdEye } from "react-icons/io";
 import { getAttachment, rootURL } from "../../service/instance";
 
 import StateViewer from "../../components/StateViewer";
 import { FaSlackHash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import theme from "../../style/theme";
 
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = React.useState("null");
@@ -33,9 +34,8 @@ const Index = () => {
   });
 
   const { data: catData, isLoading: isCatLoading } = useGetAllCategory(params);
-  // console.log(catData);
+
   const { data, isLoading } = useGetAllProduct(params);
-  // console.log(params);
 
   const cols = [
     {
@@ -56,11 +56,6 @@ const Index = () => {
           </IconButton>
         </>
       ),
-      // renderCell: (params) => (
-      //   <>
-      //     <UpdateProductDrawer info={params.row} drawerIcon={<IoMdEye />} />
-      //   </>
-      // ),
     },
 
     {
@@ -84,20 +79,6 @@ const Index = () => {
       align: "left",
       width: 200,
     },
-    // {
-    //   headerName: "Variants",
-    //   headerAlign: "center",
-    //   field: "colors",
-    //   width: 80,
-    //   align: "center",
-    //   renderCell: () => (
-    //     <>
-    //       <IconButton size={"small"}>
-    //         <IoMdEye />
-    //       </IconButton>
-    //     </>
-    //   ),
-    // },
     {
       headerName: "Category",
       headerAlign: "center",
@@ -109,9 +90,18 @@ const Index = () => {
           <Chip
             avatar={
               <Avatar
-                alt={params.row.category.titleEn}
                 src={getAttachment(params.row.category.icon)}
-              />
+                sx={{
+                  bgcolor: "transparent",
+                  color: (theme) => `${theme.palette.primary.main} !important`,
+                }}
+              >
+                <BiCategoryAlt
+                  style={{
+                    fontSize: "1.8em",
+                  }}
+                />
+              </Avatar>
             }
             label={params.row.category.titleEn}
             variant="outlined"
@@ -159,12 +149,6 @@ const Index = () => {
         />
       ),
     },
-    // {
-    //   headerName: "Discount",
-    //   headerAlign: "center",
-    //   field: "discount",
-    //   align: "center",
-    // },
     {
       headerName: "Published",
       headerAlign: "center",
@@ -175,18 +159,6 @@ const Index = () => {
         <ButtonSwitch checked={params.row.isActive} color={"success"} />
       ),
     },
-    // {
-    //   headerName: "Action",
-    //   headerAlign: "center",
-    //   field: "actions",
-    //   align: "center",
-    //   width: 120,
-    //   renderCell: (params) => (
-    //     <>
-    //       <UpdateProductDrawer info={params.row} />
-    //     </>
-    //   ),
-    // },
   ];
 
   return (
