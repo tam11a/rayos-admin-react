@@ -2,7 +2,10 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import instance from "../service/instance";
 
 const getAllCustomer = (params) => {
-  return instance.get("customer", params);
+  return instance.get(
+    `customer?limit=${params.limit}&page=${params.page}`,
+    params
+  );
 };
 
 export const useGetAllCustomer = (params) => {

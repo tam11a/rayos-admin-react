@@ -92,7 +92,6 @@ export const useDelProductImage = () => {
   });
 };
 
-
 const updateVariant = ({ id, data }) => {
   return instance.patch(`variant/${id}`, data);
 };
@@ -114,4 +113,3 @@ export const useCreateVariant = () => {
     onSuccess: () => queryClient.invalidateQueries("get-product-by-id"),
   });
 };
-
