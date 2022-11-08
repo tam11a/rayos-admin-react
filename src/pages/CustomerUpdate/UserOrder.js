@@ -60,12 +60,17 @@ const UserOrder = ({ uid }) => {
       ),
       sortable: false,
     },
-    // {
-    //   headerName: "Name",
-    //   field: "user.userName",
-    //   width: 200,
-    //   sortable: false,
-    // },
+    {
+      headerName: "Reciepent Phone",
+      headerAlign: "center",
+      align: "center",
+      field: "phone",
+      width: 120,
+      sortable: false,
+      renderCell: (params) => {
+        return <Typography>{params.row.shipping?.phone || "-"}</Typography>;
+      },
+    },
     // {
     //   headerName: "Phone",
     //   field: "receiver_number",
