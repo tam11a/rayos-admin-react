@@ -170,12 +170,19 @@ const Index = () => {
             <Stack spacing={1} direction="row" alignItems={"center"}>
               <Box>
                 <Tooltip title="Download Invoice">
-                  <Button startIcon={<FaFileInvoice />} size={'small'} variant={"contained"}>
+                  <Button
+                    startIcon={<FaFileInvoice />}
+                    size={"small"}
+                    variant={"contained"}
+                  >
                     Invoice
                   </Button>
                 </Tooltip>
               </Box>
-              <OrderStatus status={orderInfo?.data?.data?.status} id={orderInfo?.data?.data?._id} />
+              <OrderStatus
+                status={orderInfo?.data?.data?.status}
+                id={orderInfo?.data?.data?._id}
+              />
             </Stack>
           </Grid>
           <Grid item xs={12}>
@@ -385,7 +392,7 @@ const Index = () => {
                   }}
                 >
                   <Typography variant="button">Receiver Name :</Typography>
-                  <b>-</b>
+                  <b>{orderInfo?.data?.data?.shipping?.name || "-"}</b>
                 </Stack>
                 <Stack
                   direction={"row"}
@@ -398,7 +405,7 @@ const Index = () => {
                   <Typography variant="button">
                     Receiver Phone Number :
                   </Typography>
-                  <b>-</b>
+                  <b>{orderInfo?.data?.data?.shipping?.phone || "-"}</b>
                 </Stack>
                 <Stack
                   direction={{ xs: "row", md: "column" }}
@@ -409,7 +416,7 @@ const Index = () => {
                   }}
                 >
                   <Typography variant="button">Shipping Address :</Typography>
-                  <b>-</b>
+                  <b>{orderInfo?.data?.data?.shipping?.address || "-"}</b>
                 </Stack>
               </Paper>
 

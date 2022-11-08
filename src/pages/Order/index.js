@@ -102,21 +102,25 @@ const Index = () => {
         />
       ),
     },
-    // {
-    //   headerName: "Reciever Phone",
-    //   headerAlign: "center",
-    //   align: "center",
-    //   field: "user.userName",
-    //   width: 120,
-    //   sortable: false,
-    // },
+    {
+      headerName: "Reciepent Phone",
+      headerAlign: "center",
+      align: "center",
+      field: "phone",
+      width: 120,
+      sortable: false,
+      renderCell: (params) => {
+        return <Typography>{params.row.shipping?.phone || "-"}</Typography>;
+      },
+    },
     // {
     //   headerName: "Address",
     //   headerAlign: "center",
     //   align: "center",
-    //   field: "address",
+    //   field: "shipping",
     //   width: 200,
     //   sortable: false,
+    //   valueFormatter: ({ value }) => value.address || "-",
     // },
     {
       headerName: "Order Date",
@@ -127,7 +131,9 @@ const Index = () => {
       headerAlign: "center",
       renderCell: (params) => {
         return (
-          <Typography>{moment(params.row.createdAt).format("lll")}</Typography>
+          <Typography variant={"subtitle2"}>
+            {moment(params.row.createdAt).format("lll")}
+          </Typography>
         );
       },
     },

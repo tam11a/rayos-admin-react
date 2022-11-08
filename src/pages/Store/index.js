@@ -74,10 +74,12 @@ const Index = () => {
     // },
     {
       headerName: "Store Name",
-      headerAlign: "center",
+      headerAlign: "left",
       field: "titleEn",
       align: "center",
-      width: 200,
+      minWidth: 200,
+      flex: 1,
+      align: "left",
     },
 
     {
@@ -86,7 +88,8 @@ const Index = () => {
       field: "owner",
       type: "date",
       align: "center",
-      width: 180,
+      minWidth: 180,
+      flex: 1,
       renderCell: (params) => (
         <Chip
           avatar={
