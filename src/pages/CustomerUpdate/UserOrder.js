@@ -52,7 +52,7 @@ const UserOrder = ({ uid }) => {
             component={Link}
             size={"small"}
             color={"primary"}
-            to={`/order/${params.row?._id}`}
+            to={`/order-details/${params.row?._id}`}
           >
             <FaSlackHash />
           </IconButton>

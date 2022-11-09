@@ -17,6 +17,7 @@ import Product from "../pages/Product";
 import ProductUpdate from "../pages/ProductUpdate";
 import Category from "../pages/Category";
 import CategoryUpdate from "../pages/CategoryUpdate";
+import Reviews from "../pages/Reviews";
 // import User from "../pages/User";
 import Images from "../pages/Images";
 // import UserOrder from "../pages/User/UserOrder";
@@ -43,6 +44,7 @@ const AppRoute = () => {
               <Route path="customer/:cid/*" element={<CustomerUpdate />} />
               <Route path="product-list" element={<Product />} />
               <Route path="prod/:pid" element={<ProductUpdate />} />
+              <Route path="reviews" element={<Reviews />} />
 
               {/* <Route path="user/:uid" element={<Navigate to={"profile"} />} />
               <Route path="user/:uid/:path_url" element={<User />} /> */}
