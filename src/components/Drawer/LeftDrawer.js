@@ -15,7 +15,11 @@ import { Box } from "@mui/system";
 import { IconButton, Typography } from "@mui/material";
 
 // Importing Icons
-import { MdOutlineDashboardCustomize, MdSpaceDashboard } from "react-icons/md";
+import {
+  MdOutlineDashboardCustomize,
+  MdOutlineRateReview,
+  MdSpaceDashboard,
+} from "react-icons/md";
 import { RiImageLine } from "react-icons/ri";
 import { GiCog } from "react-icons/gi";
 import { CgBox } from "react-icons/cg";
@@ -60,6 +64,11 @@ const LeftDrawer = ({ open, setOpen }) => {
       name: "Product",
       icon: <MdOutlineDashboardCustomize />,
       to: "/product-list",
+    },
+    {
+      name: "Reviews",
+      icon: <MdOutlineRateReview />,
+      to: "/reviews",
     },
     {
       name: "Category",
