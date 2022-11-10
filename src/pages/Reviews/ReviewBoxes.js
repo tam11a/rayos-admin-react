@@ -76,7 +76,7 @@ const ReviewBox = ({ revItem }) => {
     >
       <Stack
         direction="row"
-        alignItems={"start"}
+        alignItems={"center"}
         justifyContent={"space-between"}
         columnGap={4}
       >
