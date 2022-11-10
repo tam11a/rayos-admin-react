@@ -23,10 +23,9 @@ import { useGetAllOrder } from "../../query/order";
 import { useGetAllReview } from "../../query/review";
 import { getAttachment } from "../../service/instance";
 import tableOptionsStyle from "../../style/tableOptions";
-import ReviewBoxes from "./ReviewBoxes";
-import ReviewBoxess from "./ReviewBoxes";
+import ReviewBoxes from "../Reviews/ReviewBoxes";
 
-const Index = () => {
+const UserReview = () => {
   const snack = React.useContext(snackContext);
   const [params, setParams] = React.useState({
     method: "all",
@@ -150,11 +149,10 @@ const Index = () => {
         </Typography>
         {/* <Paper sx={{ p: 2 }}> */}
         <ReviewBoxes />
-
         {/* </Paper> */}
       </Container>
     </>
   );
 };
 
-export default Index;
+export default UserReview;
