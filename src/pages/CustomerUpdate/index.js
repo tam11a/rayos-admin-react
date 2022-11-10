@@ -13,6 +13,7 @@ import CTab from "../../components/CTab";
 import CTabs from "../../components/CTabs";
 import Profile from "./Profile";
 import UserOrder from "./UserOrder";
+import UserReview from "./UserReview";
 // import UserOrder from "./UserOrder";
 // import Wallet from "./Wallet";
 
@@ -51,8 +52,20 @@ const Index = () => {
             label={"User Order"}
             onClick={() => setSearchParams({ ...searchParams, tab: "order" })}
           />
+          <CTab
+            value={"review"}
+            label={"User Review"}
+            onClick={() => setSearchParams({ ...searchParams, tab: "review" })}
+          />
         </CTabs>
-        {searchParams.get("tab") === "order" ? <UserOrder /> : <Profile />}
+
+        {searchParams.get("tab") === "order" ? (
+          <UserOrder />
+        ) : searchParams.get("tab") === "review" ? (
+          <UserReview />
+        ) : (
+          <Profile />
+        )}
       </Container>
     </>
   );

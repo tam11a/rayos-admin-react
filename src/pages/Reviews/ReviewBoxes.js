@@ -9,7 +9,7 @@ import {
   Button,
 } from "@mui/material";
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGetAllReview } from "../../query/review";
 import { getAttachment } from "../../service/instance";
 import moment from "moment/moment";
@@ -39,29 +39,11 @@ const ReviewBoxes = () => {
 
   return (
     <>
-      {review?.slice?.(0, 5).map?.((revItem, index) => (
+      {review?.map?.((revItem, index) => (
         <React.Fragment key={index}>
           <ReviewBox revItem={revItem} />
         </React.Fragment>
       ))}
-      {!!review?.slice?.(5, review.length).length && (
-        <>
-          <Collapse in={checked}>
-            {review?.slice?.(5, review.length).map?.((revItem, index) => (
-              <React.Fragment key={index}>
-                <ReviewBox perCat={revItem} />
-              </React.Fragment>
-            ))}
-          </Collapse>
-          <Button
-            onClick={handleChange}
-            size={"small"}
-            startIcon={checked ? <IoMdRemove /> : <IoMdAdd />}
-          >
-            View More ({review?.slice?.(5, review.length).length})
-          </Button>
-        </>
-      )}
     </>
   );
 };
@@ -70,9 +52,13 @@ const ReviewBox = ({ revItem }) => {
   return (
     <Paper
       elevation={0}
-      //   sx={{
-      //     mb: 2,
-      //   }}
+      sx={{
+        p: 1,
+        pb: 0.5,
+        mb: 1,
+        "&:last-child": { mb: 0 },
+        border: "1px solid #ddd",
+      }}
     >
       <Stack
         direction="row"
@@ -85,6 +71,9 @@ const ReviewBox = ({ revItem }) => {
           alignItems={"center"}
           rowGap={0.5}
           maxWidth="62px"
+          component={Link}
+          to={`/customer/${revItem?.author?._id}`}
+          sx={{ textDecoration: "none", color: "unset" }}
         >
           <Avatar
             sx={{ width: 45, height: 45 }}
@@ -105,10 +94,13 @@ const ReviewBox = ({ revItem }) => {
           alignItems={"center"}
           rowGap={0.5}
           maxWidth="200px"
+          component={Link}
+          to={`/prod/${revItem?.product?._id}`}
+          sx={{ textDecoration: "none", color: "unset" }}
         >
           <Avatar
             // sx={{ width: 38, height: 38 }}
-            // component={Button}
+
             sx={{
               borderRadius: 1,
               height: "45px",
