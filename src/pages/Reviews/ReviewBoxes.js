@@ -66,7 +66,7 @@ const ReviewBox = ({ revItem }) => {
         justifyContent={"space-between"}
         columnGap={4}
       >
-        <Stack
+        {/* <Stack
           direction="column"
           alignItems={"center"}
           rowGap={0.5}
@@ -88,7 +88,7 @@ const ReviewBox = ({ revItem }) => {
           >
             {revItem.author.userName}
           </Typography>
-        </Stack>
+        </Stack> */}
         <Stack
           direction="column"
           alignItems={"center"}
