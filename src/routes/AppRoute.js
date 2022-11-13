@@ -43,7 +43,7 @@ const AppRoute = () => {
               <Route path="customer-list" element={<Customer />} />
               <Route path="customer/:cid/*" element={<CustomerUpdate />} />
               <Route path="product-list" element={<Product />} />
-              <Route path="prod/:pid" element={<ProductUpdate />} />
+              <Route path="prod/:pid/*" element={<ProductUpdate />} />
               <Route path="reviews" element={<Reviews />} />
 
               {/* <Route path="user/:uid" element={<Navigate to={"profile"} />} />

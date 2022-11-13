@@ -37,6 +37,7 @@ import { TbFileInvoice } from "react-icons/tb";
 import { GrMail } from "react-icons/gr";
 import Steppers from "./Steppers";
 import OrderStatus from "../../components/OrderStatus";
+import BackButton from "../../components/BackButton";
 
 const Index = () => {
   const snack = React.useContext(snackContext);
@@ -54,10 +55,20 @@ const Index = () => {
   React.useEffect(() => {
     setProductInfo(orderInfo?.data?.data?.products || []);
   }, [isLoading]);
+  console.log(orderInfo);
 
   return (
     <>
-      <Container>
+      <Container
+        sx={{
+          py: 2,
+        }}
+      >
+        <BackButton
+          to={"/order-list"}
+          primary={"Back to Order"}
+          secondary={"Update Order"}
+        />
         <Grid
           container
           sx={{
@@ -110,6 +121,8 @@ const Index = () => {
                   </Box>
                 ) : (
                   <Avatar
+                    component={Link}
+                    to={`/customer/${orderInfo?.data?.data?.user?._id}`}
                     sx={{
                       width: "150px",
                       height: "150px",
@@ -129,7 +142,12 @@ const Index = () => {
                     },
                   }}
                 >
-                  <Typography variant={"h6"}>
+                  <Typography
+                    variant={"h6"}
+                    component={Link}
+                    to={`/customer/${orderInfo?.data?.data?.user?._id}`}
+                    sx={{ textDecoration: "none", color: "unset" }}
+                  >
                     {orderInfo?.data?.data?.user?.userName}
                   </Typography>
                   <Typography
@@ -264,6 +282,8 @@ const Index = () => {
                             color: "primary.dark",
                             mr: 1,
                           }}
+                          component={Link}
+                          to={`/prod/${prodItem?.product?._id}`}
                         >
                           <IoIosImages
                             style={{

@@ -89,7 +89,7 @@ const Index = () => {
 
   const uploadCategoryIcon = async (data) => {
     const res = await responseHandler(() => postImage(data), [201]);
-    console.log(res);
+
     if (res.status)
       await updateCategoryFunc({
         icon: res.data?.[0]?._id,
