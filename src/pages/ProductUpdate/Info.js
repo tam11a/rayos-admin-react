@@ -5,11 +5,14 @@ import {
   ListItem,
   MenuItem,
   Select,
+  Stack,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
+import ButtonSwitch from "../../components/ButtonSwitch";
 import CPaper from "../../components/CPaper";
 import DropZone from "../../components/DropZone";
 import InputBox from "../../components/InputBox";
@@ -20,12 +23,16 @@ import {
   useGetAllCategory,
   useGetSubCategoryFromCatID,
 } from "../../query/category";
-import { useGetProductByID, useUpdateProduct } from "../../query/product";
+import {
+  useGetProductByID,
+  useToggleProduct,
+  useUpdateProduct,
+} from "../../query/product";
 import { getAttachment } from "../../service/instance";
 import tableOptionsStyle from "../../style/tableOptions";
 import { responseHandler } from "../../utilities/response-handler";
 
-const ProductInfo = () => {
+const Info = () => {
   const snack = React.useContext(snackContext);
   const { pid } = useParams();
   const {
@@ -44,6 +51,7 @@ const ProductInfo = () => {
   });
 
   const { data: productInfo } = useGetProductByID(pid);
+
   const { mutateAsync: updateProduct, isLoading: updateLoading } =
     useUpdateProduct();
   const { mutateAsync: postImage } = usePostImage();
@@ -52,6 +60,13 @@ const ProductInfo = () => {
     watch("category"),
     params
   );
+  const { mutateAsync: toggleProduct } = useToggleProduct();
+
+  const updateState = async (id) => {
+    const res = await responseHandler(() => toggleProduct(id));
+    if (res.status) snack.createSnack(res.msg);
+    else snack.createSnack(res.msg, "error");
+  };
 
   React.useEffect(() => {
     if (!productInfo) return;
@@ -110,21 +125,32 @@ const ProductInfo = () => {
           mt: 2,
         }}
       >
-        <Grid item xs={12} sm={5.9} md={6.9}>
+        <Grid item xs={12} md={6.9}>
           <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
             Information
           </Typography>
 
           <CPaper>
-            <DropZone
-              defaultValue={
-                productInfo?.data?.data?.image && {
-                  preview: getAttachment(productInfo?.data?.data?.image),
+            <Stack direction="row" justifyContent="space-between">
+              <DropZone
+                defaultValue={
+                  productInfo?.data?.data?.image && {
+                    preview: getAttachment(productInfo?.data?.data?.image),
+                  }
                 }
-              }
-              onChange={uploadProductIcon}
-              onDelete={() => true}
-            />
+                onChange={uploadProductIcon}
+                onDelete={() => true}
+              />
+              <Tooltip title="deactivate" placement="top">
+                <ButtonSwitch
+                  checked={productInfo?.data?.data?.isActive}
+                  color={"success"}
+                  onClick={() => {
+                    updateState(productInfo?.data?.data?._id);
+                  }}
+                />
+              </Tooltip>
+            </Stack>
             <ListItem
               sx={{
                 display: "flex",
@@ -201,7 +227,7 @@ const ProductInfo = () => {
             </ListItem>
           </CPaper>
         </Grid>
-        <Grid item xs={12} sm={5.9} md={4.9}>
+        <Grid item xs={12} md={4.9}>
           <Typography variant={"h6"} sx={{ fontWeight: "500" }}>
             Additional Information
           </Typography>
@@ -304,7 +330,7 @@ const ProductInfo = () => {
             size={"large"}
             sx={{
               height: "52px",
-              mt: 1,
+              my: 1,
             }}
             type={"submit"}
             disabled={updateLoading || updateLoading || !isDirty}
@@ -321,4 +347,4 @@ const ProductInfo = () => {
   );
 };
 
-export default ProductInfo;
+export default Info;

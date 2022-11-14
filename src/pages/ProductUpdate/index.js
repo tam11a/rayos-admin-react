@@ -31,7 +31,7 @@ import { responseHandler } from "../../utilities/response-handler";
 
 import CTab from "../../components/CTab";
 import CTabs from "../../components/CTabs";
-import ProductInfo from "./ProductInfo";
+import Info from "./Info";
 import Variants from "./Variants";
 import Gallary from "./Gallary";
 import Reviews from "./Reviews";
@@ -103,7 +103,7 @@ const Index = () => {
         ) : searchParams.get("tab") === "review" ? (
           <Reviews />
         ) : (
-          <ProductInfo />
+          <Info />
         )}
       </Container>
     </>

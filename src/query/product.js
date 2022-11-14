@@ -113,3 +113,17 @@ export const useCreateVariant = () => {
     onSuccess: () => queryClient.invalidateQueries("get-product-by-id"),
   });
 };
+
+const toggleProduct = (id) => {
+  return instance.put(`product/${id}`);
+};
+
+export const useToggleProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation(toggleProduct, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("get-all-product");
+      queryClient.invalidateQueries("get-product-by-id");
+    },
+  });
+};
