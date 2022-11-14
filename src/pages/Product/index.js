@@ -11,7 +11,7 @@ import {
   Avatar,
 } from "@mui/material";
 import DataTable from "../../components/DataTable";
-import { useGetAllProduct } from "../../query/product";
+import { useGetAllProduct, useToggleProduct } from "../../query/product";
 import { useGetAllCategory } from "../../query/category";
 import ButtonSwitch from "../../components/ButtonSwitch";
 import tableOptionsStyle from "../../style/tableOptions";
@@ -23,19 +23,27 @@ import StateViewer from "../../components/StateViewer";
 import { FaSlackHash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import theme from "../../style/theme";
+import { responseHandler } from "../../utilities/response-handler";
+import snackContext from "../../context/snackProvider";
 
 const Index = () => {
-  const [selectedCategory, setSelectedCategory] = React.useState("null");
-
+  const snack = React.useContext(snackContext);
   const [params, setParams] = React.useState({
     limit: 10,
     page: 1,
     filters: [],
   });
+  const [selectedCategory, setSelectedCategory] = React.useState("null");
 
-  const { data: catData, isLoading: isCatLoading } = useGetAllCategory(params);
-
+  const { data: catData } = useGetAllCategory(params);
   const { data, isLoading } = useGetAllProduct(params);
+  const { mutateAsync: toggleProduct } = useToggleProduct();
+
+  const updateState = async (id) => {
+    const res = await responseHandler(() => toggleProduct(id));
+    if (res.status) snack.createSnack(res.msg);
+    else snack.createSnack(res.msg, "error");
+  };
 
   const cols = [
     {
@@ -156,7 +164,13 @@ const Index = () => {
       align: "center",
       width: 120,
       renderCell: (params) => (
-        <ButtonSwitch checked={params.row.isActive} color={"success"} />
+        <ButtonSwitch
+          checked={params.row?.isActive}
+          color={"success"}
+          onClick={() => {
+            updateState(params.row?._id);
+          }}
+        />
       ),
     },
   ];
