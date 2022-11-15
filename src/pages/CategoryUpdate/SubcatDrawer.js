@@ -73,10 +73,7 @@ const SubcatDrawer = ({ open, onClose, info }) => {
       <form onSubmit={handleSubmit(updateSubcategory)}>
         <List disablePadding>
           <ListItem>
-            <ListItemText
-              primary={"Create Subcategory"}
-              secondary={"Create Subcategory for Products"}
-            />
+            <ListItemText primary={"Update Subcategory"} />
             {isDirty && (
               <IconButton
                 size={"small"}
@@ -148,7 +145,7 @@ const SubcatDrawer = ({ open, onClose, info }) => {
             disabled={isLoading}
             fullWidth
           >
-            Create
+            Update
           </Button>
         </ListItem>
       </form>
