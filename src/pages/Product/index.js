@@ -9,6 +9,7 @@ import {
   Paper,
   Select,
   Avatar,
+  Typography,
 } from "@mui/material";
 import DataTable from "../../components/DataTable";
 import { useGetAllProduct, useToggleProduct } from "../../query/product";
@@ -37,6 +38,7 @@ const Index = () => {
 
   const { data: catData } = useGetAllCategory(params);
   const { data, isLoading } = useGetAllProduct(params);
+  console.log(data);
   const { mutateAsync: toggleProduct } = useToggleProduct();
 
   const updateState = async (id) => {
@@ -82,16 +84,34 @@ const Index = () => {
     },
     {
       headerName: "Product Name",
-      headerAlign: "left",
+      headerAlign: "center",
       field: "titleEn",
       align: "left",
       width: 200,
     },
     {
+      headerName: "Store",
+      headerAlign: "center",
+      field: "store title",
+      align: "center",
+      width: 200,
+      renderCell: (params) => (
+        <>
+          <Chip
+            label={params.row.store.titleEn}
+            variant="outlined"
+            to={`/store/${params.row.store._id}`}
+            component={Link}
+            onClick={() => {}}
+          />
+        </>
+      ),
+    },
+    {
       headerName: "Category",
       headerAlign: "center",
       field: "category",
-      width: 200,
+      width: 120,
       align: "center",
       renderCell: (params) => (
         <>

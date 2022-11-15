@@ -1,33 +1,6 @@
-import {
-  Button,
-  Container,
-  Grid,
-  IconButton,
-  InputBase,
-  ListItem,
-  MenuItem,
-  Select,
-  Typography,
-} from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import React from "react";
-import { useForm } from "react-hook-form";
-import {
-  useParams,
-  Link,
-  Navigate,
-  useSearchParams,
-  Route,
-  Routes,
-} from "react-router-dom";
-import BackButton from "../../components/BackButton";
-
-import snackContext from "../../context/snackProvider";
-import {
-  useGetAllCategory,
-  useGetSubCategoryFromCatID,
-} from "../../query/category";
-import { useGetProductByID, useUpdateProduct } from "../../query/product";
-import { responseHandler } from "../../utilities/response-handler";
+import { useSearchParams } from "react-router-dom";
 
 import CTab from "../../components/CTab";
 import CTabs from "../../components/CTabs";

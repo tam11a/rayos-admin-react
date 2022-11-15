@@ -66,15 +66,16 @@ const LeftDrawer = ({ open, setOpen }) => {
       to: "/product-list",
     },
     {
-      name: "Reviews",
-      icon: <MdOutlineRateReview />,
-      to: "/reviews",
-    },
-    {
       name: "Category",
       icon: <FaRegListAlt />,
       to: "/category",
     },
+    {
+      name: "Reviews",
+      icon: <MdOutlineRateReview />,
+      to: "/reviews",
+    },
+
     {
       name: "Images",
       icon: <RiImageLine />,
