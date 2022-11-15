@@ -97,26 +97,26 @@ const Index = () => {
             </Typography>
             <form onSubmit={handleSubmit(handleUpdate)}>
               <CPaper>
-                <Typography>Name (English)</Typography>
+                <Typography>Name</Typography>
                 <InputBox
                   fullWidth
-                  placeholder="Enter Store Name (English)"
+                  placeholder="Enter Store Name"
                   {...register("titleEn", {
                     required: true,
                   })}
                 />
-                <Typography>Name (Bengali)</Typography>
+                {/* <Typography>Name (Bengali)</Typography>
                 <InputBox
                   fullWidth
                   placeholder="Enter Store Name (Bengali)"
                   {...register("titleBn", {
                     required: false,
                   })}
-                />
-                <Typography>Description (English)</Typography>
+                /> */}
+                <Typography>Description</Typography>
                 <InputBox
                   fullWidth
-                  placeholder="Enter Description (English)"
+                  placeholder="Enter Description"
                   {...register("descriptionEn", {
                     required: true,
                   })}
@@ -124,7 +124,7 @@ const Index = () => {
                   minRows={5}
                   maxRows={6}
                 />
-                <Typography>Description (Bengali)</Typography>
+                {/* <Typography>Description (Bengali)</Typography>
                 <InputBox
                   fullWidth
                   placeholder="Enter Description (Bengali)"
@@ -134,7 +134,7 @@ const Index = () => {
                   multiline={true}
                   minRows={5}
                   maxRows={6}
-                />
+                /> */}
 
                 <Button
                   variant={"contained"}

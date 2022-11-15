@@ -1,22 +1,25 @@
 import React from "react";
-import { Container, Typography } from "@mui/material";
+import { Container, Skeleton } from "@mui/material";
 import CPaper from "../../components/CPaper";
 import DropZone from "../../components/DropZone";
 import snackContext from "../../context/snackProvider";
-import {
-  useDeleteFeedImage,
-  useGetAllFeedImages,
-  usePostFeedImage,
-} from "../../query/attachments";
 import { getAttachment } from "../../service/instance";
 import { responseHandler } from "../../utilities/response-handler";
+import { useParams } from "react-router-dom";
+import {
+  useDeleteProductImage,
+  useGetAllProductImages,
+  usePostProductImage,
+} from "../../query/product";
 
 const Gallary = () => {
+  const { pid } = useParams();
+
   const snack = React.useContext(snackContext);
   const [feedImages, setFeedImages] = React.useState([]);
-  const { data: feedImageData } = useGetAllFeedImages();
+  const { data: feedImageData, isLoading } = useGetAllProductImages(pid);
 
-  const { mutateAsync: deleteFeedImage } = useDeleteFeedImage();
+  const { mutateAsync: deleteFeedImage } = useDeleteProductImage();
 
   const deleteImage = async (id) => {
     const res = await responseHandler(() => deleteFeedImage(id));
@@ -27,13 +30,16 @@ const Gallary = () => {
     }
   };
 
-  const { mutateAsync: postFeedImage } = usePostFeedImage();
+  const { mutateAsync: postProductImage } = usePostProductImage();
 
   const postImage = async (images) => {
     const res = await responseHandler(
       () =>
-        postFeedImage({
-          "Files[]": images,
+        postProductImage({
+          id: pid,
+          data: {
+            "Files[]": images,
+          },
         }),
       [201]
     );
@@ -56,9 +62,6 @@ const Gallary = () => {
           py: 2,
         }}
       >
-        <Typography variant={"h5"} fontWeight={"600"}>
-          News Feed
-        </Typography>
         <CPaper
           sx={{
             my: 1,
@@ -69,8 +72,17 @@ const Gallary = () => {
             flexWrap: "wrap",
             rowGap: 1,
             columnGap: 1,
+            border: 0,
           }}
         >
+          {isLoading &&
+            [1, 2, 3, 4]?.map?.((x) => (
+              <Skeleton
+                variant="rectangular"
+                height={"125px"}
+                width={"125px"}
+              />
+            ))}
           {feedImages?.map?.((fimg) => (
             <React.Fragment key={fimg._id}>
               <DropZone

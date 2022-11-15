@@ -15,7 +15,7 @@ import { useGetAllProduct, useToggleProduct } from "../../query/product";
 import { useGetAllCategory } from "../../query/category";
 import ButtonSwitch from "../../components/ButtonSwitch";
 import tableOptionsStyle from "../../style/tableOptions";
-import { BiCategoryAlt } from "react-icons/bi";
+import { BiCategoryAlt, BiStore } from "react-icons/bi";
 import { getAttachment } from "../../service/instance";
 
 import StateViewer from "../../components/StateViewer";
@@ -24,6 +24,7 @@ import { Link } from "react-router-dom";
 import { responseHandler } from "../../utilities/response-handler";
 import snackContext from "../../context/snackProvider";
 import { useGetProductStats } from "../../query/stats";
+import { IoIosImages } from "react-icons/io";
 
 const Index = () => {
   const snack = React.useContext(snackContext);
@@ -75,9 +76,15 @@ const Index = () => {
       renderCell: (params) => (
         <Avatar
           src={getAttachment(params.row.image)}
-          variant="square"
-          alt={params.row.titleEn}
-        />
+          variant="rounded"
+          sx={{
+            bgcolor: "transparent",
+            color: (theme) => `${theme.palette.primary.main} !important`,
+            border: "1px solid #eee",
+          }}
+        >
+          <IoIosImages />
+        </Avatar>
       ),
     },
     {
@@ -101,6 +108,21 @@ const Index = () => {
             to={`/store/${params.row.store._id}`}
             component={Link}
             onClick={() => {}}
+            avatar={
+              <Avatar
+                src={getAttachment(params.row.store.image)}
+                sx={{
+                  bgcolor: "transparent",
+                  color: (theme) => `${theme.palette.primary.main} !important`,
+                }}
+              >
+                <BiStore
+                  style={{
+                    fontSize: "1.8em",
+                  }}
+                />
+              </Avatar>
+            }
           />
         </>
       ),

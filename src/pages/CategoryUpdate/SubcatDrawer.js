@@ -37,7 +37,7 @@ const SubcatDrawer = ({ open, onClose, info }) => {
   React.useEffect(() => {
     if (!info || isDirty) return;
     setValue("titleEn", info?.titleEn);
-    setValue("titleBn", info?.titleBn);
+    // setValue("titleBn", info?.titleBn);
   }, [info]);
 
   const { mutateAsync: patchSubcategory, isLoading } = useUpdateSubcategory();
@@ -73,7 +73,10 @@ const SubcatDrawer = ({ open, onClose, info }) => {
       <form onSubmit={handleSubmit(updateSubcategory)}>
         <List disablePadding>
           <ListItem>
-            <ListItemText primary={"Update Subcategory"} />
+            <ListItemText
+              primary={"Update Subcategory"}
+              secondary={"Update Subcategory Information"}
+            />
             {isDirty && (
               <IconButton
                 size={"small"}
@@ -120,7 +123,7 @@ const SubcatDrawer = ({ open, onClose, info }) => {
             />
             <ShowError err={errors.titleEn} />
           </ListItem>
-          <ListItem
+          {/* <ListItem
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -136,7 +139,7 @@ const SubcatDrawer = ({ open, onClose, info }) => {
               fullWidth
             />
             <ShowError err={errors.titleBn} />
-          </ListItem>
+          </ListItem> */}
         </List>
         <ListItem>
           <Button

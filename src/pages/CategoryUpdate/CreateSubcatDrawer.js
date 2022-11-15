@@ -108,7 +108,7 @@ const CreateSubcatDrawer = ({ open, onClose, categoryId }) => {
             />
             <ShowError err={errors.titleEn} />
           </ListItem>
-          <ListItem
+          {/* <ListItem
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -124,7 +124,7 @@ const CreateSubcatDrawer = ({ open, onClose, categoryId }) => {
               fullWidth
             />
             <ShowError err={errors.titleBn} />
-          </ListItem>
+          </ListItem> */}
         </List>
         <ListItem>
           <Button

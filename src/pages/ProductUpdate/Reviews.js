@@ -13,6 +13,7 @@ import {
   MenuItem,
   Select,
   InputBase,
+  Alert,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { useGetAllReview, useToggleReview } from "../../query/review";
@@ -44,11 +45,12 @@ const Reviews = () => {
     if (isError) return;
     setReview(reviewList?.data?.data || []);
   }, [isLoading, reviewList]);
-  console.log(reviewList);
 
   return (
     <>
-      <Typography variant="h2">Not Ready Yet</Typography>
+      <Alert severity="error" variant="filled">
+        Not Integrated
+      </Alert>
       <Paper
         elevation={0}
         sx={{
@@ -140,7 +142,7 @@ const Reviews = () => {
       </Paper>
       {review?.map?.((revItem, index) => (
         <React.Fragment key={index}>
-          <ReviewBox revItem={revItem} />
+          <ReviewBox revItem={revItem} showUser={true} />
         </React.Fragment>
       ))}
       <Stack direction="row" justifyContent={"flex-end"}>
@@ -195,65 +197,67 @@ const ReviewBox = ({ revItem, showUser, showProd }) => {
         justifyContent={"space-between"}
         columnGap={4}
       >
-        {/* {showUser && ( */}
-        <Stack
-          direction="column"
-          alignItems={"center"}
-          rowGap={0.5}
-          maxWidth="62px"
-          component={Link}
-          to={`/customer/${revItem?.author?._id}`}
-          sx={{ textDecoration: "none", color: "unset" }}
-        >
-          <Avatar
-            sx={{ width: 45, height: 45 }}
-            src={getAttachment(revItem?.author.image)}
-            alt={revItem?.author.fullName}
-          />
-          <Typography
-            variant={"caption"}
-            sx={{ fontWeight: 600 }}
-            noWrap={true}
+        {showUser && (
+          <Stack
+            direction="column"
+            alignItems={"center"}
+            rowGap={0.5}
             maxWidth="62px"
+            component={Link}
+            to={`/customer/${revItem?.author?._id}`}
+            sx={{ textDecoration: "none", color: "unset" }}
           >
-            {revItem.author.userName}
-          </Typography>
-        </Stack>
-        {/* )} */}
-        {/* {showProd && ( */}
-        {/* <Stack
-          direction="column"
-          alignItems={"center"}
-          rowGap={0.5}
-          maxWidth="200px"
-          component={Link}
-          to={`/prod/${revItem?.product?._id}`}
-          sx={{ textDecoration: "none", color: "unset" }}
-        >
-          <Avatar
-            // sx={{ width: 38, height: 38 }}
-
-            sx={{
-              borderRadius: 1,
-              height: "45px",
-              width: "45px",
-              background: "transparent",
-              color: "primary.dark",
-              mr: 1,
-            }}
-            src={getAttachment(revItem?.product.image)}
-            alt={revItem?.product.titleEn}
-          />
-          <Typography
-            variant={"caption"}
-            sx={{ fontWeight: 600 }}
-            noWrap={true}
+            <Avatar
+              sx={{ width: 45, height: 45 }}
+              variant={"rounded"}
+              src={getAttachment(revItem?.author.image)}
+              alt={revItem?.author.fullName}
+            />
+            <Typography
+              variant={"caption"}
+              sx={{ fontWeight: 600 }}
+              noWrap={true}
+              maxWidth="62px"
+            >
+              {revItem.author.userName}
+            </Typography>
+          </Stack>
+        )}
+        {showProd && (
+          <Stack
+            direction="column"
+            alignItems={"center"}
+            rowGap={0.5}
             maxWidth="200px"
+            component={Link}
+            to={`/prod/${revItem?.product?._id}`}
+            sx={{ textDecoration: "none", color: "unset" }}
           >
-            {revItem?.product.titleEn}
-          </Typography>
-        </Stack> */}
-        {/* )} */}
+            <Avatar
+              // sx={{ width: 38, height: 38 }}
+
+              sx={{
+                borderRadius: 1,
+                height: "45px",
+                width: "45px",
+                background: "transparent",
+                color: "primary.dark",
+                mr: 1,
+              }}
+              variant={"rounded"}
+              src={getAttachment(revItem?.product.image)}
+              alt={revItem?.product.titleEn}
+            />
+            <Typography
+              variant={"caption"}
+              sx={{ fontWeight: 600 }}
+              noWrap={true}
+              maxWidth="200px"
+            >
+              {revItem?.product.titleEn}
+            </Typography>
+          </Stack>
+        )}
         <Stack direction="column" rowGap={0.5} flex={1}>
           <Rating
             name="half-rating-read"

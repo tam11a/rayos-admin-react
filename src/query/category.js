@@ -109,3 +109,42 @@ export const useToggleSubcategory = () => {
     onSuccess: () => queryClient.invalidateQueries("get-sub-category-cat"),
   });
 };
+
+
+
+const getAllCategoryImages = (pid) => {
+  return instance.get(`category/${pid}/images`);
+};
+
+export const useGetAllCategoryImages = (pid) => {
+  return useQuery(
+    ["get-category-images", pid],
+    () => getAllCategoryImages(pid),
+    {
+      // refetchInterval: 20000,
+      enabled: !!pid,
+    }
+  );
+};
+
+const delCategoryImage = (id) => {
+  return instance.delete(`category/images/${id}`);
+};
+
+export const useDeleteCategoryImage = () => {
+  const queryClient = useQueryClient();
+  return useMutation(delCategoryImage, {
+    onSuccess: () => queryClient.invalidateQueries("get-category-images"),
+  });
+};
+
+const postCategoryImage = ({ id, data }) => {
+  return instance.postForm(`category/${id}/images`, data);
+};
+
+export const usePostCategoryImage = () => {
+  const queryClient = useQueryClient();
+  return useMutation(postCategoryImage, {
+    onSuccess: () => queryClient.invalidateQueries("get-category-images"),
+  });
+};

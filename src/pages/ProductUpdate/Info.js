@@ -85,20 +85,12 @@ const Info = () => {
       });
   }, [productInfo]);
 
-  const updateProductFunc = async (data) => {
-    const res = await responseHandler(
-      () => updateProduct({ id: pid, data }),
-      [200]
-    );
-    if (res.status) snack.createSnack(res.msg);
-    else snack.createSnack(res.msg, "error");
-  };
 
   const uploadProductIcon = async (data) => {
     const res = await responseHandler(() => postImage(data), [201]);
     if (res.status)
-      await updateProductFunc({
-        icon: res.data?.[0]?._id,
+      await handleUpdate({
+        image: res.data?.[0]?._id,
       });
     else snack.createSnack(res.msg, "error");
   };
@@ -168,7 +160,7 @@ const Info = () => {
               />
               <ShowError err={errors.titleEn} />
             </ListItem>
-            <ListItem
+            {/* <ListItem
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -184,7 +176,7 @@ const Info = () => {
                 {...register("titleBn")}
               />
               <ShowError err={errors.titleBn} />
-            </ListItem>
+            </ListItem> */}
             <ListItem
               sx={{
                 display: "flex",
@@ -201,11 +193,10 @@ const Info = () => {
                 {...register("descriptionEn")}
                 multiline={true}
                 minRows={5}
-                maxRows={6}
               />
               <ShowError err={errors.descriptionEn} />
             </ListItem>
-            <ListItem
+            {/* <ListItem
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -224,7 +215,7 @@ const Info = () => {
                 maxRows={6}
               />
               <ShowError err={errors.descriptionBn} />
-            </ListItem>
+            </ListItem> */}
           </CPaper>
         </Grid>
         <Grid item xs={12} md={4.9}>

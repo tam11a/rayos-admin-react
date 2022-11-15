@@ -101,7 +101,7 @@ const CreateDrawer = ({ open, onClose }) => {
             />
             <ShowError err={errors.titleEn} />
           </ListItem>
-          <ListItem
+          {/* <ListItem
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -117,7 +117,7 @@ const CreateDrawer = ({ open, onClose }) => {
               fullWidth
             />
             <ShowError err={errors.titleBn} />
-          </ListItem>
+          </ListItem> */}
           <ListItem
             sx={{
               display: "flex",
@@ -132,7 +132,7 @@ const CreateDrawer = ({ open, onClose }) => {
               placeholder={"Enter Description"}
               multiline
               minRows={5}
-              maxRows={6}
+              // maxRows={6}
               {...register("descriptionEn", {
                 required: true,
               })}
@@ -140,7 +140,7 @@ const CreateDrawer = ({ open, onClose }) => {
             />
             <ShowError err={errors.descriptionEn} />
           </ListItem>
-          <ListItem
+          {/* <ListItem
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -159,7 +159,7 @@ const CreateDrawer = ({ open, onClose }) => {
               fullWidth
             />
             <ShowError err={errors.descriptionBn} />
-          </ListItem>
+          </ListItem> */}
           <ListItem>
             <Button
               variant={"contained"}

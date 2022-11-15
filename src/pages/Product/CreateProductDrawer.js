@@ -158,7 +158,7 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
               />
               <ShowError err={errors.titleEn} />
             </ListItem>
-            <ListItem
+            {/* <ListItem
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -174,7 +174,7 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
                 fullWidth
               />
               <ShowError err={errors.titleBn} />
-            </ListItem>
+            </ListItem> */}
             <ListItem
               sx={{
                 display: "flex",
@@ -332,12 +332,12 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
                 })}
                 multiline
                 minRows={5}
-                maxRows={6}
+                // maxRows={6}
                 fullWidth
               />
               <ShowError err={errors.descriptionEn} />
             </ListItem>
-            <ListItem
+            {/* <ListItem
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -356,7 +356,7 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
                 fullWidth
               />
               <ShowError err={errors.descriptionBn} />
-            </ListItem>
+            </ListItem> */}
             {/* <ListItem
               sx={{
                 display: "flex",

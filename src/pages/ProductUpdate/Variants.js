@@ -11,7 +11,7 @@ import VariantInput from "./VariantInput";
 import CreateVariantInput from "./CreateVariantInput";
 import { responseHandler } from "../../utilities/response-handler";
 
-const Variants = (variant) => {
+const Variants = () => {
   const snack = React.useContext(snackContext);
   const { pid } = useParams();
   const {

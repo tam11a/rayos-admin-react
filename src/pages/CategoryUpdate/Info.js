@@ -121,32 +121,32 @@ const Info = () => {
               </Tooltip>
             </Stack>
             <form onSubmit={handleSubmit(updateCategoryFunc)}>
-              <Typography>Name (English)</Typography>
+              <Typography>Name </Typography>
               <InputBox
                 fullWidth
-                placeholder="Enter Category Name (English)"
+                placeholder="Enter Category Name "
                 {...register("titleEn", {
                   required: true,
                 })}
               />
-              <Typography>Name (Bengali)</Typography>
+              {/* <Typography>Name (Bengali)</Typography>
               <InputBox
                 fullWidth
                 placeholder="Enter Category Name (Bengali)"
                 {...register("titleBn")}
-              />
-              <Typography>Description (English)</Typography>
+              /> */}
+              <Typography>Description </Typography>
               <InputBox
                 fullWidth
-                placeholder="Enter Description (English)"
+                placeholder="Enter Description "
                 {...register("descriptionEn", {
                   required: true,
                 })}
                 multiline={true}
                 minRows={5}
-                maxRows={6}
+                // maxRows={6}
               />
-              <Typography>Description (Bengali)</Typography>
+              {/* <Typography>Description (Bengali)</Typography>
               <InputBox
                 fullWidth
                 placeholder="Enter Description (Bengali)"
@@ -154,7 +154,7 @@ const Info = () => {
                 multiline={true}
                 minRows={5}
                 maxRows={6}
-              />
+              /> */}
               <Button
                 variant={"contained"}
                 color={"primary"}

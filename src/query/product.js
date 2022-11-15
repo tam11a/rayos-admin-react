@@ -59,36 +59,38 @@ export const useCreateProduct = () => {
   });
 };
 
-const delProduct = (product_id) => {
-  return instance.delete(`product/delete/${product_id}`);
+
+
+const getAllProductImages = (pid) => {
+  return instance.get(`product/${pid}/images`);
 };
 
-export const useDelProduct = () => {
-  const queryClient = useQueryClient();
-  return useMutation(delProduct, {
-    onSuccess: () => queryClient.invalidateQueries("get-all-product"),
+export const useGetAllProductImages = (pid) => {
+  return useQuery(["get-product-images", pid], () => getAllProductImages(pid), {
+    // refetchInterval: 20000,
+    enabled: !!pid,
   });
 };
 
-const uploadProductImage = (data) => {
-  return instance.postForm(`product/img/update`, data);
+const delProductImage = (id) => {
+  return instance.delete(`product/images/${id}`);
 };
 
-export const useUploadProductImage = () => {
-  const queryClient = useQueryClient();
-  return useMutation(uploadProductImage, {
-    onSuccess: () => queryClient.invalidateQueries("get-all-product"),
-  });
-};
-
-const delProductImage = (data) => {
-  return instance.post(`product/img/delete`, data);
-};
-
-export const useDelProductImage = () => {
+export const useDeleteProductImage = () => {
   const queryClient = useQueryClient();
   return useMutation(delProductImage, {
-    onSuccess: () => queryClient.invalidateQueries("get-all-product"),
+    onSuccess: () => queryClient.invalidateQueries("get-product-images"),
+  });
+};
+
+const postProductImage = ({ id, data }) => {
+  return instance.postForm(`product/${id}/images`, data);
+};
+
+export const usePostProductImage = () => {
+  const queryClient = useQueryClient();
+  return useMutation(postProductImage, {
+    onSuccess: () => queryClient.invalidateQueries("get-product-images"),
   });
 };
 
@@ -124,6 +126,7 @@ export const useToggleProduct = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("get-all-product");
       queryClient.invalidateQueries("get-product-by-id");
+      queryClient.invalidateQueries("get-product-stats");
     },
   });
 };
