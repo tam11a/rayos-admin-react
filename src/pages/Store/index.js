@@ -21,7 +21,9 @@ import CreateStoreDrawer from "./CreateStoreDrawer";
 import moment from "moment/moment";
 import { Link } from "react-router-dom";
 import { responseHandler } from "../../utilities/response-handler";
+import StateViewer from "../../components/StateViewer";
 import snackContext from "../../context/snackProvider";
+import { useGetStoreStats } from "../../query/stats";
 
 const Index = () => {
   const [open, setOpen] = React.useState(false);
@@ -33,6 +35,8 @@ const Index = () => {
     page: 1,
   });
   const { data, isLoading } = useGetAllStore(params);
+  const { data: storeStats } = useGetStoreStats();
+  console.log(storeStats);
   const { mutateAsync: toggleStore } = useToggleStore();
 
   const updateState = async (id) => {
@@ -148,6 +152,22 @@ const Index = () => {
           py: 2,
         }}
       >
+        <StateViewer
+          stateList={[
+            {
+              num: storeStats?.data?.data?.total,
+              title: "Total Store",
+            },
+            {
+              num: storeStats?.data?.data?.published,
+              title: "Published",
+            },
+            {
+              num: storeStats?.data?.data?.unpublished,
+              title: "Unpublished",
+            },
+          ]}
+        />
         <Paper
           elevation={0}
           sx={{

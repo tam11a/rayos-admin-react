@@ -9,7 +9,6 @@ import {
   Paper,
   Select,
   Avatar,
-  Typography,
 } from "@mui/material";
 import DataTable from "../../components/DataTable";
 import { useGetAllProduct, useToggleProduct } from "../../query/product";
@@ -17,15 +16,14 @@ import { useGetAllCategory } from "../../query/category";
 import ButtonSwitch from "../../components/ButtonSwitch";
 import tableOptionsStyle from "../../style/tableOptions";
 import { BiCategoryAlt } from "react-icons/bi";
-import { IoMdEye } from "react-icons/io";
-import { getAttachment, rootURL } from "../../service/instance";
+import { getAttachment } from "../../service/instance";
 
 import StateViewer from "../../components/StateViewer";
 import { FaSlackHash } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import theme from "../../style/theme";
 import { responseHandler } from "../../utilities/response-handler";
 import snackContext from "../../context/snackProvider";
+import { useGetProductStats } from "../../query/stats";
 
 const Index = () => {
   const snack = React.useContext(snackContext);
@@ -35,10 +33,10 @@ const Index = () => {
     filters: [],
   });
   const [selectedCategory, setSelectedCategory] = React.useState("null");
-
+  const { data: prodStats } = useGetProductStats();
+  console.log(prodStats);
   const { data: catData } = useGetAllCategory(params);
   const { data, isLoading } = useGetAllProduct(params);
-  console.log(data);
   const { mutateAsync: toggleProduct } = useToggleProduct();
 
   const updateState = async (id) => {
@@ -205,15 +203,15 @@ const Index = () => {
         <StateViewer
           stateList={[
             {
-              num: data?.data?.total,
+              num: prodStats?.data?.data?.total,
               title: "Total Products",
             },
             {
-              num: data?.data?.value?.total_publish_product,
+              num: prodStats?.data?.data?.published,
               title: "Published",
             },
             {
-              num: data?.data?.value?.total_unpublish_product,
+              num: prodStats?.data?.data?.unpublished,
               title: "Unpublished",
             },
           ]}

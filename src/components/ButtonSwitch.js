@@ -22,7 +22,7 @@ const ButtonSwitch = styled((props) => (
     height: 12,
   },
   "& .MuiSwitch-track": {
-    borderRadius: 18,
+    borderRadius: 16,
   },
 }));
 
