@@ -16,22 +16,15 @@ import {
 
 import StateViewer from "../../components/StateViewer";
 import DataTable from "../../components/DataTable";
-import {
-  useBlockUser,
-  useCancelUser,
-  useConfirmUser,
-  useGetAllCustomer,
-  useToggleCustomer,
-} from "../../query/customer";
+import { useGetAllCustomer, useToggleCustomer } from "../../query/customer";
 import ButtonSwitch from "../../components/ButtonSwitch";
 
-import { IoMdEye } from "react-icons/io";
 import tableOptionsStyle from "../../style/tableOptions";
 import { responseHandler } from "../../utilities/response-handler";
 import snackContext from "../../context/snackProvider";
 import { Link } from "react-router-dom";
-import { FaSlackHash } from "react-icons/fa";
 import { getAttachment } from "../../service/instance";
+import { useGetCustomerStats } from "../../query/stats";
 
 const Index = () => {
   const snack = React.useContext(snackContext);
@@ -52,6 +45,7 @@ const Index = () => {
 
   // get user data
   const { data, isLoading } = useGetAllCustomer(params);
+  const { data: custStats } = useGetCustomerStats();
 
   const cols = [
     {
@@ -116,7 +110,7 @@ const Index = () => {
       align: "center",
       width: 120,
       // flex: 1,
-      renderCell: (params) => params.row?.totalOrders || "-",
+      renderCell: (params) => params.row?.totalOrders,
     },
     {
       headerName: "Status",
@@ -146,19 +140,15 @@ const Index = () => {
         <StateViewer
           stateList={[
             {
-              num: data?.data?.total,
+              num: custStats?.data?.data?.total,
+              title: "Total User",
+            },
+            {
+              num: custStats?.data?.data?.active,
               title: "Active User",
             },
             {
-              num: data?.data?.value?.total_pending_user,
-              title: "Pending User",
-            },
-            {
-              num: data?.data?.value?.total_cancel_user,
-              title: "Canceled",
-            },
-            {
-              num: data?.data?.value?.total_block_user,
+              num: custStats?.data?.data?.blocked,
               title: "Blocked User",
             },
           ]}

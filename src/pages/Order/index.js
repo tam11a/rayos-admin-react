@@ -29,6 +29,7 @@ import { getAttachment } from "../../service/instance";
 import { Link } from "react-router-dom";
 import { FaSlackHash } from "react-icons/fa";
 import OrderStatus from "../../components/OrderStatus";
+import { useGetOrderStats } from "../../query/stats";
 /**
  * get-all-pending
  * get-all-confirm
@@ -47,7 +48,9 @@ const Index = () => {
   });
 
   const { data, isLoading } = useGetAllOrder(params);
-  // console.log(data);
+  const { data: orderStats } = useGetOrderStats(params);
+
+  console.log(orderStats);
 
   // useMutations
   // const { mutateAsync: mutateConfirmOrder } = useConfirmOrder();
@@ -280,19 +283,31 @@ const Index = () => {
         <StateViewer
           stateList={[
             {
-              num: data?.data?.value?.total_delivered_order,
-              title: "Total Delivered",
+              num: orderStats?.data?.data?.total,
+              title: "Total order",
             },
             {
-              num: data?.data?.value?.total_confirm_order,
+              num: orderStats?.data?.data?.confirmed,
               title: "Confirmed",
             },
             {
-              num: data?.data?.value?.total_pending_order,
+              num: orderStats?.data?.data?.pending,
               title: "pending",
             },
             {
-              num: data?.data?.value?.total_cancel_order,
+              num: orderStats?.data?.data?.shipped,
+              title: "Shipped",
+            },
+            {
+              num: orderStats?.data?.data?.deliverd,
+              title: "Deliverd",
+            },
+            {
+              num: orderStats?.data?.data?.returned,
+              title: "Returned",
+            },
+            {
+              num: orderStats?.data?.data?.canceled,
               title: "Canceled",
             },
           ]}

@@ -25,6 +25,8 @@ import { FaSlackHash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { responseHandler } from "../../utilities/response-handler";
 import snackContext from "../../context/snackProvider";
+import StateViewer from "../../components/StateViewer";
+import { useGetCatStats } from "../../query/stats";
 
 const Index = () => {
   const snack = React.useContext(snackContext);
@@ -33,7 +35,9 @@ const Index = () => {
     page: 1,
   });
   const { data, isLoading } = useGetAllCategory(params);
-  // console.log(data);
+  const { data: catStats } = useGetCatStats(params);
+
+  console.log(catStats);
 
   const [openCreate, setOpenCreate] = React.useState(false);
 
@@ -136,6 +140,22 @@ const Index = () => {
           py: 2,
         }}
       >
+        <StateViewer
+          stateList={[
+            {
+              num: catStats?.data?.data?.total,
+              title: "Total Products",
+            },
+            {
+              num: catStats?.data?.data?.active,
+              title: "Published",
+            },
+            {
+              num: catStats?.data?.data?.blocked,
+              title: "Unpublished",
+            },
+          ]}
+        />
         <Paper
           elevation={0}
           sx={{
