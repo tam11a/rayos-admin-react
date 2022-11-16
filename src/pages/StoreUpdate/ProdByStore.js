@@ -26,7 +26,7 @@ import tableOptionsStyle from "../../style/tableOptions";
 import CreateProductDrawer from "../Product/CreateProductDrawer";
 import DataTable from "../../components/DataTable";
 
-const ProductsByStore = () => {
+const ProdByStore = () => {
   const { sid } = useParams();
 
   const [selectedCategory, setSelectedCategory] = React.useState("null");
@@ -270,4 +270,4 @@ const ProductsByStore = () => {
   );
 };
 
-export default ProductsByStore;
+export default ProdByStore;
