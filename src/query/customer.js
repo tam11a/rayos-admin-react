@@ -52,6 +52,7 @@ export const useToggleCustomer = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("get-all-customer");
       queryClient.invalidateQueries("get-customer-by-id");
+      queryClient.invalidateQueries("get-customer-stats");
     },
   });
 };

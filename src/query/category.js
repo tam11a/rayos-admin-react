@@ -33,7 +33,6 @@ export const useCreateCategory = () => {
   });
 };
 
-
 const createSubcategory = (data) => {
   return instance.post("subcategory", data);
 };
@@ -95,7 +94,10 @@ const toggleCategory = (id) => {
 export const useToggleCategory = () => {
   const queryClient = useQueryClient();
   return useMutation(toggleCategory, {
-    onSuccess: () => queryClient.invalidateQueries("get-all-category"),
+    onSuccess: () => {
+      queryClient.invalidateQueries("get-all-category");
+      queryClient.invalidateQueries("get-category-stats");
+    },
   });
 };
 
@@ -109,8 +111,6 @@ export const useToggleSubcategory = () => {
     onSuccess: () => queryClient.invalidateQueries("get-sub-category-cat"),
   });
 };
-
-
 
 const getAllCategoryImages = (pid) => {
   return instance.get(`category/${pid}/images`);

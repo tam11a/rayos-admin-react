@@ -98,16 +98,6 @@ const UserOrder = ({ uid }) => {
         );
       },
     },
-    // {
-    //   headerName: "Date",
-    //   field: "created_at",
-    //   width: 170,
-    //   headerAlign: "center",
-    //   renderCell: (d) => {
-    //     return <p>{moment(d.row.created_at).format("DD/MM/YYYY hh:mm a")}</p>;
-    //   },
-    //   sortable: false,
-    // },
     {
       headerName: "Status",
       headerAlign: "center",
@@ -218,31 +208,31 @@ const UserOrder = ({ uid }) => {
     //   // },
     //   sortable: false,
     // },
-    // {
-    //   headerName: "Invoice",
-    //   field: "invoice_print",
-    //   align: "center",
-    //   headerAlign: "center",
-    //   // renderCell: (d) => {
-    //   //   return (
-    //   //     <>
-    //   //       <IconButton
-    //   //         size={"small"}
-    //   //         onClick={() => {
-    //   //           console.log(d.row);
-    //   //           window.open(
-    //   //             "https://admin.pndservicebd.com/orderdetails.html?id=" +
-    //   //               d.row.id
-    //   //           );
-    //   //         }}
-    //   //       >
-    //   //         <IoMdEye />
-    //   //       </IconButton>
-    //   //     </>
-    //   //   );
-    //   // },
-    //   sortable: false,
-    // },
+    {
+      headerName: "Invoice",
+      field: "invoice_print",
+      align: "center",
+      headerAlign: "center",
+      renderCell: (d) => {
+        return (
+          <>
+            <IconButton
+              size={"small"}
+              // onClick={() => {
+              //   console.log(d.row);
+              //   window.open(
+              //     "https://admin.pndservicebd.com/orderdetails.html?id=" +
+              //       d.row.id
+              //   );
+              // }}
+            >
+              <IoMdEye />
+            </IconButton>
+          </>
+        );
+      },
+      sortable: false,
+    },
   ];
 
   return (
@@ -252,7 +242,7 @@ const UserOrder = ({ uid }) => {
           py: 2,
         }}
       >
-        <StateViewer
+        {/* <StateViewer
           stateList={[
             {
               num: data?.data?.total,
@@ -271,7 +261,7 @@ const UserOrder = ({ uid }) => {
               title: "Total Cancel Order",
             },
           ]}
-        />
+        /> */}
 
         <Paper
           elevation={0}

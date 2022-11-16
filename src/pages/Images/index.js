@@ -69,6 +69,7 @@ const Index = () => {
             flexWrap: "wrap",
             rowGap: 1,
             columnGap: 1,
+            border: 0,
           }}
         >
           {feedImages?.map?.((fimg) => (
