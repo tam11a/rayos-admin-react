@@ -25,19 +25,27 @@ import { responseHandler } from "../../utilities/response-handler";
 import snackContext from "../../context/snackProvider";
 import { useGetProductStats } from "../../query/stats";
 import { IoIosImages } from "react-icons/io";
+import usePaginate from "../../hooks/usePaginate";
 
 const Index = () => {
   const snack = React.useContext(snackContext);
-  const [params, setParams] = React.useState({
-    limit: 10,
-    page: 1,
-    filters: [],
-  });
+
+  const {
+    limit,
+    setLimit,
+    page,
+    setPage,
+    search,
+    setSearch,
+    watch,
+    setFilterField,
+    getQueryParams,
+  } = usePaginate();
+
   const [selectedCategory, setSelectedCategory] = React.useState("null");
   const { data: prodStats } = useGetProductStats();
-  console.log(prodStats);
-  const { data: catData } = useGetAllCategory(params);
-  const { data, isLoading } = useGetAllProduct(params);
+  const { data: catData } = useGetAllCategory({ limit: 10000, page: 1 });
+  const { data, isLoading } = useGetAllProduct(getQueryParams());
   const { mutateAsync: toggleProduct } = useToggleProduct();
 
   const updateState = async (id) => {
@@ -257,12 +265,8 @@ const Index = () => {
               <InputBase
                 placeholder="Search Product"
                 sx={tableOptionsStyle}
-                onChange={(e) => {
-                  setParams({
-                    ...params,
-                    filters: [`title_en~${e.target.value}`],
-                  });
-                }}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 fullWidth
               />
             </Grid>
@@ -271,17 +275,13 @@ const Index = () => {
                 sx={{
                   ...tableOptionsStyle,
                 }}
-                value={selectedCategory}
+                value={watch("category") || "null"}
                 onChange={(e) => {
-                  setSelectedCategory(e.target.value);
-                  setParams({
-                    ...params,
-                    filters: [`category_id=${e.target.value}`],
-                  });
+                  setFilterField("category", e.target.value);
                 }}
                 fullWidth
               >
-                <MenuItem value={"null"} disabled>
+                <MenuItem value={"null"} selected disabled>
                   Select Category
                 </MenuItem>
                 {catData?.data?.data?.map((cat) => (
@@ -320,20 +320,10 @@ const Index = () => {
           isLoading={isLoading}
           paginationMode={"server"}
           rowCount={data?.data?.total || 0}
-          page={(params?.page || 1) - 1}
-          onPageChange={(newPage) =>
-            setParams({
-              ...params,
-              page: newPage + 1,
-            })
-          }
-          pageSize={params?.limit}
-          onPageSizeChange={(pageSize) =>
-            setParams({
-              ...params,
-              limit: pageSize,
-            })
-          }
+          page={page}
+          onPageChange={setPage}
+          pageSize={limit}
+          onPageSizeChange={setLimit}
         />
       </Container>
     </>

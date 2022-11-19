@@ -2,11 +2,9 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import instance from "../service/instance";
 
 const getAllProduct = (params) => {
-  let queryString = `product?limit=${params.limit}&page=${params.page}`; // /${params.limit}?page=${params.page}
-  params.filters?.map((filter) => {
-    queryString += `&filters[]=${filter}`;
+  return instance.get(`product`, {
+    params,
   });
-  return instance.get(queryString);
 };
 
 export const useGetAllProduct = (params) => {
@@ -58,8 +56,6 @@ export const useCreateProduct = () => {
     },
   });
 };
-
-
 
 const getAllProductImages = (pid) => {
   return instance.get(`product/${pid}/images`);
