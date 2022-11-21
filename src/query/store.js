@@ -2,7 +2,9 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import instance from "../service/instance";
 
 const getAllStore = (params) => {
-  return instance.get(`store?limit=${params.limit}&page=${params.page}`);
+  return instance.get(`store`, {
+    params,
+  });
 };
 
 export const useGetAllStore = (params) => {

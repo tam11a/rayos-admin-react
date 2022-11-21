@@ -53,12 +53,6 @@ const Index = () => {
     setFilterField,
     getQueryParams,
   } = usePaginate();
-  // const [params, setParams] = React.useState({
-  //   method: "all",
-  //   limit: 10,
-  //   page: 1,
-  //   filters: [],
-  // });
 
   const { data, isLoading } = useGetAllOrder(getQueryParams());
   const { data: orderStats } = useGetOrderStats();

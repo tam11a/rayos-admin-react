@@ -24,17 +24,26 @@ import { responseHandler } from "../../utilities/response-handler";
 import StateViewer from "../../components/StateViewer";
 import snackContext from "../../context/snackProvider";
 import { useGetStoreStats } from "../../query/stats";
+import usePaginate from "../../hooks/usePaginate";
 
 const Index = () => {
   const [open, setOpen] = React.useState(false);
   const snack = React.useContext(snackContext);
   const onClose = () => setOpen(!open);
 
-  const [params, setParams] = React.useState({
-    limit: 5,
-    page: 1,
-  });
-  const { data, isLoading } = useGetAllStore(params);
+  const {
+    limit,
+    setLimit,
+    page,
+    setPage,
+    search,
+    setSearch,
+    watch,
+    setFilterField,
+    getQueryParams,
+  } = usePaginate();
+
+  const { data, isLoading } = useGetAllStore(getQueryParams());
   const { data: storeStats } = useGetStoreStats();
   console.log(storeStats);
   const { mutateAsync: toggleStore } = useToggleStore();
@@ -187,12 +196,7 @@ const Index = () => {
               <InputBase
                 placeholder="Search Store"
                 sx={tableOptionsStyle}
-                // onChange={(e) => {
-                //   setParams({
-                //     ...params,
-                //     filters: [`titleEn~${e.target.value}`],
-                //   });
-                // }}
+                onChange={(e) => setSearch(e.target.value)}
                 fullWidth
               />
             </Grid>
@@ -222,20 +226,10 @@ const Index = () => {
           isLoading={isLoading}
           paginationMode={"server"}
           rowCount={data?.data?.total || 0}
-          page={(params?.page || 1) - 1}
-          onPageChange={(newPage) =>
-            setParams({
-              ...params,
-              page: newPage + 1,
-            })
-          }
-          pageSize={params?.limit}
-          onPageSizeChange={(pageSize) =>
-            setParams({
-              ...params,
-              limit: pageSize,
-            })
-          }
+          page={page}
+          onPageChange={setPage}
+          pageSize={limit}
+          onPageSizeChange={setLimit}
         />
       </Container>
     </>
