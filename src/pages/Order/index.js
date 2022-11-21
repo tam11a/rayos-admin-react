@@ -30,6 +30,7 @@ import { Link } from "react-router-dom";
 import { FaSlackHash } from "react-icons/fa";
 import OrderStatus from "../../components/OrderStatus";
 import { useGetOrderStats } from "../../query/stats";
+import usePaginate from "../../hooks/usePaginate";
 /**
  * get-all-pending
  * get-all-confirm
@@ -40,17 +41,29 @@ import { useGetOrderStats } from "../../query/stats";
 const Index = () => {
   const invoice = React.useContext(invoiceContext);
   const snack = React.useContext(snackContext);
-  const [params, setParams] = React.useState({
-    method: "all",
-    limit: 10,
-    page: 1,
-    filters: [],
-  });
 
-  const { data, isLoading } = useGetAllOrder(params);
-  const { data: orderStats } = useGetOrderStats(params);
+  const {
+    limit,
+    setLimit,
+    page,
+    setPage,
+    search,
+    setSearch,
+    watch,
+    setFilterField,
+    getQueryParams,
+  } = usePaginate();
+  // const [params, setParams] = React.useState({
+  //   method: "all",
+  //   limit: 10,
+  //   page: 1,
+  //   filters: [],
+  // });
 
-  console.log(orderStats);
+  const { data, isLoading } = useGetAllOrder(getQueryParams());
+  const { data: orderStats } = useGetOrderStats();
+
+  // console.log(data);
 
   // useMutations
   // const { mutateAsync: mutateConfirmOrder } = useConfirmOrder();
@@ -332,16 +345,8 @@ const Index = () => {
               <InputBase
                 placeholder="Search Order"
                 sx={tableOptionsStyle}
-                onChange={(e) => {
-                  setParams({
-                    ...params,
-                    filters: [
-                      // `receiver_name~${e.target.value}`,
-                      `receiver_number~${e.target.value}`,
-                      // `receiver_address~${e.target.value}`,
-                    ],
-                  });
-                }}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 fullWidth
               />
             </Grid>
@@ -362,51 +367,48 @@ const Index = () => {
                 sx={{
                   ...tableOptionsStyle,
                 }}
-                value={params.method}
-                onChange={(e) =>
-                  setParams({
-                    ...params,
-                    method: e.target.value,
-                  })
-                }
+                value={watch("status") || "null"}
+                onChange={(e) => {
+                  setFilterField("status", e.target.value);
+                }}
                 fullWidth
               >
-                <MenuItem value={"all"} disabled={params.method === "all"}>
+                <MenuItem value={"null"} selected disabled>
                   All
                 </MenuItem>
                 <MenuItem
                   value={"Pending"}
-                  disabled={params.method === "Pending"}
+                  disabled={watch("status") === "Pending"}
                 >
                   Pending
                 </MenuItem>
                 <MenuItem
                   value={"Confirmed"}
-                  disabled={params.method === "Confirmed"}
+                  disabled={watch("status") === "Confirmed"}
                 >
                   Confirmed
                 </MenuItem>
                 <MenuItem
                   value={"Shipped"}
-                  disabled={params.method === "Shipped"}
+                  disabled={watch("status") === "Shipped"}
                 >
                   Shipped
                 </MenuItem>
                 <MenuItem
                   value={"Delivered"}
-                  disabled={params.method === "Delivered"}
+                  disabled={watch("status") === "Delivered"}
                 >
                   Delivered
                 </MenuItem>
                 <MenuItem
                   value={"Canceled"}
-                  disabled={params.method === "Canceled"}
+                  disabled={watch("status") === "Canceled"}
                 >
                   Canceled
                 </MenuItem>
                 <MenuItem
                   value={"Returned"}
-                  disabled={params.method === "Returned"}
+                  disabled={watch("status") === "Returned"}
                 >
                   Returned
                 </MenuItem>
@@ -420,21 +422,10 @@ const Index = () => {
           isLoading={isLoading}
           paginationMode={"server"}
           rowCount={data?.data?.total || 0}
-          page={(params?.page || 1) - 1}
-          onPageChange={(newPage) =>
-            setParams({
-              ...params,
-              page: newPage + 1,
-            })
-          }
-          pageSize={params?.limit}
-          onPageSizeChange={(pageSize) =>
-            setParams({
-              ...params,
-              limit: pageSize,
-              page: 1,
-            })
-          }
+          page={page}
+          onPageChange={setPage}
+          pageSize={limit}
+          onPageSizeChange={setLimit}
         />
       </Container>
     </>
