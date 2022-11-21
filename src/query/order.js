@@ -2,11 +2,9 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import instance from "../service/instance";
 
 const getAllOrder = (params) => {
-  return instance.get(
-    `order?${
-      params.method && params.method !== "all" ? `status=${params.method}&` : ""
-    }limit=${params.limit}&page=${params.page}`
-  );
+  return instance.get(`order`, {
+    params,
+  });
 };
 
 export const useGetAllOrder = (params) => {
@@ -48,7 +46,7 @@ export const useGetProductsByOrderID = (order_id) => {
 };
 
 // order status
-const updateOrderStatus = ({id, status}) => {
+const updateOrderStatus = ({ id, status }) => {
   return instance.put(`order/${id}?status=${status}`);
 };
 
