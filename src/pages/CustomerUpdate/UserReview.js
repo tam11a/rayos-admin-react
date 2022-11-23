@@ -18,6 +18,7 @@ import moment from "moment";
 
 import React from "react";
 import { IoIosImages } from "react-icons/io";
+import { useParams } from "react-router-dom";
 import snackContext from "../../context/snackProvider";
 import { useGetAllOrder } from "../../query/order";
 import { useGetAllReview } from "../../query/review";
@@ -26,6 +27,8 @@ import tableOptionsStyle from "../../style/tableOptions";
 import ReviewBoxes from "../Reviews/ReviewBoxes";
 
 const UserReview = () => {
+  const { cid } = useParams();
+
   return (
     <>
       <Container
@@ -43,7 +46,7 @@ const UserReview = () => {
           All Review
         </Typography>
         {/* <Paper sx={{ p: 2 }}> */}
-        <ReviewBoxes />
+        <ReviewBoxes author={cid} />
         {/* </Paper> */}
       </Container>
     </>
