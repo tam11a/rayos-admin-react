@@ -25,15 +25,21 @@ import snackContext from "../../context/snackProvider";
 import { Link } from "react-router-dom";
 import { getAttachment } from "../../service/instance";
 import { useGetCustomerStats } from "../../query/stats";
+import usePaginate from "../../hooks/usePaginate";
 
 const Index = () => {
   const snack = React.useContext(snackContext);
-  const [params, setParams] = React.useState({
-    method: "all",
-    limit: 10,
-    page: 1,
-    filters: [],
-  });
+  const {
+    limit,
+    setLimit,
+    page,
+    setPage,
+    search,
+    setSearch,
+    watch,
+    setFilterField,
+    getQueryParams,
+  } = usePaginate();
 
   const { mutateAsync: toggleCustomer } = useToggleCustomer();
 
@@ -44,7 +50,7 @@ const Index = () => {
   };
 
   // get user data
-  const { data, isLoading } = useGetAllCustomer(params);
+  const { data, isLoading } = useGetAllCustomer(getQueryParams());
   const { data: custStats } = useGetCustomerStats();
 
   const cols = [
@@ -172,18 +178,7 @@ const Index = () => {
               <InputBase
                 placeholder="Search Customer by Phone Number"
                 sx={tableOptionsStyle}
-                onChange={(e) => {
-                  if (e.target.value)
-                    setParams({
-                      ...params,
-                      filters: [`phone~${e.target.value}`],
-                    });
-                  else
-                    setParams({
-                      ...params,
-                      filters: [],
-                    });
-                }}
+                onChange={(e) => setSearch(e.target.value)}
                 fullWidth
               />
             </Grid>
@@ -192,19 +187,20 @@ const Index = () => {
                 sx={{
                   ...tableOptionsStyle,
                 }}
-                value={params.method}
-                onChange={(e) =>
-                  setParams({
-                    ...params,
-                    method: e.target.value,
-                  })
-                }
-                // disabled={params.method === "delivered"}
+                value={watch("isActive") || "null"}
+                onChange={(e) => {
+                  setFilterField(
+                    "isActive",
+                    e.target.value === "null" ? undefined : e.target.value
+                  );
+                }}
                 fullWidth
               >
-                <MenuItem value={"all"}>All</MenuItem>
-                <MenuItem value={"filters[]=status=active&"}>Active</MenuItem>
-                <MenuItem value={"filters[]=status=block&"}>Blocked</MenuItem>
+                <MenuItem value={"null"} selected>
+                  All
+                </MenuItem>
+                <MenuItem value={"true"}>Active</MenuItem>
+                <MenuItem value={"false"}>Blocked</MenuItem>
               </Select>
             </Grid>
           </Grid>
@@ -220,21 +216,11 @@ const Index = () => {
           paginationMode={"server"}
           rowCount={data?.data?.total || 0}
           getRowId={(row) => row._id}
-          page={(params?.page || 1) - 1}
-          onPageChange={(newPage) =>
-            setParams({
-              ...params,
-              page: newPage + 1,
-            })
-          }
-          pageSize={params?.limit}
-          onPageSizeChange={(pageSize) =>
-            setParams({
-              ...params,
-              limit: pageSize,
-            })
-          }
-        />{" "}
+          page={page}
+          onPageChange={setPage}
+          pageSize={limit}
+          onPageSizeChange={setLimit}
+        />
       </Container>
     </>
   );

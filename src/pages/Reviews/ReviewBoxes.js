@@ -12,6 +12,7 @@ import {
   MenuItem,
   Select,
   InputBase,
+  CircularProgress,
 } from "@mui/material";
 import React from "react";
 import { Link, useParams } from "react-router-dom";
@@ -23,28 +24,39 @@ import tableOptionsStyle from "../../style/tableOptions";
 import ButtonSwitch from "../../components/ButtonSwitch";
 import snackContext from "../../context/snackProvider";
 import { responseHandler } from "../../utilities/response-handler";
+import usePaginate from "../../hooks/usePaginate";
 
-const ReviewBoxes = () => {
-  const { productId } = useParams();
-  const [checked, setChecked] = React.useState(false);
-  const handleChange = () => {
-    setChecked((prev) => !prev);
-  };
-  const [params, setParams] = React.useState({
-    method: "all",
-    limit: 10,
-    page: 1,
-    filters: [],
-  });
+const ReviewBoxes = ({ author, product }) => {
+  const {
+    limit,
+    setLimit,
+    page,
+    setPage,
+    search,
+    setSearch,
+    watch,
+    setFilterField,
+    getQueryParams,
+  } = usePaginate();
 
-  const { data: reviewList, isLoading, isError } = useGetAllReview(params);
+  React.useEffect(() => {
+    if (!author && !product) return;
+    if (author) setFilterField("author", author);
+    if (product) setFilterField("product", product);
+  }, []);
+  // console.log(product, author);
+  const {
+    data: reviewList,
+    isLoading,
+    isError,
+  } = useGetAllReview(getQueryParams());
   const [review, setReview] = React.useState([]);
 
   React.useEffect(() => {
     if (isError) return;
     setReview(reviewList?.data?.data || []);
   }, [isLoading, reviewList]);
-  console.log(reviewList);
+  // console.log(reviewList);
 
   return (
     <>
@@ -67,16 +79,8 @@ const ReviewBoxes = () => {
             <InputBase
               placeholder="Search User"
               sx={tableOptionsStyle}
-              onChange={(e) => {
-                setParams({
-                  ...params,
-                  filters: [
-                    // `receiver_name~${e.target.value}`,
-                    `receiver_number~${e.target.value}`,
-                    // `receiver_address~${e.target.value}`,
-                  ],
-                });
-              }}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               fullWidth
             />
           </Grid>
@@ -85,90 +89,55 @@ const ReviewBoxes = () => {
               sx={{
                 ...tableOptionsStyle,
               }}
-              value={params.method}
-              onChange={(e) =>
-                setParams({
-                  ...params,
-                  method: e.target.value,
-                })
-              }
+              value={watch("isActive") || "null"}
+              onChange={(e) => {
+                setFilterField(
+                  "isActive",
+                  e.target.value === "null" ? undefined : e.target.value
+                );
+              }}
               fullWidth
             >
-              <MenuItem value={"all"} disabled={params.method === "all"}>
+              <MenuItem value={"null"} selected>
                 All
               </MenuItem>
-              <MenuItem
-                value={"Pending"}
-                disabled={params.method === "Pending"}
-              >
-                Pending
-              </MenuItem>
-              <MenuItem
-                value={"Confirmed"}
-                disabled={params.method === "Confirmed"}
-              >
-                Confirmed
-              </MenuItem>
-              <MenuItem
-                value={"Shipped"}
-                disabled={params.method === "Shipped"}
-              >
-                Shipped
-              </MenuItem>
-              <MenuItem
-                value={"Delivered"}
-                disabled={params.method === "Delivered"}
-              >
-                Delivered
-              </MenuItem>
-              <MenuItem
-                value={"Canceled"}
-                disabled={params.method === "Canceled"}
-              >
-                Canceled
-              </MenuItem>
-              <MenuItem
-                value={"Returned"}
-                disabled={params.method === "Returned"}
-              >
-                Returned
-              </MenuItem>
+              <MenuItem value={"true"}>Active</MenuItem>
+              <MenuItem value={"false"}>Blocked</MenuItem>/
             </Select>
           </Grid>
         </Grid>
       </Paper>
+      {isLoading && (
+        <Stack alignItems="center" py={2} pb={4}>
+          <CircularProgress />
+        </Stack>
+      )}
       {review?.map?.((revItem, index) => (
         <React.Fragment key={index}>
-          <ReviewBox revItem={revItem} />
+          <ReviewBox
+            revItem={revItem}
+            showProd={!!author}
+            showUser={!!product}
+            showAll={!author && !product}
+          />
         </React.Fragment>
       ))}
       <Stack direction="row" justifyContent={"flex-end"}>
         <TablePagination
           component="div"
           count={reviewList?.data?.total || 0}
-          page={(params?.page || 1) - 1}
-          onPageChange={(e, newPage) =>
-            setParams({
-              ...params,
-              page: newPage + 1,
-            })
-          }
-          rowsPerPageOptions={[5, 10, 25, 50, 100]}
-          rowsPerPage={params?.limit}
-          onRowsPerPageChange={(pageSize) => {
-            // console.log(pageSize);
-            setParams({
-              ...params,
-              limit: pageSize.target.value,
-            });
-          }}
+          // rowsPerPageOptions={[5, 10, 25, 50, 100]}
+          page={page}
+          onPageChange={(e, newPage) => setPage(newPage)}
+          rowsPerPage={limit}
+          onRowsPerPageChange={(e) => setLimit(e.target.value)}
         />
       </Stack>
     </>
   );
 };
 
-const ReviewBox = ({ revItem, showUser, showProd }) => {
+const ReviewBox = ({ revItem, showUser, showProd, showAll }) => {
   const snack = React.useContext(snackContext);
   const { mutateAsync: toggleReview } = useToggleReview();
 
@@ -194,65 +163,64 @@ const ReviewBox = ({ revItem, showUser, showProd }) => {
         justifyContent={"space-between"}
         columnGap={4}
       >
-        {/* {showUser && ( */}
-        <Stack
-          direction="column"
-          alignItems={"center"}
-          rowGap={0.5}
-          maxWidth="62px"
-          component={Link}
-          to={`/customer/${revItem?.author?._id}`}
-          sx={{ textDecoration: "none", color: "unset" }}
-        >
-          <Avatar
-            sx={{ width: 45, height: 45 }}
-            src={getAttachment(revItem?.author.image)}
-            alt={revItem?.author.fullName}
-          />
-          <Typography
-            variant={"caption"}
-            sx={{ fontWeight: 600 }}
-            noWrap={true}
+        {(showUser || showAll) && (
+          <Stack
+            direction="column"
+            alignItems={"center"}
+            rowGap={0.5}
             maxWidth="62px"
+            component={Link}
+            to={`/customer/${revItem?.author?._id}`}
+            sx={{ textDecoration: "none", color: "unset" }}
           >
-            {revItem.author.userName}
-          </Typography>
-        </Stack>
-        {/* )} */}
-        {/* {showProd && ( */}
-        <Stack
-          direction="column"
-          alignItems={"center"}
-          rowGap={0.5}
-          maxWidth="200px"
-          component={Link}
-          to={`/prod/${revItem?.product?._id}`}
-          sx={{ textDecoration: "none", color: "unset" }}
-        >
-          <Avatar
-            // sx={{ width: 38, height: 38 }}
-
-            sx={{
-              borderRadius: 1,
-              height: "45px",
-              width: "45px",
-              background: "transparent",
-              color: "primary.dark",
-              mr: 1,
-            }}
-            src={getAttachment(revItem?.product.image)}
-            alt={revItem?.product.titleEn}
-          />
-          <Typography
-            variant={"caption"}
-            sx={{ fontWeight: 600 }}
-            noWrap={true}
+            <Avatar
+              sx={{ width: 45, height: 45 }}
+              variant={"rounded"}
+              src={getAttachment(revItem?.author.image)}
+              alt={revItem?.author.fullName}
+            />
+            {/* <Typography
+              variant={"caption"}
+              sx={{ fontWeight: 600 }}
+              noWrap={true}
+              maxWidth="62px"
+            >
+              {revItem.author.userName}
+            </Typography> */}
+          </Stack>
+        )}
+        {(showProd || showAll) && (
+          <Stack
+            direction="column"
+            alignItems={"center"}
+            rowGap={0.5}
             maxWidth="200px"
+            component={Link}
+            to={`/prod/${revItem?.product?._id}`}
+            sx={{ textDecoration: "none", color: "unset" }}
           >
-            {revItem?.product.titleEn}
-          </Typography>
-        </Stack>
-        {/* )} */}
+            <Avatar
+              sx={{
+                borderRadius: 1,
+                height: "45px",
+                width: "45px",
+                background: "transparent",
+                color: "primary.dark",
+                mr: 1,
+              }}
+              src={getAttachment(revItem?.product.image)}
+              alt={revItem?.product.titleEn}
+            />
+            {/* <Typography
+              variant={"caption"}
+              sx={{ fontWeight: 600 }}
+              noWrap={true}
+              maxWidth="200px"
+            >
+              {revItem?.product.titleEn}
+            </Typography> */}
+          </Stack>
+        )}
         <Stack direction="column" rowGap={0.5} flex={1}>
           <Rating
             name="half-rating-read"

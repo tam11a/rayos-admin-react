@@ -31,8 +31,8 @@ const usePaginate = (args) => {
     setParams({
       ...params,
       filters: {
-        ...params?.filter,
-        [key]: [value],
+        ...params?.filters,
+        [key]: value,
       },
     });
 

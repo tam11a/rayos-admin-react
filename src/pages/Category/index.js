@@ -27,15 +27,23 @@ import { responseHandler } from "../../utilities/response-handler";
 import snackContext from "../../context/snackProvider";
 import StateViewer from "../../components/StateViewer";
 import { useGetCatStats } from "../../query/stats";
+import usePaginate from "../../hooks/usePaginate";
 
 const Index = () => {
   const snack = React.useContext(snackContext);
-  const [params, setParams] = React.useState({
-    limit: 5,
-    page: 1,
-  });
-  const { data, isLoading } = useGetAllCategory(params);
-  const { data: catStats } = useGetCatStats(params);
+  const {
+    limit,
+    setLimit,
+    page,
+    setPage,
+    search,
+    setSearch,
+    watch,
+    setFilterField,
+    getQueryParams,
+  } = usePaginate();
+  const { data, isLoading } = useGetAllCategory(getQueryParams());
+  const { data: catStats } = useGetCatStats();
 
   console.log(catStats);
 
@@ -175,12 +183,8 @@ const Index = () => {
               <InputBase
                 placeholder="Search Category"
                 sx={tableOptionsStyle}
-                onChange={(e) => {
-                  //   setParams({
-                  //     ...params,
-                  //     filters: [`title_en~${e.target.value}`],
-                  //   });
-                }}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 fullWidth
               />
             </Grid>
@@ -208,20 +212,10 @@ const Index = () => {
           width={"auto"}
           paginationMode={"server"}
           rowCount={data?.data?.total || 0}
-          page={(params?.page || 1) - 1}
-          onPageChange={(newPage) =>
-            setParams({
-              ...params,
-              page: newPage + 1,
-            })
-          }
-          pageSize={params?.limit}
-          onPageSizeChange={(pageSize) =>
-            setParams({
-              ...params,
-              limit: pageSize,
-            })
-          }
+          page={page}
+          onPageChange={setPage}
+          pageSize={limit}
+          onPageSizeChange={setLimit}
         />
         <CreateDrawer
           open={openCreate}

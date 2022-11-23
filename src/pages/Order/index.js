@@ -363,11 +363,14 @@ const Index = () => {
                 }}
                 value={watch("status") || "null"}
                 onChange={(e) => {
-                  setFilterField("status", e.target.value);
+                  setFilterField(
+                    "status",
+                    e.target.value === "null" ? undefined : e.target.value
+                  );
                 }}
                 fullWidth
               >
-                <MenuItem value={"null"} selected disabled>
+                <MenuItem value={"null"} selected>
                   All
                 </MenuItem>
                 <MenuItem

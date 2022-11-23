@@ -22,21 +22,28 @@ import { responseHandler } from "../../utilities/response-handler";
 import snackContext from "../../context/snackProvider";
 import { FaSlackHash } from "react-icons/fa";
 import SubcatDrawer from "./SubcatDrawer";
+import usePaginate from "../../hooks/usePaginate";
 
 const Subcatagory = () => {
   const snack = React.useContext(snackContext);
   const { cid } = useParams();
-  const [params, setParams] = React.useState({
-    limit: 10,
-    page: 1,
-    filters: [],
-  });
+  const {
+    limit,
+    setLimit,
+    page,
+    setPage,
+    search,
+    setSearch,
+    watch,
+    setFilterField,
+    getQueryParams,
+  } = usePaginate();
 
   const {
     data: subCatData,
-    // isLoading: isSubCatLoading,
+    isLoading,
     isError: isSubCatError,
-  } = useGetSubCategoryFromCatID(cid, params);
+  } = useGetSubCategoryFromCatID(cid, getQueryParams());
   const [open, setOpen] = React.useState(false); // Create Subcategory Drawer
   const onClose = () => setOpen(!open);
 
@@ -120,12 +127,8 @@ const Subcatagory = () => {
               <InputBase
                 placeholder="Search Subcategory"
                 sx={tableOptionsStyle}
-                onChange={(e) => {
-                  //   setParams({
-                  //     ...params,
-                  //     filters: [`title_en~${e.target.value}`],
-                  //   });
-                }}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 fullWidth
               />
             </Grid>
@@ -150,24 +153,14 @@ const Subcatagory = () => {
           columns={cols}
           rows={subCatData?.data?.data || []}
           getRowId={(row) => row._id}
-          // isLoading={isLoading}
+          isLoading={isLoading}
           width={"auto"}
           paginationMode={"server"}
           rowCount={subCatData?.data?.total || 0}
-          page={(params?.page || 1) - 1}
-          onPageChange={(newPage) =>
-            setParams({
-              ...params,
-              page: newPage + 1,
-            })
-          }
-          pageSize={params?.limit}
-          onPageSizeChange={(pageSize) =>
-            setParams({
-              ...params,
-              limit: pageSize,
-            })
-          }
+          page={page}
+          onPageChange={setPage}
+          pageSize={limit}
+          onPageSizeChange={setLimit}
         />
         <CreateSubcatDrawer open={open} onClose={onClose} categoryId={cid} />
       </Container>

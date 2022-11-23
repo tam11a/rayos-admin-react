@@ -161,7 +161,7 @@ const Index = () => {
           py: 2,
         }}
       >
-        <StateViewer
+        {/* <StateViewer
           stateList={[
             {
               num: storeStats?.data?.data?.total,
@@ -176,7 +176,7 @@ const Index = () => {
               title: "Unpublished",
             },
           ]}
-        />
+        /> */}
         <Paper
           elevation={0}
           sx={{
