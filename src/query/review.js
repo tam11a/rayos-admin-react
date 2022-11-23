@@ -2,11 +2,9 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import instance from "../service/instance";
 
 const getAllReview = (params) => {
-  return instance.get(
-    `review?${
-      params.method && params.method !== "all" ? `status=${params.method}&` : ""
-    }limit=${params.limit}&page=${params.page}`
-  );
+  return instance.get(`review`, {
+    params,
+  });
 };
 
 export const useGetAllReview = (params) => {

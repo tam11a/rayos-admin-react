@@ -53,12 +53,6 @@ const Index = () => {
     setFilterField,
     getQueryParams,
   } = usePaginate();
-  // const [params, setParams] = React.useState({
-  //   method: "all",
-  //   limit: 10,
-  //   page: 1,
-  //   filters: [],
-  // });
 
   const { data, isLoading } = useGetAllOrder(getQueryParams());
   const { data: orderStats } = useGetOrderStats();
@@ -369,11 +363,14 @@ const Index = () => {
                 }}
                 value={watch("status") || "null"}
                 onChange={(e) => {
-                  setFilterField("status", e.target.value);
+                  setFilterField(
+                    "status",
+                    e.target.value === "null" ? undefined : e.target.value
+                  );
                 }}
                 fullWidth
               >
-                <MenuItem value={"null"} selected disabled>
+                <MenuItem value={"null"} selected>
                   All
                 </MenuItem>
                 <MenuItem

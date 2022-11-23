@@ -1,50 +1,69 @@
+import React from "react";
 import {
-  Avatar,
-  Button,
   Chip,
+  Container,
   Grid,
   IconButton,
   InputBase,
   MenuItem,
   Paper,
   Select,
-  Typography,
+  Avatar,
+  Button,
 } from "@mui/material";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { FaSlackHash } from "react-icons/fa";
-import { IoMdEye } from "react-icons/io";
-import { MdAdd } from "react-icons/md";
-import { Link, useParams } from "react-router-dom";
-import ButtonSwitch from "../../components/ButtonSwitch";
-import snackContext from "../../context/snackProvider";
-import { useGetAllCategory } from "../../query/category";
-import { useGetAllProduct } from "../../query/product";
-import { useGetProductsByStoreID } from "../../query/store";
-import { getAttachment } from "../../service/instance";
-import tableOptionsStyle from "../../style/tableOptions";
-import CreateProductDrawer from "../Product/CreateProductDrawer";
 import DataTable from "../../components/DataTable";
+import { useGetAllProduct, useToggleProduct } from "../../query/product";
+import { useGetAllCategory } from "../../query/category";
+import ButtonSwitch from "../../components/ButtonSwitch";
+import tableOptionsStyle from "../../style/tableOptions";
+import { BiCategoryAlt, BiStore } from "react-icons/bi";
+import { getAttachment } from "../../service/instance";
+
+import StateViewer from "../../components/StateViewer";
+import { FaSlackHash } from "react-icons/fa";
+import { Link, useParams } from "react-router-dom";
+import { responseHandler } from "../../utilities/response-handler";
+import snackContext from "../../context/snackProvider";
+import { useGetProductStats } from "../../query/stats";
+import { IoIosImages } from "react-icons/io";
+import usePaginate from "../../hooks/usePaginate";
+import CreateProductDrawer from "../Product/CreateProductDrawer";
+import { MdAdd } from "react-icons/md";
 
 const ProdByStore = () => {
   const { sid } = useParams();
-
-  const [selectedCategory, setSelectedCategory] = React.useState("null");
   const [open, setOpen] = React.useState(false);
-  const [params, setParams] = React.useState({
-    limit: 100,
-    page: 1,
-    filters: [],
-  });
+  const onClose = () => setOpen(!open);
+
+  const snack = React.useContext(snackContext);
 
   const {
-    data: prodData,
-    isLoading: isProdDataLoading,
-    // isError: isSubCatError,
-  } = useGetProductsByStoreID(sid, params);
-  const { data: catData, isLoading: isCatLoading } = useGetAllCategory(params);
-  // console.log(catData);
-  const onClose = () => setOpen(!open);
+    limit,
+    setLimit,
+    page,
+    setPage,
+    search,
+    setSearch,
+    watch,
+    setFilterField,
+    getQueryParams,
+  } = usePaginate();
+
+  React.useEffect(() => {
+    setFilterField("store", sid);
+  }, []);
+
+  const [selectedCategory, setSelectedCategory] = React.useState("null");
+  const { data: prodStats } = useGetProductStats();
+  const { data: catData } = useGetAllCategory({ limit: 10000, page: 1 });
+  const { data, isLoading } = useGetAllProduct(getQueryParams());
+  const { mutateAsync: toggleProduct } = useToggleProduct();
+
+  const updateState = async (id) => {
+    const res = await responseHandler(() => toggleProduct(id));
+    if (res.status) snack.createSnack(res.msg);
+    else snack.createSnack(res.msg, "error");
+  };
 
   const cols = [
     {
@@ -66,48 +85,97 @@ const ProdByStore = () => {
         </>
       ),
     },
+
     {
       headerName: "Image",
       headerAlign: "center",
-      field: "receiver_number",
+      field: "icon",
       align: "center",
       width: 80,
       renderCell: (params) => (
-        <Avatar src={getAttachment(params.row.image)} variant="square" />
+        <Avatar
+          src={getAttachment(params.row.image)}
+          variant="rounded"
+          sx={{
+            bgcolor: "transparent",
+            color: (theme) => `${theme.palette.primary.main} !important`,
+            border: "1px solid #eee",
+          }}
+        >
+          <IoIosImages />
+        </Avatar>
       ),
     },
     {
       headerName: "Product Name",
       headerAlign: "center",
       field: "titleEn",
-      align: "center",
+      align: "left",
       width: 200,
     },
-    {
-      headerName: "Variants",
-      headerAlign: "center",
-      field: "colors",
-      width: 80,
-      align: "center",
-      renderCell: () => (
-        <>
-          <IconButton size={"small"}>
-            <IoMdEye />
-          </IconButton>
-        </>
-      ),
-    },
+    // {
+    //   headerName: "Store",
+    //   headerAlign: "center",
+    //   field: "store title",
+    //   align: "center",
+    //   width: 200,
+    //   renderCell: (params) => (
+    //     <>
+    //       <Chip
+    //         label={params.row.store.titleEn}
+    //         variant="outlined"
+    //         to={`/store/${params.row.store._id}`}
+    //         component={Link}
+    //         onClick={() => {}}
+    //         avatar={
+    //           <Avatar
+    //             src={getAttachment(params.row.store.image)}
+    //             sx={{
+    //               bgcolor: "transparent",
+    //               color: (theme) => `${theme.palette.primary.main} !important`,
+    //             }}
+    //           >
+    //             <BiStore
+    //               style={{
+    //                 fontSize: "1.8em",
+    //               }}
+    //             />
+    //           </Avatar>
+    //         }
+    //       />
+    //     </>
+    //   ),
+    // },
     {
       headerName: "Category",
       headerAlign: "center",
-      field: "category_id",
-      width: 200,
+      field: "category",
+      width: 120,
       align: "center",
       renderCell: (params) => (
         <>
-          {catData?.data?.data?.map((cat) => {
-            return cat.titleEn;
-          })[0] || "-"}
+          <Chip
+            avatar={
+              <Avatar
+                src={getAttachment(params.row.category.icon)}
+                sx={{
+                  bgcolor: "transparent",
+                  color: (theme) => `${theme.palette.primary.main} !important`,
+                }}
+              >
+                <BiCategoryAlt
+                  style={{
+                    fontSize: "1.8em",
+                  }}
+                />
+              </Avatar>
+            }
+            label={params.row.category.titleEn}
+            variant="outlined"
+            to={`/cat/${params.row.category._id}`}
+            component={Link}
+            onClick={() => {}}
+          />
         </>
       ),
     },
@@ -155,118 +223,121 @@ const ProdByStore = () => {
       align: "center",
       width: 120,
       renderCell: (params) => (
-        <ButtonSwitch checked={params.row.isActive} color={"success"} />
+        <ButtonSwitch
+          checked={params.row?.isActive}
+          color={"success"}
+          onClick={() => {
+            updateState(params.row?._id);
+          }}
+        />
       ),
     },
   ];
 
   return (
-    <div>
-      <Typography variant={"h6"} sx={{ fontWeight: "500", mt: 2 }}>
-        Products Of The Store
-      </Typography>
-      <Typography sx={{ fontWeight: "500", mb: 2 }} variant={"subtitle2"}>
-        {prodData?.data?.total || 0} Products Found
-      </Typography>
-
-      <Paper
-        elevation={0}
+    <>
+      <Container
         sx={{
-          p: 2,
-          border: "1px solid #ccc",
-          my: 2,
+          py: 2,
         }}
       >
-        <Grid
-          container
-          rowGap={1}
-          columnGap={1}
-          alignItems={"center"}
-          justifyContent={"space-between"}
+        <StateViewer
+          stateList={[
+            {
+              num: prodStats?.data?.data?.total,
+              title: "Total Products",
+            },
+            {
+              num: prodStats?.data?.data?.published,
+              title: "Published",
+            },
+            {
+              num: prodStats?.data?.data?.unpublished,
+              title: "Unpublished",
+            },
+          ]}
+        />
+        <Paper
+          elevation={0}
+          sx={{
+            p: 2,
+            border: "1px solid #ccc",
+            my: 2,
+          }}
         >
-          <Grid item xs={12} md={5.7}>
-            <InputBase
-              placeholder="Search Product"
-              sx={tableOptionsStyle}
-              onChange={(e) => {
-                setParams({
-                  ...params,
-                  filters: [`title_en~${e.target.value}`],
-                });
-              }}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={5.9} md={3}>
-            <Select
-              sx={{
-                ...tableOptionsStyle,
-              }}
-              value={selectedCategory}
-              onChange={(e) => {
-                setSelectedCategory(e.target.value);
-                setParams({
-                  ...params,
-                  filters: [`category_id=${e.target.value}`],
-                });
-              }}
-              fullWidth
-            >
-              <MenuItem value={"null"} disabled>
-                Select Category
-              </MenuItem>
-              {catData?.data?.value?.map((cat) => (
-                <MenuItem
-                  key={cat.id}
-                  value={cat.id}
-                  disabled={cat.id === selectedCategory}
-                >
-                  {cat.title_en}
+          <Grid
+            container
+            rowGap={1}
+            columnGap={1}
+            alignItems={"center"}
+            justifyContent={"space-between"}
+          >
+            <Grid item xs={12} md={5.7}>
+              <InputBase
+                placeholder="Search Product"
+                sx={tableOptionsStyle}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={5.9} md={3}>
+              <Select
+                sx={{
+                  ...tableOptionsStyle,
+                }}
+                value={watch("category") || "null"}
+                onChange={(e) => {
+                  setFilterField("category", e.target.value);
+                }}
+                fullWidth
+              >
+                <MenuItem value={"null"} selected disabled>
+                  Select Category
                 </MenuItem>
-              ))}
-            </Select>
+                {catData?.data?.data?.map((cat) => (
+                  <MenuItem
+                    key={cat._id}
+                    value={cat._id}
+                    disabled={cat._id === selectedCategory}
+                  >
+                    {cat.titleEn}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+            <Grid item xs={12} sm={5.9} md={3}>
+              <Button
+                variant={"contained"}
+                color={"primary"}
+                size={"large"}
+                sx={{
+                  height: "52px",
+                }}
+                onClick={onClose}
+                startIcon={<MdAdd />}
+                fullWidth
+              >
+                Add Product
+              </Button>
+              <CreateProductDrawer open={open} onClose={onClose} />
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={5.9} md={3}>
-            <Button
-              variant={"contained"}
-              color={"primary"}
-              size={"large"}
-              sx={{
-                height: "52px",
-              }}
-              onClick={onClose}
-              startIcon={<MdAdd />}
-              fullWidth
-            >
-              Add Product
-            </Button>
-            <CreateProductDrawer open={open} onClose={onClose} />
-          </Grid>
-        </Grid>
-      </Paper>
+        </Paper>
 
-      <DataTable
-        columns={cols}
-        rows={prodData?.data?.data || []}
-        isLoading={isProdDataLoading}
-        paginationMode={"server"}
-        rowCount={prodData?.data?.total || 0}
-        page={(params?.page || 1) - 1}
-        onPageChange={(newPage) =>
-          setParams({
-            ...params,
-            page: newPage + 1,
-          })
-        }
-        pageSize={params?.limit}
-        onPageSizeChange={(pageSize) =>
-          setParams({
-            ...params,
-            limit: pageSize,
-          })
-        }
-      />
-    </div>
+        <DataTable
+          columns={cols}
+          rows={data?.data?.data || []}
+          isLoading={isLoading}
+          paginationMode={"server"}
+          rowCount={data?.data?.total || 0}
+          page={page}
+          onPageChange={setPage}
+          pageSize={limit}
+          onPageSizeChange={setLimit}
+        />
+      </Container>
+    </>
   );
 };
 

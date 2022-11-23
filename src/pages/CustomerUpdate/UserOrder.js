@@ -23,7 +23,7 @@ import { Link, useParams } from "react-router-dom";
 import { FaSlackHash } from "react-icons/fa";
 import OrderStatus from "../../components/OrderStatus";
 
-const UserOrder = ({ uid }) => {
+const UserOrder = () => {
   const snack = React.useContext(snackContext);
 
   const { cid } = useParams();

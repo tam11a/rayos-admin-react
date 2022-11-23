@@ -2,7 +2,9 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import instance from "../service/instance";
 
 const getAllStore = (params) => {
-  return instance.get(`store?limit=${params.limit}&page=${params.page}`);
+  return instance.get(`store`, {
+    params,
+  });
 };
 
 export const useGetAllStore = (params) => {
@@ -23,9 +25,12 @@ export const useCreateStore = () => {
 };
 
 const getProductsByStoreID = (store_id, params) => {
-  return instance.get(
-    `store/${store_id}/products?limit=${params.limit}&page=${params.page}`
-  );
+  return instance.get(`product`, {
+    params: {
+      ...params,
+      store: store_id,
+    },
+  });
 };
 
 export const useGetProductsByStoreID = (store_id, params) => {
@@ -34,6 +39,7 @@ export const useGetProductsByStoreID = (store_id, params) => {
     () => getProductsByStoreID(store_id, params),
     {
       // refetchInterval: 20000,
+      enabled: !!store_id,
     }
   );
 };

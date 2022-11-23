@@ -2,7 +2,9 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import instance from "../service/instance";
 
 const getAllCategory = (params) => {
-  return instance.get(`category?limit=${params.limit}&page=${params.page}`);
+  return instance.get(`category`, {
+    params,
+  });
 };
 
 export const useGetAllCategory = (params) => {
@@ -32,7 +34,6 @@ export const useCreateCategory = () => {
     onSuccess: () => queryClient.invalidateQueries("get-all-category"),
   });
 };
-
 
 const createSubcategory = (data) => {
   return instance.post("subcategory", data);
@@ -71,9 +72,12 @@ export const useUpdateCategory = () => {
 };
 
 const getSubCategoryFromCatID = (category_id, params) => {
-  return instance.get(
-    `category/${category_id}/subcategories?limit=${params.limit}&page=${params.page}`
-  );
+  return instance.get(`subcategory`, {
+    params: {
+      ...params,
+      category: category_id,
+    },
+  });
 };
 
 export const useGetSubCategoryFromCatID = (category_id, params) => {
@@ -109,8 +113,6 @@ export const useToggleSubcategory = () => {
     onSuccess: () => queryClient.invalidateQueries("get-sub-category-cat"),
   });
 };
-
-
 
 const getAllCategoryImages = (pid) => {
   return instance.get(`category/${pid}/images`);
