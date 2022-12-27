@@ -7,10 +7,11 @@ import CFab from "./CFab";
 const BackButton = ({ primary, secondary, to, ...others }) => {
   const navigate = useNavigate();
   return (
-    <ListItem {...others} disablePadding>
-      <ListItemIcon>
+    <ListItem {...others} disablePadding sx={{ mx: 1 }}>
+      <ListItemIcon sx={{ minWidth: "45px" }}>
         <CFab
           size={"small"}
+          sx={{ p: 0 }}
           color={"default"}
           onClick={() => {
             navigate(-1);
