@@ -13,7 +13,7 @@ import {
 import React from "react";
 import { useForm } from "react-hook-form";
 import { MdClose } from "react-icons/md";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ShowError from "../../components/ShowError";
 import snackContext from "../../context/snackProvider";
 import {
@@ -26,6 +26,7 @@ import { responseHandler } from "../../utilities/response-handler";
 
 const CreateProductDrawer = ({ open, onClose, ...others }) => {
   const snack = React.useContext(snackContext);
+  const navigate = useNavigate();
   const { sid } = useParams();
   const {
     register,
@@ -67,9 +68,10 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
       () => mutateCreateProduct({ ...data, store: sid }),
       [201]
     );
-    console.log(res);
+
     if (res.status) {
       snack.createSnack(res.msg);
+      navigate("/prod/" + res?.data?.id);
       onClose();
     } else {
       snack.createSnack(res.msg, "error");
