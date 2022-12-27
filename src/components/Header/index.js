@@ -114,11 +114,11 @@ const Index = () => {
                     Create Order
                   </Button>
                 </Hidden> */}
-                <IconButton color={"black"} size={"small"}>
+                <IconButton color={"black"} size={"small"} disabled>
                   <MdNotificationsNone />
                 </IconButton>
                 <Hidden smDown>
-                  <IconButton color={"black"} size={"small"}>
+                  <IconButton color={"black"} size={"small"} disabled>
                     <FiUser />
                   </IconButton>
                 </Hidden>

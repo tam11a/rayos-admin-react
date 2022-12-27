@@ -80,7 +80,6 @@ const LeftDrawer = ({ open, setOpen }) => {
       name: "Images",
       icon: <RiImageLine />,
       to: "/images",
-      // disabled: true,
     },
   ];
 
@@ -89,6 +88,7 @@ const LeftDrawer = ({ open, setOpen }) => {
       name: "Settings",
       icon: <GiCog />,
       to: "/settings",
+      disabled: true,
     },
     {
       name: "Logout",
@@ -143,6 +143,7 @@ const LeftDrawer = ({ open, setOpen }) => {
             if (item.onClick) item.onClick();
             setOpen(false);
           }}
+          disabled={!!item.disabled}
         >
           <ListItemIcon sx={{ color: "primary.main", fontSize: "24px" }}>
             {" "}
