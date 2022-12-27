@@ -25,6 +25,7 @@ import { MdClose, MdNotificationsNone } from "react-icons/md";
 import LeftDrawer from "../Drawer/LeftDrawer";
 import { authContext } from "../../context/AuthProvider";
 import { Route, Routes } from "react-router-dom";
+import BackButton from "../BackButton";
 
 const Index = () => {
   const [open, setOpen] = useState(false);
@@ -50,7 +51,7 @@ const Index = () => {
                 },
               }}
             >
-              <span>
+              <Stack direction={"row"} justifyContent={""}>
                 <IconButton
                   color={"black"}
                   size={"small"}
@@ -58,62 +59,36 @@ const Index = () => {
                 >
                   <BiMenuAltLeft />
                 </IconButton>
-                <Typography variant="normal">
-                  <Routes path={"/"}>
-                    <Route index element={"Dashboard"} />
-                    <Route path={"order-list"} element={"Order List"} />
-                    <Route
-                      path={"order-details/:oid"}
-                      element={"Order Details"}
-                    />
-                    <Route path={"store"} element={"Store List"} />
-                    <Route path={"store/:pid"} element={"Store Info"} />
-                    <Route path={"customer-list"} element={"Customer List"} />
-                    <Route path={"customer/:cid"} element={"Customer Info"} />
-                    <Route path={"product-list"} element={"Product List"} />
-                    <Route path={"reviews"} element={"Reviews"} />
-                    <Route path={"prod/:pid"} element={"Product Info"} />
-                    <Route path={"images"} element={"Images"} />
-                    <Route path={"settings"} element={"Settings"} />
-                    <Route path={"category"} element={"Category List"} />
-                    <Route path={"cat/:cid"} element={"Category Info"} />
-                    <Route
-                      path={"user/:uid/profile"}
-                      element={"User Profile"}
-                    />
-                    <Route path={"user/:uid/order"} element={"User Orders"} />
-                    {/* <Route path={"user/:uid/wallet"} element={"User Wallet"} /> */}
 
-                    <Route path={"*"} element={""} />
-                  </Routes>
-                </Typography>
-              </span>
+                <BackButton primary={"Back"} />
+              </Stack>
+              <Typography variant="normal">
+                <Routes path={"/"}>
+                  <Route index element={"Dashboard"} />
+                  <Route path={"order-list"} element={"Order List"} />
+                  <Route
+                    path={"order-details/:oid"}
+                    element={"Order Details"}
+                  />
+                  <Route path={"store"} element={"Store List"} />
+                  <Route path={"store/:pid"} element={"Store Info"} />
+                  <Route path={"customer-list"} element={"Customer List"} />
+                  <Route path={"customer/:cid"} element={"Customer Info"} />
+                  <Route path={"product-list"} element={"Product List"} />
+                  <Route path={"reviews"} element={"Reviews"} />
+                  <Route path={"prod/:pid"} element={"Product Info"} />
+                  <Route path={"images"} element={"Images"} />
+                  <Route path={"settings"} element={"Settings"} />
+                  <Route path={"category"} element={"Category List"} />
+                  <Route path={"cat/:cid"} element={"Category Info"} />
+                  <Route path={"user/:uid/profile"} element={"User Profile"} />
+                  <Route path={"user/:uid/order"} element={"User Orders"} />
+                  {/* <Route path={"user/:uid/wallet"} element={"User Wallet"} /> */}
+
+                  <Route path={"*"} element={""} />
+                </Routes>
+              </Typography>
               <span>
-                {/* <Hidden smDown>
-                  <IconButton size={"small"}>
-                    <Avatar
-                      src={BIicon}
-                      alt={"bi"}
-                      sx={{
-                        height: "26px",
-                        width: "26px",
-                        borderRadius: 0,
-                      }}
-                    />
-                  </IconButton>
-                  <Button
-                    startIcon={<MdOutlineAddShoppingCart />}
-                    variant={"contained"}
-                    size={"small"}
-                    color={"black"}
-                    sx={{
-                      borderRadius: "100px",
-                      pr: 2,
-                    }}
-                  >
-                    Create Order
-                  </Button>
-                </Hidden> */}
                 <IconButton color={"black"} size={"small"} disabled>
                   <MdNotificationsNone />
                 </IconButton>
