@@ -25,17 +25,19 @@ import tableOptionsStyle from "../../style/tableOptions";
 import { responseHandler } from "../../utilities/response-handler";
 
 const CreateProductDrawer = ({ open, onClose, ...others }) => {
-	const navigate = useNavigate();
-	const snack = React.useContext(snackContext);
-	const { sid } = useParams();
-	const {
-		register,
-		setValue,
-		reset,
-		handleSubmit,
-		watch,
-		formState: { errors },
-	} = useForm();
+
+  const snack = React.useContext(snackContext);
+  const navigate = useNavigate();
+  const { sid } = useParams();
+  const {
+    register,
+    setValue,
+    reset,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+
 
 	const [categoryId, setCategoryId] = React.useState();
 	const [subcategoryId, setSubcategoryId] = React.useState();
@@ -63,19 +65,22 @@ const CreateProductDrawer = ({ open, onClose, ...others }) => {
 
 	const { mutateAsync: mutateCreateProduct, isLoading } = useCreateProduct();
 
-	const handleUpdate = async (data) => {
-		const res = await responseHandler(
-			() => mutateCreateProduct({ ...data, store: sid }),
-			[201]
-		);
-		if (res.status) {
-			snack.createSnack(res.msg);
-			onClose();
-			navigate(`/prod/${res.data._id}`);
-		} else {
-			snack.createSnack(res.msg, "error");
-		}
-	};
+
+  const handleUpdate = async (data) => {
+    const res = await responseHandler(
+      () => mutateCreateProduct({ ...data, store: sid }),
+      [201]
+    );
+
+    if (res.status) {
+      snack.createSnack(res.msg);
+      navigate("/prod/" + res?.data?.id);
+      onClose();
+    } else {
+      snack.createSnack(res.msg, "error");
+    }
+  };
+
 
 	React.useEffect(() => {
 		setCategoryId();
