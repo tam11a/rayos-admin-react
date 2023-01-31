@@ -24,7 +24,7 @@ import { authContext } from "../context/AuthProvider";
 // import Wallet from "../pages/User/Wallet";
 
 const Order = React.lazy(() => import("../pages/Order"));
-const OrderDetails = React.lazy(() => "../pages/OrderDetails");
+const OrderDetails = React.lazy(() => import("../pages/OrderDetails"));
 const Store = React.lazy(() => import("../pages/Store"));
 const StoreUpdate = React.lazy(() => import("../pages/StoreUpdate"));
 const Customer = React.lazy(() => import("../pages/Customer"));
@@ -37,54 +37,99 @@ const Reviews = React.lazy(() => import("../pages/Reviews"));
 const Images = React.lazy(() => import("../pages/Images"));
 
 const AppRoute = () => {
-  const authCntxt = React.useContext(authContext);
+	const authCntxt = React.useContext(authContext);
 
-  return (
-    <>
-      {authCntxt.isLoggedIn ? (
-        <>
-          <Header />
-          <Container>
-            <Suspense>
-              <Routes path="/">
-                <Route index element={<Dashboard />} />
-                {/* <Route path="/login" element={<>Order Lists</>} /> */}
-                <Route path="order-list" element={<Order />} />
-                <Route path="order-details/:oid" element={<OrderDetails />} />
+	return (
+		<>
+			{authCntxt.isLoggedIn ? (
+				<>
+					<Header />
+					<Container>
+						<Suspense>
+							<Routes path="/">
+								<Route
+									index
+									element={<Dashboard />}
+								/>
+								{/* <Route path="/login" element={<>Order Lists</>} /> */}
+								<Route
+									path="order-list"
+									element={<Order />}
+								/>
+								<Route
+									path="order-details/:oid"
+									element={<OrderDetails />}
+								/>
 
-                <Route path="store" element={<Store />} />
-                <Route path="store/:sid" element={<StoreUpdate />} />
-                <Route path="customer-list" element={<Customer />} />
-                <Route path="customer/:cid/*" element={<CustomerUpdate />} />
-                <Route path="product-list" element={<Product />} />
-                <Route path="prod/:pid/*" element={<ProductUpdate />} />
-                <Route path="reviews" element={<Reviews />} />
+								<Route
+									path="store"
+									element={<Store />}
+								/>
+								<Route
+									path="store/:sid"
+									element={<StoreUpdate />}
+								/>
+								<Route
+									path="customer-list"
+									element={<Customer />}
+								/>
+								<Route
+									path="customer/:cid/*"
+									element={<CustomerUpdate />}
+								/>
+								<Route
+									path="product-list"
+									element={<Product />}
+								/>
+								<Route
+									path="prod/:pid/*"
+									element={<ProductUpdate />}
+								/>
+								<Route
+									path="reviews"
+									element={<Reviews />}
+								/>
 
-                {/* <Route path="user/:uid" element={<Navigate to={"profile"} />} />
+								{/* <Route path="user/:uid" element={<Navigate to={"profile"} />} />
               <Route path="user/:uid/:path_url" element={<User />} /> */}
-                <Route path="images" element={<Images />} />
-                <Route path="settings" element={<>Settings</>} />
-                <Route path="create-order" element={<>Create Order</>} />
-                <Route
-                  path="create-bim-order"
-                  element={<>Create BIM Order</>}
-                />
-                <Route path="category" element={<Category />} />
-                <Route path="cat/:cid" element={<CategoryUpdate />} />
-              </Routes>
-            </Suspense>
-          </Container>
-        </>
-      ) : (
-        <>
-          <Suspense>
-            <Login />
-          </Suspense>
-        </>
-      )}
-      {/* </Suspense> */}
-    </>
-  );
+								<Route
+									path="images"
+									element={<Images />}
+								/>
+								<Route
+									path="settings"
+									element={<>Settings</>}
+								/>
+								<Route
+									path="create-order"
+									element={<>Create Order</>}
+								/>
+								<Route
+									path="create-bim-order"
+									element={<>Create BIM Order</>}
+								/>
+								<Route
+									path="category"
+									element={<Category />}
+								/>
+								<Route
+									path="cat/:cid"
+									element={<CategoryUpdate />}
+								/>
+							</Routes>
+						</Suspense>
+					</Container>
+				</>
+			) : (
+				<>
+					<Suspense>
+						<Login />
+					</Suspense>
+				</>
+			)}
+			{/* </Suspense> */}
+		</>
+	);
 };
 
 export default AppRoute;

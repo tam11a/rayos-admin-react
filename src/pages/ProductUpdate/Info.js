@@ -68,8 +68,6 @@ const Info = () => {
 		else snack.createSnack(res.msg, "error");
 	};
 
-	console.log(productInfo);
-
 	React.useEffect(() => {
 		if (!productInfo) return;
 
