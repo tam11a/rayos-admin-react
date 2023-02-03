@@ -27,6 +27,7 @@ import { HiOutlineLogout } from "react-icons/hi";
 import { BiMenuAltRight, BiStore } from "react-icons/bi";
 import { IoIosPeople } from "react-icons/io";
 import { FaRegListAlt } from "react-icons/fa";
+import { TbShoppingCartDiscount } from "react-icons/tb";
 
 // Importing Images
 import PIlogo from "../../assets/pnd-logo.svg";
@@ -74,6 +75,11 @@ const LeftDrawer = ({ open, setOpen }) => {
       name: "Reviews",
       icon: <MdOutlineRateReview />,
       to: "/reviews",
+    },
+    {
+      name: "Discounts",
+      icon: <TbShoppingCartDiscount />,
+      to: "/discounts",
     },
 
     {
