@@ -25,3 +25,14 @@ export const useToggleDiscount = () => {
     },
   });
 };
+
+const createDiscount = (data) => {
+  return instance.post("discount", data);
+};
+
+export const useCreateDiscount = () => {
+  const queryClient = useQueryClient();
+  return useMutation(createDiscount, {
+    onSuccess: () => queryClient.invalidateQueries("get-all-discount"),
+  });
+};
