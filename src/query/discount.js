@@ -80,3 +80,17 @@ export const useUpdateDiscount = () => {
     },
   });
 };
+
+const deleteDiscountProduct = ({ id, data }) => {
+  return instance.delete(`discount/${id}`, data);
+};
+
+export const useDeleteDiscountProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation(deleteDiscountProduct, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("get-discount-by-id");
+      queryClient.invalidateQueries("get-all-discount-admin");
+    },
+  });
+};

@@ -56,7 +56,6 @@ const Products = () => {
     did,
     getQueryParams()
   );
-  console.log(data);
   const { mutateAsync: toggleDiscount } = useToggleDiscount();
 
   const updateState = async (id) => {
@@ -64,6 +63,10 @@ const Products = () => {
     if (res.status) snack.createSnack(res.msg);
     else snack.createSnack(res.msg, "error");
   };
+
+  const [selectionModel, setSelectionModel] = React.useState([]);
+  console.log(selectionModel);
+
   const cols = [
     {
       headerName: "",
@@ -198,6 +201,14 @@ const Products = () => {
       align: "center",
     },
     {
+      headerName: "Discount",
+      headerAlign: "center",
+      field: "discount amount",
+      align: "center",
+      width: 100,
+      renderCell: (params) => <>{params.row.discount.amount}%</>,
+    },
+    {
       headerName: "Status",
       headerAlign: "center",
       field: "status_stock",
@@ -214,22 +225,22 @@ const Products = () => {
         />
       ),
     },
-    // {
-    //   headerName: "Published",
-    //   headerAlign: "center",
-    //   field: "status",
-    //   align: "center",
-    //   width: 120,
-    //   renderCell: (params) => (
-    //     <ButtonSwitch
-    //       checked={params.row?.isActive}
-    //       color={"success"}
-    //       onClick={() => {
-    //         updateState(params.row?.id);
-    //       }}
-    //     />
-    //   ),
-    // },
+    {
+      headerName: "Published",
+      headerAlign: "center",
+      field: "status",
+      align: "center",
+      width: 120,
+      renderCell: (params) => (
+        <ButtonSwitch
+          checked={params.row?.isActive}
+          color={"success"}
+          onClick={() => {
+            updateState(params.row?.id);
+          }}
+        />
+      ),
+    },
   ];
 
   return (
@@ -288,7 +299,13 @@ const Products = () => {
           onPageChange={setPage}
           pageSize={limit}
           onPageSizeChange={setLimit}
+          keepNonExistentRowsSelected
+          onSelectionModelChange={(newSelectionModel) => {
+            setSelectionModel(newSelectionModel);
+          }}
+          selectionModel={selectionModel}
         />
+        {/* <Typography>Selected Cell ID: {data[selectedCell.row]?.id}</Typography> */}
       </Container>
     </>
   );
