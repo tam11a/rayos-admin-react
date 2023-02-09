@@ -15,32 +15,18 @@ import React from "react";
 import { IoMdEye } from "react-icons/io";
 import StateViewer from "../../components/StateViewer";
 import DataTable from "../../components/DataTable";
-import {
-	useCancelOrder,
-	useCompleteOrder,
-	useConfirmOrder,
-	useGetAllOrder,
-} from "../../query/order";
+import { useGetAllOrder } from "../../query/order";
 import tableOptionsStyle from "../../style/tableOptions";
-import snackContext from "../../context/snackProvider";
-import { responseHandler } from "../../utilities/response-handler";
-import invoiceContext from "../../context/invoiceProvider";
+import { useInvoice } from "../../context/invoiceProvider";
 import { getAttachment } from "../../service/instance";
 import { Link } from "react-router-dom";
 import { FaSlackHash } from "react-icons/fa";
 import OrderStatus from "../../components/OrderStatus";
 import { useGetOrderStats } from "../../query/stats";
 import usePaginate from "../../hooks/usePaginate";
-/**
- * get-all-pending
- * get-all-confirm
- * get-all-deliver
- * get-all-cancel
- * get-all-order
- */
+
 const Index = () => {
-	const invoice = React.useContext(invoiceContext);
-	const snack = React.useContext(snackContext);
+	const { showInvoice } = useInvoice();
 
 	const {
 		limit,
@@ -57,18 +43,8 @@ const Index = () => {
 	const { data, isLoading } = useGetAllOrder(getQueryParams());
 	const { data: orderStats } = useGetOrderStats();
 
-	// console.log(data);
-
-	// useMutations
-	// const { mutateAsync: mutateConfirmOrder } = useConfirmOrder();
-	// const { mutateAsync: mutateCompleteOrder } = useCompleteOrder();
-	// const { mutateAsync: mutateCancelOrder } = useCancelOrder();
-
 	const cols = [
 		{
-			// headerName: "#",
-			// field: "show_info",
-			// width: 60,
 			headerName: "",
 			field: "show_info",
 			width: 100,
@@ -123,15 +99,7 @@ const Index = () => {
 				return <Typography>{params.row.shipping?.phone || "-"}</Typography>;
 			},
 		},
-		// {
-		//   headerName: "Address",
-		//   headerAlign: "center",
-		//   align: "center",
-		//   field: "shipping",
-		//   width: 200,
-		//   sortable: false,
-		//   valueFormatter: ({ value }) => value.address || "-",
-		// },
+
 		{
 			headerName: "Order Date",
 			headerAlign: "center",
@@ -286,11 +254,7 @@ const Index = () => {
 						<IconButton
 							size={"small"}
 							onClick={() => {
-								// console.log(d.row);
-								// window.open(
-								//   "https://admin.pndservicebd.com/orderdetails.html?id=" +
-								//     d.row.id
-								// );
+								showInvoice(d.row._id);
 							}}
 						>
 							<IoMdEye />

@@ -44,9 +44,6 @@ const Index = () => {
   } = usePaginate();
   const { data, isLoading } = useGetAllCategory(getQueryParams());
   const { data: catStats } = useGetCatStats();
-
-  console.log(catStats);
-
   const [openCreate, setOpenCreate] = React.useState(false);
 
   const { mutateAsync: toggleState } = useToggleCategory();
