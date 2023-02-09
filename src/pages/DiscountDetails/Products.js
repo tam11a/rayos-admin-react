@@ -33,6 +33,7 @@ import { FaSlackHash } from "react-icons/fa";
 import { IoIosImages } from "react-icons/io";
 import { MdAdd } from "react-icons/md";
 import { BiCategoryAlt, BiStore } from "react-icons/bi";
+import AddNewProductDialog from "./AddNewProductDialog";
 
 const Products = () => {
   const { did } = useParams();
@@ -40,17 +41,8 @@ const Products = () => {
 
   const [open, setOpen] = React.useState(false);
   const onClose = () => setOpen((o) => !o);
-  const {
-    limit,
-    setLimit,
-    page,
-    setPage,
-    search,
-    setSearch,
-    watch,
-    setFilterField,
-    getQueryParams,
-  } = usePaginate();
+  const { limit, setLimit, page, setPage, search, setSearch, getQueryParams } =
+    usePaginate();
 
   const { data, isLoading } = useGetAllProductsByDiscount(
     did,
@@ -246,7 +238,7 @@ const Products = () => {
   return (
     <>
       <Container>
-        {/* <Paper
+        <Paper
           elevation={0}
           sx={{
             p: 2,
@@ -263,7 +255,7 @@ const Products = () => {
           >
             <Grid item xs={12} md={8.8}>
               <InputBase
-                placeholder="Search Discount"
+                placeholder="Search Product"
                 sx={tableOptionsStyle}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -282,11 +274,11 @@ const Products = () => {
                 startIcon={<MdAdd />}
                 fullWidth
               >
-                New Discount
+                New Product
               </Button>
             </Grid>
           </Grid>
-        </Paper> */}
+        </Paper>
         <DataTable
           checkboxSelection
           columns={cols}
@@ -307,6 +299,7 @@ const Products = () => {
         />
         {/* <Typography>Selected Cell ID: {data[selectedCell.row]?.id}</Typography> */}
       </Container>
+      {open && <AddNewProductDialog discount={did} onClose={onClose} />}
     </>
   );
 };
