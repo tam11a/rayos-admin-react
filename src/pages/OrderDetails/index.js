@@ -1,24 +1,15 @@
 import {
-	Alert,
 	Avatar,
 	Box,
 	Button,
 	CircularProgress,
 	Divider,
-	FormControlLabel,
 	Grid,
 	Hidden,
-	IconButton,
-	List,
 	ListItem,
 	ListItemAvatar,
 	ListItemText,
-	MenuItem,
 	Paper,
-	Radio,
-	RadioGroup,
-	Select,
-	Skeleton,
 	Stack,
 	Tooltip,
 	Typography,
@@ -26,29 +17,21 @@ import {
 import { Container } from "@mui/system";
 import React from "react";
 import { IoIosImages } from "react-icons/io";
-import { RiDeleteBinLine } from "react-icons/ri";
-import { AiFillMinusSquare, AiFillPlusSquare } from "react-icons/ai";
 import { Link, useParams } from "react-router-dom";
-import snackContext from "../../context/snackProvider";
 import { useGetProductsByOrderID } from "../../query/order";
 import { getAttachment } from "../../service/instance";
-import { FaFileInvoice, FaFileInvoiceDollar, FaPhoneAlt } from "react-icons/fa";
-import { TbFileInvoice } from "react-icons/tb";
+import { FaFileInvoice, FaPhoneAlt } from "react-icons/fa";
 import { GrMail } from "react-icons/gr";
 import Steppers from "./Steppers";
 import OrderStatus from "../../components/OrderStatus";
 import BackButton from "../../components/BackButton";
+import { useInvoice } from "../../context/invoiceProvider";
 
 const Index = () => {
-	const snack = React.useContext(snackContext);
+	const { showInvoice } = useInvoice();
 	const { oid } = useParams();
-	const [params, setParams] = React.useState({
-		limit: 10,
-		page: 1,
-		filters: [],
-	});
 
-	const { data: orderInfo, isLoading } = useGetProductsByOrderID(oid, params);
+	const { data: orderInfo, isLoading } = useGetProductsByOrderID(oid);
 
 	const [productInfo, setProductInfo] = React.useState([]);
 
@@ -196,6 +179,7 @@ const Index = () => {
 										startIcon={<FaFileInvoice />}
 										size={"small"}
 										variant={"contained"}
+										onClick={() => showInvoice(orderInfo?.data?.data?._id)}
 									>
 										Invoice
 									</Button>
