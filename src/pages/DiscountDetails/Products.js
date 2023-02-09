@@ -19,6 +19,7 @@ import { useParams } from "react-router-dom";
 import snackContext from "../../context/snackProvider";
 import usePaginate from "../../hooks/usePaginate";
 import {
+  useDeleteDiscountProduct,
   useGetAllDiscount,
   useGetAllDiscountByID,
   useGetAllProductsByDiscount,
@@ -31,7 +32,7 @@ import { getAttachment } from "../../service/instance";
 import { responseHandler } from "../../utilities/response-handler";
 import { FaSlackHash } from "react-icons/fa";
 import { IoIosImages } from "react-icons/io";
-import { MdAdd } from "react-icons/md";
+import { MdAdd, MdOutlineDeleteForever } from "react-icons/md";
 import { BiCategoryAlt, BiStore } from "react-icons/bi";
 import AddNewProductDialog from "./AddNewProductDialog";
 
@@ -57,7 +58,18 @@ const Products = () => {
   };
 
   const [selectionModel, setSelectionModel] = React.useState([]);
-  console.log(selectionModel);
+
+  const { mutateAsync: deleteProduct } = useDeleteDiscountProduct();
+
+  const removeProductToDiscount = async () => {
+    const res = await responseHandler(() =>
+      deleteProduct({ id: did, products: selectionModel?.join?.(",") })
+    );
+    if (res.status) {
+      snack.createSnack(res.msg);
+      setSelectionModel([]);
+    } else snack.createSnack(res.msg, "error");
+  };
 
   const cols = [
     {
@@ -277,6 +289,21 @@ const Products = () => {
                 New Product
               </Button>
             </Grid>
+            {!!selectionModel?.length && (
+              <Button
+                variant={"contained"}
+                color={"error"}
+                size={"large"}
+                sx={{
+                  height: "52px",
+                }}
+                onClick={removeProductToDiscount}
+                startIcon={<MdOutlineDeleteForever />}
+                fullWidth
+              >
+                Remove Selected Products
+              </Button>
+            )}
           </Grid>
         </Paper>
         <DataTable
