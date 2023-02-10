@@ -325,7 +325,7 @@ const PrintableArea = ({ ...others }) => {
 											minWidth: "fit-content",
 										}}
 									>
-										{cart.price} ৳
+										{cart.price * cart.quantity} ৳
 									</TableCell>
 								</TableRow>
 							);
